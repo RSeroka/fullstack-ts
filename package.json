@@ -14,6 +14,7 @@
     "@tsconfig/node-lts-strictest": "^18.12.1",
     "@types/chai": "^4.3.4",
     "@types/mocha": "^10.0.1",
+    "@types/node": "^18.15.11",
     "@types/sinon": "^10.0.13",
     "chai": "^4.3.7",
     "mocha": "^10.2.0",
