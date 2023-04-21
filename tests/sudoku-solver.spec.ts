@@ -65,8 +65,8 @@ describe("SudokuSolver9 Tests", () => {
             ["2","8","7","4","1","9","6","3","5"],
             ["3","4","5","2","8","6","1","7","9"]];
     
-        const sudokuSolver = new SudokuSolver9();
-        sudokuSolver.solve(input);
+        const sudokuSolver = new SudokuSolver9(input);
+        sudokuSolver.solve();
 
         // logBoard(input);
         assert.isTrue(isEqualArrayOfArrays<Board9Char>(expectedResult, input));
@@ -94,8 +94,8 @@ describe("SudokuSolver9 Tests", () => {
             ["8","3","2","4","9","1","7","5","6"],
             ["6","4","1","2","7","5","9","8","3"]];
     
-        const sudokuSolver = new SudokuSolver9();
-        sudokuSolver.solve(input);
+        const sudokuSolver = new SudokuSolver9(input);
+        sudokuSolver.solve();
 
         // logBoard(input);
         assert.isTrue(isEqualArrayOfArrays<Board9Char>(expectedResult, input));
@@ -126,8 +126,8 @@ describe("SudokuSolver9 Tests", () => {
             ["5","9","2","6","1","4","3","7","8"],
             ["8","1","7","9","5","3","4","2","6"]];
     
-        const sudokuSolver = new SudokuSolver9();
-        sudokuSolver.solve(input);
+        const sudokuSolver = new SudokuSolver9(input);
+        sudokuSolver.solve();
 
         // logBoard(input);
         assert.isTrue(isEqualArrayOfArrays<Board9Char>(expectedResult, input));
@@ -159,8 +159,8 @@ describe("SudokuSolver9 Tests", () => {
             ["7","5","8","3","1","2","6","4","9"],
             ["6","4","2","5","8","9","3","7","1"]];
     
-        const sudokuSolver = new SudokuSolver9();
-        sudokuSolver.solve(input);
+        const sudokuSolver = new SudokuSolver9(input);
+        sudokuSolver.solve();
 
         // logBoard(input);
         assert.isTrue(isEqualArrayOfArrays<Board9Char>(expectedResult, input));
@@ -192,8 +192,8 @@ describe("SudokuSolver9 Tests", () => {
             ["1","3","6","4","9","7","5","2","8"],
             ["9","2","7","3","8","5","6","1","4"]];
     
-        const sudokuSolver = new SudokuSolver9();
-        sudokuSolver.solve(input);
+        const sudokuSolver = new SudokuSolver9(input);
+        sudokuSolver.solve();
 
         // logBoard(input);
         assert.isTrue(isEqualArrayOfArrays<Board9Char>(expectedResult, input));
@@ -225,8 +225,8 @@ describe("SudokuSolver9 Tests", () => {
             ["5","4","1","7","8","6","2","3","9"],
             ["9","6","2","1","5","3","4","8","7"]];
     
-        const sudokuSolver = new SudokuSolver9();
-        sudokuSolver.solve(input);
+        const sudokuSolver = new SudokuSolver9(input);
+        sudokuSolver.solve();
 
         // logBoard(input);
         assert.isTrue(isEqualArrayOfArrays<Board9Char>(expectedResult, input));
@@ -258,8 +258,8 @@ describe("SudokuSolver9 Tests", () => {
             ["7","2","9","8","5","6","1","4","3"],
             ["5","3","1","4","7","9","6","2","8"]];
     
-        const sudokuSolver = new SudokuSolver9();
-        sudokuSolver.solve(input);
+        const sudokuSolver = new SudokuSolver9(input);
+        sudokuSolver.solve();
 
         // logBoard(input);
         assert.isTrue(isEqualArrayOfArrays<Board9Char>(expectedResult, input));

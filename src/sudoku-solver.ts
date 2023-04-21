@@ -46,6 +46,7 @@ type Guess = {
 export default class SudokuSolver9 implements ISudokuSolver {
     private static readonly SIZE = 9;
     private consoleLogging: boolean = false;
+    private input: Array<Array<Board9Char>>;
     private output: Array<Array<Board9Char>>;
     private numsQuantity: Array<number>; // how many of each number in the output 
     private rowsQuantity: Array<number>; // how many entries filled in for each row
@@ -59,7 +60,7 @@ export default class SudokuSolver9 implements ISudokuSolver {
     private sectionsWith8 = new Array<number>();
     private guesses = new Array<Guess>();
 
-    public constructor() {
+    public constructor(board: Board9) {
         this.output = new Array<Array<Board9Char>>(SudokuSolver9.SIZE);
         for (let outputRowNum = 0; outputRowNum < this.output.length; outputRowNum++) {
             this.output[outputRowNum] = new Array<Board9Char>(this.output.length);
@@ -77,10 +78,13 @@ export default class SudokuSolver9 implements ISudokuSolver {
 
         this.sectionsQuantity = new Array<number>(SudokuSolver9.SIZE);
         this.sectionsQuantity.fill(0);
+
+        this.input = board;
+        this.initializeBins();
     }
 
-    public solve(board: Board9): void {
-        this.initializeBins(board);
+    public solve(): void {
+
         let solved = false;
         let invalid = false;
         let iterations = 0;
@@ -111,8 +115,8 @@ export default class SudokuSolver9 implements ISudokuSolver {
             } 
             else if (solveResult === 1) {
                 solved = true;
-                for (let rCnt = 0; rCnt < board.length && rCnt < this.output.length; rCnt++) {
-                    const target = board[rCnt]!;
+                for (let rCnt = 0; rCnt < this.input.length && rCnt < this.output.length; rCnt++) {
+                    const target = this.input[rCnt]!;
                     const src = this.output[rCnt]!;
                     for (let cCnt = 0; cCnt < target.length && cCnt < src.length; cCnt++) {
                         target[cCnt] = src[cCnt]!;
@@ -190,9 +194,10 @@ export default class SudokuSolver9 implements ISudokuSolver {
     }
 
 
-    private initializeBins(board: Board9):void {
-        for (let rowNum = 0; rowNum < board.length || rowNum < SudokuSolver9.SIZE; rowNum++) {
-            let row = board[rowNum];
+    private initializeBins():void {
+
+        for (let rowNum = 0; rowNum < this.input.length || rowNum < SudokuSolver9.SIZE; rowNum++) {
+            let row = this.input[rowNum];
             if (row === undefined) {
                 row = new Array<Board9Char>(SudokuSolver9.SIZE);
                 row.fill('.');
@@ -204,6 +209,9 @@ export default class SudokuSolver9 implements ISudokuSolver {
                 if (this.isValidCharacter(row[colNum]!)) {
                     const value = row[colNum] as Suduko9Char;
                     this.addEntry(rowNum, colNum, value);
+                }
+                else if (row[colNum] !== '.') {
+                    row[colNum] = '.';
                 }
             }
         }
