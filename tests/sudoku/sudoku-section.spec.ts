@@ -1,6 +1,6 @@
 // tests/sudoku-section.spec.tx
 import { assert } from "chai"; 
-import { getSectionNumber9, getSectionNumber } from "../src/suduko-section";
+import { getSectionNumber9, getSectionNumber } from "../../src/sudoku/sudoku-section";
 
 describe("getSectionNumber Tests", () => {
     it("getSectionNumber 0", () => {

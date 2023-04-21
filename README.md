@@ -1,2 +1,2 @@
-# suduko-ts
+# sudoku-ts
  

@@ -1,6 +1,6 @@
 // tests/get-sorted-remaining.spec.tx
 import { assert } from "chai"; 
-import getSortedRemaining from "../src/get-sorted-remaining";
+import getSortedRemaining from "../../src/sudoku/get-sorted-remaining";
 
 describe("getSortedRemaining Tests", () => {
     it("presorted below 8", () => {

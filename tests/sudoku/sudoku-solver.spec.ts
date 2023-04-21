@@ -1,8 +1,8 @@
 
 
 import { assert } from "chai"; 
-import SudokuSolver9 from "../src/sudoku-solver";
-import type { Board9, Board9Char } from "../src/board";
+import SudokuSolver9 from "../../src/sudoku/sudoku-solver";
+import type { Board9, Board9Char } from "../../src/sudoku/board";
 
 
 

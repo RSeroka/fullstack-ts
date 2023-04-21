@@ -1,11 +1,11 @@
 /**
- * implementation of sudoko solver
+ * implementation of sudoku solver
  */
 
-import type { Board9, Board9Char, Suduko9Char } from "./board";
+import type { Board9, Board9Char, Sudoku9Char } from "./board";
 import type ISudokuSolver from "./i-sudoku-solver";
 import { NumCounter9 } from "./num-counter";
-import { getSectionNumber9 } from "./suduko-section";
+import { getSectionNumber9 } from "./sudoku-section";
 import getSortedRemaining from "./get-sorted-remaining";
 import { cloneTwoDimensionalArray } from "./clone-two-dimensional-array";
 
@@ -97,14 +97,14 @@ export default class SudokuSolver9 implements ISudokuSolver {
                 const newGuess = this.createOrUpdateLastGuess();
                 if (newGuess !== undefined) {
                     this.pushGuess(newGuess);
-                    this.addEntry(newGuess.row, newGuess.col, ("" + newGuess.value) as Suduko9Char, `guess ${iterations}`);
+                    this.addEntry(newGuess.row, newGuess.col, ("" + newGuess.value) as Sudoku9Char, `guess ${iterations}`);
                 } 
                 else {
                     // handle this like solveWithConstraints found invalid.
                     const updatedGuess = this.guessAgain();
                     if (updatedGuess !== undefined) {
                         this.pushGuess(updatedGuess);
-                        this.addEntry(updatedGuess.row, updatedGuess.col, ("" + updatedGuess.value) as Suduko9Char, `guess ${iterations}`);
+                        this.addEntry(updatedGuess.row, updatedGuess.col, ("" + updatedGuess.value) as Sudoku9Char, `guess ${iterations}`);
                     }
                     else {
                         invalid = true;
@@ -136,7 +136,7 @@ export default class SudokuSolver9 implements ISudokuSolver {
                 const updatedGuess = this.guessAgain();
                 if (updatedGuess !== undefined) {
                     this.pushGuess(updatedGuess);
-                    this.addEntry(updatedGuess.row, updatedGuess.col, ("" + updatedGuess.value) as Suduko9Char, `guess ${iterations}`);
+                    this.addEntry(updatedGuess.row, updatedGuess.col, ("" + updatedGuess.value) as Sudoku9Char, `guess ${iterations}`);
                 }
                 else {
                     invalid = true;
@@ -152,7 +152,7 @@ export default class SudokuSolver9 implements ISudokuSolver {
         return (!isNaN(numVal) && numVal >= 1 && numVal <= 9);
     }
 
-    private addEntry(rowNum: number, colNum: number, value: Suduko9Char, reason?: string) {
+    private addEntry(rowNum: number, colNum: number, value: Sudoku9Char, reason?: string) {
         if (this.consoleLogging && reason !== undefined && reason.length > 0) {
             console.log(`Adding (${colNum},${rowNum})=>${value} ${reason}`);
         }
@@ -207,7 +207,7 @@ export default class SudokuSolver9 implements ISudokuSolver {
                     row[colNum] = '.';
                 }
                 if (this.isValidCharacter(row[colNum]!)) {
-                    const value = row[colNum] as Suduko9Char;
+                    const value = row[colNum] as Sudoku9Char;
                     this.addEntry(rowNum, colNum, value);
                 }
                 else if (row[colNum] !== '.') {
@@ -217,7 +217,7 @@ export default class SudokuSolver9 implements ISudokuSolver {
         }
     }
 
-    private findingMissingValueAndOffset(array1To9: Array<Board9Char>): {value: Suduko9Char, offset: number} {
+    private findingMissingValueAndOffset(array1To9: Array<Board9Char>): {value: Sudoku9Char, offset: number} {
         let total = 0;
         let offset = -1;
         for (let cnt = 0; cnt < array1To9.length; cnt++) {
@@ -233,7 +233,7 @@ export default class SudokuSolver9 implements ISudokuSolver {
         }
 
         return { 
-            value: ("" + (45 - total) as Suduko9Char),
+            value: ("" + (45 - total) as Sudoku9Char),
             offset 
         }
     }
@@ -261,7 +261,7 @@ export default class SudokuSolver9 implements ISudokuSolver {
      * @returns true if can be added to the grid without breaking constraints
      *          false if adding to grid would be invalid 
      */
-    private isValidNewEntry (rowNum:number, colNum:number, value:Suduko9Char, reason?: string):boolean {
+    private isValidNewEntry (rowNum:number, colNum:number, value:Sudoku9Char, reason?: string):boolean {
         const valueOffset = parseInt(value as string) - 1;
 
         if (!this.isValidCharacter(value) || this.numInWhichCol.hasInitializedValue(valueOffset, rowNum) 
@@ -387,7 +387,7 @@ export default class SudokuSolver9 implements ISudokuSolver {
      *          1 when board is updated 
      */
     private solveForTarget(target: number) {
-        const targetSuduko9Char = ("" + target) as Suduko9Char;
+        const targetSudoku9Char = ("" + target) as Sudoku9Char;
         const valueOffset = target - 1;  
         const alreadyFound = this.numsQuantity[valueOffset]!;
         // console.log(`REMOVE ME solving for ${target} left to find ${9 - alreadyFound}`);
@@ -405,7 +405,7 @@ export default class SudokuSolver9 implements ISudokuSolver {
             const missingRow = this.numInWhichCol.getFirstUninitializedIndexOfSlice(valueOffset); //  indexOfUnitializeOffset(whichColArray);
             const missingCol = this.numInWhichRow.getFirstUninitializedIndexOfSlice(valueOffset); // indexOfUnitializeOffset(whichRowArray);
             // console.log(`REMOVE ME one left [${whichRowArray}], ${missingRow}, [${whichColArray}], ${missingCol}, ${target}`);
-            this.addEntry(missingRow, missingCol, targetSuduko9Char, 'value complete');
+            this.addEntry(missingRow, missingCol, targetSudoku9Char, 'value complete');
             return 1;
         }
 
@@ -455,10 +455,10 @@ export default class SudokuSolver9 implements ISudokuSolver {
                             
                             // confirm that the entry we are about to add is valid
 
-                            if (!this.isValidNewEntry(rowCnt, colCnt, targetSuduko9Char, 'inferred')) {
+                            if (!this.isValidNewEntry(rowCnt, colCnt, targetSudoku9Char, 'inferred')) {
                                 return -1;
                             }
-                            this.addEntry(rowCnt, colCnt, targetSuduko9Char, 'inferred');
+                            this.addEntry(rowCnt, colCnt, targetSudoku9Char, 'inferred');
                             retVal = 1;                            
                         }
                         // else if (target === 1 && rowCnt === 8 && colCnt === 6) {
@@ -492,7 +492,7 @@ export default class SudokuSolver9 implements ISudokuSolver {
      * 
      * @returns -1 when invalid constraints
      *          0 when nothing updated
-     *          1 when suduko is completed
+     *          1 when sudoku is completed
      */
     private solveWithConstraints(): number {
         let updated = true;

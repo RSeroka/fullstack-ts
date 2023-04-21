@@ -1,5 +1,5 @@
 /**
- * ISudukoSolver interface 
+ * ISudokuSolver interface 
  */
 
 import type { Board9 } from "./board";
