@@ -7,17 +7,12 @@ import type { Server } from 'http';
 
 export default class SudokuExpressApp {
     private app: core.Express; 
-    private server: Server;
-    private port: number;
+    private server: Server | undefined;
+    private httpPort: number | undefined;
     private static readonly DEFAULT_PORT = 8080;
 
-    public constructor(port?: number) {
-        if (port === undefined) {
-            this.port = SudokuExpressApp.DEFAULT_PORT;
-        }
-        else {
-            this.port = port;
-        }
+    public constructor() {
+
 
         this.app = express();
 
@@ -26,28 +21,23 @@ export default class SudokuExpressApp {
         this.app.get('/', (req, res) => res.send('This is the sudoku-ts web app'));
 
         this.app.post('/echo', (req, res) => {
-            console.log('echo being called');
             res.json({...req.body,...{"added": true}});
         });
 
         this.app.post('/solve', (req, res) => {
 
-            const board: Board9 = [
-                ["5","3",".",".","7",".",".",".","."],
-                ["6",".",".","1","9","5",".",".","."],
-                [".","9","8",".",".",".",".","6","."],
-                ["8",".",".",".","6",".",".",".","3"],
-                ["4",".",".","8",".","3",".",".","1"],
-                ["7",".",".",".","2",".",".",".","6"],
-                [".","6",".",".",".",".","2","8","."],
-                [".",".",".","4","1","9",".",".","5"],
-                [".",".",".",".","8",".",".","7","9"]];
+            const board = req.body as Board9;
             const solver = new SudokuSolver9(board);
-            solver.solve();
-            res.json(board);
+            if (solver.solve()) {
+                res.json(board);
+            }
+            else {
+                res.status(400).json({error: -1, errormsg: "input board not solvable"});
+            }
+
         });
 
-        this.server = this.app.listen(this.port, () => console.log(`Sudoku app listening on port ${this.port}!`));
+
     }
 
 
@@ -56,8 +46,24 @@ export default class SudokuExpressApp {
         return this.app;
     }
 
+    public startHttpServer(port?: number) {
+        if (this.server === undefined) {
+            if (port === undefined) {
+                this.httpPort = SudokuExpressApp.DEFAULT_PORT;
+            }
+            else {
+                this.httpPort = port;
+            }
+
+            this.server = this.app.listen(this.httpPort, () => console.log(`Sudoku app listening on port ${this.httpPort}!`));
+        }
+    }
+
     public shutdown() {
-        this.server.close(() => `Sudoku app closing HTTP server on port ${this.port}`);
+        if (this.server !== undefined) {
+            console.log(`Sudoku app shutting down HTTP server on port ${this.httpPort}`)
+            this.server.close(() => `Sudoku app closed HTTP server on port ${this.httpPort}`);
+        }
     }
     
 

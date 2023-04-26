@@ -61,6 +61,7 @@ export default class SudokuSolver9 implements ISudokuSolver {
     private guesses = new Array<Guess>();
 
     public constructor(board: Board9) {
+
         this.output = new Array<Array<Board9Char>>(SudokuSolver9.SIZE);
         for (let outputRowNum = 0; outputRowNum < this.output.length; outputRowNum++) {
             this.output[outputRowNum] = new Array<Board9Char>(this.output.length);
@@ -83,7 +84,10 @@ export default class SudokuSolver9 implements ISudokuSolver {
         this.initializeBins();
     }
 
-    public solve(): void {
+    /**
+     * returns true when solved.  returns false when input board is invalid or can't be solved
+     */
+    public solve(): boolean {
 
         let solved = false;
         let invalid = false;
@@ -144,6 +148,8 @@ export default class SudokuSolver9 implements ISudokuSolver {
     
             }
         }
+
+        return solved ? true : false;
 
     }
 
