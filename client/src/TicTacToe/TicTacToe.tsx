@@ -7,7 +7,7 @@ type SquareParams = {
 }
 
 function Square({ value, onSquareClick }: SquareParams): JSX.Element {
-    return <button className="square" onClick={onSquareClick}>{value}</button>;
+    return <div className="square" onClick={onSquareClick}>{value}</div>;
 }
 
 type BoardParams = {
