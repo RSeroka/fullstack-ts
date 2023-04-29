@@ -9,7 +9,8 @@ export default class SudokuExpressApp extends ExpressApp {
 
 
     public constructor() {
-        super("Sudoku");
+        super("Sudoku", [{folderName: './client/build'}]);
+
 
         super.expressApp.post('/solve', (req, res) => {
 

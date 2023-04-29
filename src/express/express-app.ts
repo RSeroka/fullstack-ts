@@ -3,6 +3,15 @@ import express from 'express';
 import type * as core from 'express-serve-static-core';
 import type { Server } from 'http';
 
+/**
+ * pathName defaults to "/"
+ * folderName relative to the working directory of the process
+ */
+type ExpressAppStaticFilesConfig = Array<{
+    pathName? : string; 
+    folderName: string; 
+}>;
+
 export default class ExpressApp {
     private name: string;
     private app: core.Express; 
@@ -10,19 +19,28 @@ export default class ExpressApp {
     private httpPort: number | undefined;
     private static readonly DEFAULT_PORT = 8080;
 
-    public constructor(name?: string) {
+    public constructor(name?: string, staticFilesConfig?: ExpressAppStaticFilesConfig) {
         this.name = name ? name : 'Express';
 
         this.app = express();
 
         this.app.use(express.json());
 
-        this.app.get('/', (req, res) => res.send(`This is the ${this.name} web app`));
+        this.app.get('/info', (req, res) => res.send(`This is the ${this.name} web app.`));
 
         this.app.post('/echo', (req, res) => {
             res.json({...req.body,...{"added": true}});
         });
 
+        if (staticFilesConfig) {
+            for (let index = 0; index < staticFilesConfig.length; index++) {
+                const config = staticFilesConfig[index];
+                if (config) {
+                    const root = config.pathName ? config.pathName : '/';
+                    this.app.use(root, express.static(config?.folderName));
+                }
+            }
+        }
 
     }
  
