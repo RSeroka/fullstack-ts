@@ -1,13 +1,13 @@
 import React from 'react';
 // import logo from './logo.svg';
 import './App.css';
-import TicTocToe from './TicTacToe/TicTacToe';
+import Sudoku from './Sudoku/Sudoku';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <TicTocToe />
+        <Sudoku />
       </header>
     </div>
   );
