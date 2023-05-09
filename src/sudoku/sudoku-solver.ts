@@ -43,6 +43,22 @@ type Guess = {
     targetRowOrColumn: LeastLeftRowOrColumn;
 }
 
+type ColOrRowNum = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+type HistoricalEntry = {
+    entry: {
+        col: ColOrRowNum;
+        row: ColOrRowNum;
+        value: Sudoku9Char;
+        why: string; 
+    }
+};
+type HistoricalGuess = {
+    guess: {
+        pushOrPop: 'push' | 'pop';
+        stack: number;
+    }
+}
+
 export default class SudokuSolver9 implements ISudokuSolver {
     private static readonly SIZE = 9;
     private consoleLogging: boolean = false;
@@ -59,6 +75,10 @@ export default class SudokuSolver9 implements ISudokuSolver {
     private colsWith8 = new Array<number>();
     private sectionsWith8 = new Array<number>();
     private guesses = new Array<Guess>();
+    private _history = new Array<HistoricalEntry | HistoricalGuess>();
+    public get history() {
+        return this._history;
+    }
 
     public constructor(board: Board9) {
 
@@ -159,9 +179,13 @@ export default class SudokuSolver9 implements ISudokuSolver {
     }
 
     private addEntry(rowNum: number, colNum: number, value: Sudoku9Char, reason?: string) {
-        if (this.consoleLogging && reason !== undefined && reason.length > 0) {
-            console.log(`Adding (${colNum},${rowNum})=>${value} ${reason}`);
-        }
+        if (reason !== undefined && reason.length > 0) {
+            if (this.consoleLogging) {
+                console.log(`Adding (${colNum},${rowNum})=>${value} ${reason}`);
+            }
+            this.history.push({entry: {col: colNum as ColOrRowNum, row: rowNum as ColOrRowNum, value: value, why: reason}});
+        }       
+
 
         const valueOffset = parseInt(value as string) - 1;
         const sectionNumber = getSectionNumber9(rowNum,colNum);
@@ -631,14 +655,18 @@ export default class SudokuSolver9 implements ISudokuSolver {
         if (this.consoleLogging) {
             console.log(`Pushing Guess ${this.guesses.length + 1} type:${guess.targetRowOrColumn.type} row:${guess.row} col:${guess.col} value:${guess.value} try:${guess.try+1} of ${guess.targetRowOrColumn.missingEntries.length}`);
         }
+        this.history.push({guess: {pushOrPop: "push", stack: this.guesses.length + 1}});
         this.guesses.push(guess);
     }
 
     private popGuess():Guess | undefined {
         const guess = this.guesses.pop();
 
-        if (guess != undefined && this.consoleLogging) {
-            console.log(`Popping Guess ${this.guesses.length} type:${guess.targetRowOrColumn.type} row:${guess.row} col:${guess.col} value:${guess.value} try:${guess.try+1} of ${guess.targetRowOrColumn.missingEntries!.length}`);
+        if (guess != undefined) {
+            if (this.consoleLogging) {
+                console.log(`Popping Guess ${this.guesses.length + 1} type:${guess.targetRowOrColumn.type} row:${guess.row} col:${guess.col} value:${guess.value} try:${guess.try+1} of ${guess.targetRowOrColumn.missingEntries!.length}`);
+            }
+            this.history.push({guess: {pushOrPop: 'pop', stack: this.guesses.length + 1}});
         }
         return guess;
     }

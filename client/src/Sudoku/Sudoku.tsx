@@ -1,5 +1,6 @@
 import { MouseEventHandler, useState } from 'react';
 import './Sudoku.css';
+import { SolveResponse as SudokuSolveResponse, HistoricalEntry, HistoricalGuess}  from './sudoku-service';
 
 type SquareParams = {
     value?: string;
@@ -118,21 +119,13 @@ function Board({squares, squaresStyling, onPlay }: BoardParams): JSX.Element {
 
 
 
-export default function Game() {
+export default function Game(): JSX.Element {
+    console.log('REMOVE ME Game');
 
-    const initialValues = [
-        ["5", "3",    ,    , "7",    ,    ,    ,    ],// eslint-disable-line
-        ["6",    ,    , "1", "9", "5",    ,    ,    ],// eslint-disable-line
-        [   , "9", "8",    ,    ,    ,    , "6",    ],// eslint-disable-line
-        ["8",    ,    ,    , "6",    ,    ,    , "3"],// eslint-disable-line
-        ["4",    ,    , "8",    , "3",    ,    , "1"],// eslint-disable-line
-        ["7",    ,    ,    , "2",    ,    ,    , "6"],// eslint-disable-line
-        [   , "6",    ,    ,    ,    , "2", "8",    ],// eslint-disable-line
-        [   ,    ,    , "4", "1", "9",    ,    , "5"],// eslint-disable-line
-        [   ,    ,    ,    , "8",    ,    , "7", "9"]]; // eslint-disable-line
-
+    const initialValues: Array<Array<string|undefined>> = new Array<Array<string|undefined>>(9);
     const initialStyling = new Array<Array<Array<string>>>(9);
     for (let row = 0; row < 9; row++) {
+        initialValues[row] = new Array<string|undefined>(9);
         initialStyling[row] = new Array<Array<string>>(9);
         for (let col = 0; col < 9; col++) {
             initialStyling[row][col] = new Array<string>(0);
@@ -156,7 +149,75 @@ export default function Game() {
         setCurrentMove(nextMove);
     }
 
+    function start(): void {
+        console.log('Game Start');
+        const startValues: Array<Array<string|undefined>> = [
+            ["5", "3",    ,    , "7",    ,    ,    ,    ],// eslint-disable-line
+            ["6",    ,    , "1", "9", "5",    ,    ,    ],// eslint-disable-line
+            [   , "9", "8",    ,    ,    ,    , "6",    ],// eslint-disable-line
+            ["8",    ,    ,    , "6",    ,    ,    , "3"],// eslint-disable-line
+            ["4",    ,    , "8",    , "3",    ,    , "1"],// eslint-disable-line
+            ["7",    ,    ,    , "2",    ,    ,    , "6"],// eslint-disable-line
+            [   , "6",    ,    ,    ,    , "2", "8",    ],// eslint-disable-line
+            [   ,    ,    , "4", "1", "9",    ,    , "5"],// eslint-disable-line
+            [   ,    ,    ,    , "8",    ,    , "7", "9"]]; // eslint-disable-line
 
+        const nextHistory = [...valuesHistory.slice(0, 1), startValues];
+        const nextStyling = [...stylingHistory.slice(0, 1), initialStyling]; 
+        setValuesHistory(nextHistory);
+        setStylingHistory(nextStyling);
+        setCurrentMove(nextHistory.length - 1);
+        handleStartBoard(startValues);
+    }
+
+    async function handleStartBoard(initial: Array<Array<string|undefined>>) {
+
+        fetch('/sudoku/solve', {
+            method: 'POST', 
+            body: JSON.stringify(initial), 
+            headers: { 'Content-Type': 'application/json'}
+        }).then((response) => response.json())
+        .then((solvedObject) => {
+            console.log(`${JSON.stringify(solvedObject)}`);
+            const solved = solvedObject.history as SudokuSolveResponse;
+
+            let lastSquares = initial;
+            let lastStyling = stylingHistory[0];
+            const additionalValuesHistory: Array<Array<Array<string|undefined>>> = [];
+            const additionalStylingHistory: Array<Array<Array<Array<string>>>> = [];
+            for (let index = 0; index < solved.length; index++) {
+                const curr = solved[index];
+                const entry = (curr as HistoricalEntry).entry;
+                // const guess = (curr as HistoricalGuess).guess;
+                if (entry) {
+
+                    const nextSquares = new Array<Array<string|undefined>>(9);
+                    const nextStyling = new Array<Array<Array<string>>>(9);
+                    for (let row = 0; row < 9; row++) {
+                        nextSquares[row] = lastSquares[row].slice();
+                        nextStyling[row] = lastStyling[row].slice();
+                        for (let col = 0; col < 9; col++) {
+                            nextStyling[row][col] = lastStyling[row][col].slice();
+                        }
+                    }
+                    nextSquares[entry.row][entry.col] = entry.value;
+                    // TODO nextStyling[entry.row][entry.col] = ....;
+                    lastSquares = nextSquares;
+                    lastStyling = nextStyling;
+                    additionalValuesHistory.push(nextSquares);
+                    additionalStylingHistory.push(nextStyling);
+                }              
+            }
+
+            const nextHistory = [...valuesHistory, ...additionalValuesHistory];
+            const nextStyling = [...stylingHistory, ...additionalStylingHistory]; 
+            setValuesHistory(nextHistory);
+            setStylingHistory(nextStyling);
+        })
+        .catch((reason:any) => {
+            console.error(`Failed to retrieve solved sudoku reason:${reason}`);
+        })
+    }
 
     return (
 
@@ -165,8 +226,10 @@ export default function Game() {
                 <Board squares={currentValues} squaresStyling={currentStyling} onPlay={handlePlay} />
             </div>
             <div className="game-info">
-                <button className="game-nav-button" disabled={currentMove === 0} onClick={() => jumpTo(0)}>Initial</button>
-                <button className="game-nav-button" disabled={currentMove === 0} onClick={() => jumpTo(currentMove - 1)}>Prior</button>
+                <button className="game-nav-button" disabled={currentMove !== 0} onClick={() => start()}>Start</button>
+                <button className="game-nav-button" disabled={currentMove < 2} onClick={() => jumpTo(1)}>Initial</button>
+                <button className="game-nav-button" disabled={currentMove < 2} onClick={() => jumpTo(currentMove - 1)}>Prior</button>
+                <button className="game-nav-button" disabled={currentMove === 0 || currentMove >= valuesHistory.length - 1} onClick={() => jumpTo(currentMove + 1)}>Next</button>
             </div>
         </div>
     );

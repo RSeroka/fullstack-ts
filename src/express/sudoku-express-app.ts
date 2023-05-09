@@ -12,12 +12,12 @@ export default class SudokuExpressApp extends ExpressApp {
         super("Sudoku", [{folderName: './client/build'}]);
 
 
-        super.expressApp.post('/solve', (req, res) => {
+        super.expressApp.post('/sudoku/solve', (req, res) => {
 
             const board = req.body as Board9;
             const solver = new SudokuSolver9(board);
             if (solver.solve()) {
-                res.json(board);
+                res.json({board: board, history: solver.history});
             }
             else {
                 res.status(400).json({error: -1, errormsg: "input board not solvable"});

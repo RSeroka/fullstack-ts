@@ -53,7 +53,7 @@ describe('Sudoku Express App', () => {
                     assert.equal(res.status, 200, "solve response status is not 200"); // should.have.status(200);
                     assert.equal(res.type, "application/json", "solve response type is not application/json");
                     const respContent = res.body;
-                    assert.deepEqual(respContent, expectedResult, "solve response content not expected");
+                    assert.deepEqual(respContent.board, expectedResult, "solve response content not expected");
                     done();
                 });
         });
