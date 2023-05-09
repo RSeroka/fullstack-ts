@@ -185,6 +185,7 @@ export default function Game(): JSX.Element {
             let lastStyling = stylingHistory[0];
             const additionalValuesHistory: Array<Array<Array<string|undefined>>> = [];
             const additionalStylingHistory: Array<Array<Array<Array<string>>>> = [];
+            let lastEntry: HistoricalEntry|undefined;
             for (let index = 0; index < solved.length; index++) {
                 const curr = solved[index];
                 const entry = (curr as HistoricalEntry).entry;
@@ -201,6 +202,30 @@ export default function Game(): JSX.Element {
                         }
                     }
                     nextSquares[entry.row][entry.col] = entry.value;
+                    switch (entry.why) {
+                        case 'inferred':
+                            nextStyling[entry.row][entry.col].push("square--inferred", "square--last");
+                            break;
+                        case 'value complete':
+                            nextStyling[entry.row][entry.col].push("square--value-complete", "square--last");
+                            break;
+                        case 'row complete':
+                            nextStyling[entry.row][entry.col].push("square--row-complete", "square--last");
+                            break;
+                        case 'column complete':
+                            nextStyling[entry.row][entry.col].push("square--column-complete", "square--last");
+                            break;
+                        case 'section complete':
+                            nextStyling[entry.row][entry.col].push("square--section-complete", "square--last");
+                            break;
+                        default: 
+                            // guess *
+                            break;
+                    }
+                    if (lastEntry) {
+                        nextStyling[lastEntry.entry.row][lastEntry.entry.col].pop(); // remove "square--last"
+                    }
+                    lastEntry = curr as HistoricalEntry;
                     // TODO nextStyling[entry.row][entry.col] = ....;
                     lastSquares = nextSquares;
                     lastStyling = nextStyling;
@@ -209,8 +234,8 @@ export default function Game(): JSX.Element {
                 }              
             }
 
-            const nextHistory = [...valuesHistory, ...additionalValuesHistory];
-            const nextStyling = [...stylingHistory, ...additionalStylingHistory]; 
+            const nextHistory = [...valuesHistory, initial, ...additionalValuesHistory];
+            const nextStyling = [...stylingHistory, stylingHistory[0], ...additionalStylingHistory]; 
             setValuesHistory(nextHistory);
             setStylingHistory(nextStyling);
         })

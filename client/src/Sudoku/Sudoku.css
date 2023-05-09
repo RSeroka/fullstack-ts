@@ -18,6 +18,19 @@
   background-color: goldenrod;
 }
 
+.square--inferred {
+  background-color: beige;
+}
+
+.square--column-complete, .square--row-complete, .square--section-complete, .square--value-complete {
+  background-color: lightgreen;
+}
+
+.square--last {
+  color: red;
+}
+
+
 .section {
   border: 3px solid #999;
   float: left;
