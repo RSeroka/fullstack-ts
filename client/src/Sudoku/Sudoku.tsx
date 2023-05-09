@@ -117,7 +117,11 @@ function Board({squares, squaresStyling, onPlay }: BoardParams): JSX.Element {
     );
 }
 
-
+type GameState = {
+    values: Array<Array<string | undefined>>;
+    styling: Array<Array<Array<string>>>;
+    status: string;
+};
 
 export default function Game(): JSX.Element {
     console.log('REMOVE ME Game');
@@ -131,18 +135,21 @@ export default function Game(): JSX.Element {
             initialStyling[row][col] = new Array<string>(0);
         }
     }
-    const [valuesHistory, setValuesHistory] = useState([initialValues]);
-    const [stylingHistory, setStylingHistory] = useState([initialStyling]);
+    // const [valuesHistory, setValuesHistory] = useState([initialValues]);
+    // const [stylingHistory, setStylingHistory] = useState([initialStyling]);
+    const initialGameState: GameState = {values: initialValues, styling: initialStyling, status: "empty board"};
+    const [gameStateHistory, setGameStateHistory] = useState([initialGameState]);
     const [currentMove, setCurrentMove] = useState<number>(0);
-    const currentValues = valuesHistory[currentMove];
-    const currentStyling = stylingHistory[currentMove];
+    // const currentValues = valuesHistory[currentMove];
+    // const currentStyling = stylingHistory[currentMove];
+    const currentGameState = gameStateHistory[currentMove];
 
     function handlePlay(nextSquares: Array<Array<string | undefined>>, nextSquaresStyling: Array<Array<Array<string>>>): void {
-        const nextHistory = [...valuesHistory.slice(0, currentMove + 1), nextSquares];
-        const nextStyling = [...stylingHistory.slice(0, currentMove + 1), nextSquaresStyling]; 
-        setValuesHistory(nextHistory);
-        setStylingHistory(nextStyling);
-        setCurrentMove(nextHistory.length - 1);
+        // const nextHistory = [...valuesHistory.slice(0, currentMove + 1), nextSquares];
+        // const nextStyling = [...stylingHistory.slice(0, currentMove + 1), nextSquaresStyling]; 
+        // setValuesHistory(nextHistory);
+        // setStylingHistory(nextStyling);
+        // setCurrentMove(nextHistory.length - 1);
     }
 
     function jumpTo(nextMove: number): void {
@@ -162,82 +169,80 @@ export default function Game(): JSX.Element {
             [   ,    ,    , "4", "1", "9",    ,    , "5"],// eslint-disable-line
             [   ,    ,    ,    , "8",    ,    , "7", "9"]]; // eslint-disable-line
 
-        const nextHistory = [...valuesHistory.slice(0, 1), startValues];
-        const nextStyling = [...stylingHistory.slice(0, 1), initialStyling]; 
-        setValuesHistory(nextHistory);
-        setStylingHistory(nextStyling);
-        setCurrentMove(nextHistory.length - 1);
         handleStartBoard(startValues);
     }
 
-    async function handleStartBoard(initial: Array<Array<string|undefined>>) {
+    async function handleStartBoard(initialValues: Array<Array<string|undefined>>) {
 
         fetch('/sudoku/solve', {
             method: 'POST', 
-            body: JSON.stringify(initial), 
+            body: JSON.stringify(initialValues), 
             headers: { 'Content-Type': 'application/json'}
         }).then((response) => response.json())
         .then((solvedObject) => {
             console.log(`${JSON.stringify(solvedObject)}`);
             const solved = solvedObject.history as SudokuSolveResponse;
 
-            let lastSquares = initial;
-            let lastStyling = stylingHistory[0];
-            const additionalValuesHistory: Array<Array<Array<string|undefined>>> = [];
-            const additionalStylingHistory: Array<Array<Array<Array<string>>>> = [];
+            let lastSquares = initialValues;
+            let lastStyling = initialStyling;
+            const additionalGameStateHistory: Array<GameState> = [{
+                values: initialValues,
+                styling: initialStyling,
+                status: 'new game'
+            } ];
             let lastEntry: HistoricalEntry|undefined;
             for (let index = 0; index < solved.length; index++) {
                 const curr = solved[index];
                 const entry = (curr as HistoricalEntry).entry;
                 // const guess = (curr as HistoricalGuess).guess;
                 if (entry) {
-
-                    const nextSquares = new Array<Array<string|undefined>>(9);
-                    const nextStyling = new Array<Array<Array<string>>>(9);
+                    const nextGameState: GameState = {
+                        values: new Array<Array<string|undefined>>(9),
+                        styling: new Array<Array<Array<string>>>(9),
+                        status: 'TBD'
+                    }
                     for (let row = 0; row < 9; row++) {
-                        nextSquares[row] = lastSquares[row].slice();
-                        nextStyling[row] = lastStyling[row].slice();
+                        nextGameState.values[row] = lastSquares[row].slice();
+                        nextGameState.styling[row] = lastStyling[row].slice();
                         for (let col = 0; col < 9; col++) {
-                            nextStyling[row][col] = lastStyling[row][col].slice();
+                            nextGameState.styling[row][col] = lastStyling[row][col].slice();
                         }
                     }
-                    nextSquares[entry.row][entry.col] = entry.value;
+                    nextGameState.values[entry.row][entry.col] = entry.value;
                     switch (entry.why) {
                         case 'inferred':
-                            nextStyling[entry.row][entry.col].push("square--inferred", "square--last");
+                            nextGameState.styling[entry.row][entry.col].push("square--inferred", "square--last");
                             break;
                         case 'value complete':
-                            nextStyling[entry.row][entry.col].push("square--value-complete", "square--last");
+                            nextGameState.styling[entry.row][entry.col].push("square--value-complete", "square--last");
                             break;
                         case 'row complete':
-                            nextStyling[entry.row][entry.col].push("square--row-complete", "square--last");
+                            nextGameState.styling[entry.row][entry.col].push("square--row-complete", "square--last");
                             break;
                         case 'column complete':
-                            nextStyling[entry.row][entry.col].push("square--column-complete", "square--last");
+                            nextGameState.styling[entry.row][entry.col].push("square--column-complete", "square--last");
                             break;
                         case 'section complete':
-                            nextStyling[entry.row][entry.col].push("square--section-complete", "square--last");
+                            nextGameState.styling[entry.row][entry.col].push("square--section-complete", "square--last");
                             break;
                         default: 
                             // guess *
                             break;
                     }
                     if (lastEntry) {
-                        nextStyling[lastEntry.entry.row][lastEntry.entry.col].pop(); // remove "square--last"
+                        nextGameState.styling[lastEntry.entry.row][lastEntry.entry.col].pop(); // remove "square--last"
                     }
                     lastEntry = curr as HistoricalEntry;
-                    // TODO nextStyling[entry.row][entry.col] = ....;
-                    lastSquares = nextSquares;
-                    lastStyling = nextStyling;
-                    additionalValuesHistory.push(nextSquares);
-                    additionalStylingHistory.push(nextStyling);
+                    lastSquares = nextGameState.values;
+                    lastStyling = nextGameState.styling;
+                    additionalGameStateHistory.push(nextGameState);
                 }              
             }
 
-            const nextHistory = [...valuesHistory, initial, ...additionalValuesHistory];
-            const nextStyling = [...stylingHistory, stylingHistory[0], ...additionalStylingHistory]; 
-            setValuesHistory(nextHistory);
-            setStylingHistory(nextStyling);
+            const nextGameStateHistory = [...gameStateHistory, ...additionalGameStateHistory];
+            setGameStateHistory(nextGameStateHistory);
+            setCurrentMove(1);
+
         })
         .catch((reason:any) => {
             console.error(`Failed to retrieve solved sudoku reason:${reason}`);
@@ -248,13 +253,13 @@ export default function Game(): JSX.Element {
 
         <div className="game">
             <div className="game-board">
-                <Board squares={currentValues} squaresStyling={currentStyling} onPlay={handlePlay} />
+                <Board squares={currentGameState.values} squaresStyling={currentGameState.styling} onPlay={handlePlay} />
             </div>
             <div className="game-info">
                 <button className="game-nav-button" disabled={currentMove !== 0} onClick={() => start()}>Start</button>
                 <button className="game-nav-button" disabled={currentMove < 2} onClick={() => jumpTo(1)}>Initial</button>
                 <button className="game-nav-button" disabled={currentMove < 2} onClick={() => jumpTo(currentMove - 1)}>Prior</button>
-                <button className="game-nav-button" disabled={currentMove === 0 || currentMove >= valuesHistory.length - 1} onClick={() => jumpTo(currentMove + 1)}>Next</button>
+                <button className="game-nav-button" disabled={currentMove === 0 || currentMove >= gameStateHistory.length - 1} onClick={() => jumpTo(currentMove + 1)}>Next</button>
             </div>
         </div>
     );
