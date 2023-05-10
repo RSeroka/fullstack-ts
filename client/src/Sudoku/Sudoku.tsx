@@ -124,8 +124,6 @@ type GameState = {
 };
 
 export default function Game(): JSX.Element {
-    console.log('REMOVE ME Game');
-
     const initialValues: Array<Array<string|undefined>> = new Array<Array<string|undefined>>(9);
     const initialStyling = new Array<Array<Array<string>>>(9);
     for (let row = 0; row < 9; row++) {
@@ -140,6 +138,7 @@ export default function Game(): JSX.Element {
     const initialGameState: GameState = {values: initialValues, styling: initialStyling, status: "empty board"};
     const [gameStateHistory, setGameStateHistory] = useState([initialGameState]);
     const [currentMove, setCurrentMove] = useState<number>(0);
+    const [inSolveQuery, setInSolveQuery] = useState<boolean>(false);
     // const currentValues = valuesHistory[currentMove];
     // const currentStyling = stylingHistory[currentMove];
     const currentGameState = gameStateHistory[currentMove];
@@ -173,6 +172,10 @@ export default function Game(): JSX.Element {
     }
 
     async function handleStartBoard(initialValues: Array<Array<string|undefined>>) {
+        if (inSolveQuery) {
+            return;
+        }
+        setInSolveQuery(true);
 
         fetch('/sudoku/solve', {
             method: 'POST', 
@@ -247,6 +250,9 @@ export default function Game(): JSX.Element {
         .catch((reason:any) => {
             console.error(`Failed to retrieve solved sudoku reason:${reason}`);
         })
+        .finally(() => {
+            setInSolveQuery(false);
+        });
     }
 
     return (
@@ -256,7 +262,7 @@ export default function Game(): JSX.Element {
                 <Board squares={currentGameState.values} squaresStyling={currentGameState.styling} onPlay={handlePlay} />
             </div>
             <div className="game-info">
-                <button className="game-nav-button" disabled={currentMove !== 0} onClick={() => start()}>Start</button>
+                <button className="game-nav-button" disabled={inSolveQuery || currentMove !== 0} onClick={() => start()}>Start</button>
                 <button className="game-nav-button" disabled={currentMove < 2} onClick={() => jumpTo(1)}>Initial</button>
                 <button className="game-nav-button" disabled={currentMove < 2} onClick={() => jumpTo(currentMove - 1)}>Prior</button>
                 <button className="game-nav-button" disabled={currentMove === 0 || currentMove >= gameStateHistory.length - 1} onClick={() => jumpTo(currentMove + 1)}>Next</button>
