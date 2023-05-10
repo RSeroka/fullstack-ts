@@ -23,7 +23,9 @@ type SquareCellParams = {
 
 function SquareCell({column, row, squares, squaresStyling, handleSquareClicked}: SquareCellParams): JSX.Element {
     return (
-        <Square value={squares[row][column]} modifierClassList={squaresStyling[row][column]} onSquareClick={() => handleSquareClicked(column, row)} />
+        <Square value={squares[row][column]} 
+        modifierClassList={squaresStyling[row][column]} 
+        onSquareClick={() => handleSquareClicked(column, row)} />
     )
 }
 
@@ -64,34 +66,12 @@ function Section({ colOffset, rowOffset, squares, squaresStyling, handleSquareCl
 type BoardParams = {
     squares: Array<Array<string | undefined>>,
     squaresStyling: Array<Array<Array<string>>>,
-    onPlay: (nextSquares: Array<Array<string | undefined>>, nextSquaresStyling: Array<Array<Array<string>>>) => void;
-
+    handleSquareClicked: (column: number, row: number) => void;
 }
 // ...
-function Board({squares, squaresStyling, onPlay }: BoardParams): JSX.Element {
+function Board({squares, squaresStyling, handleSquareClicked }: BoardParams): JSX.Element {
 
 
-
-    function handleSquareClicked(column: number, row: number) {
-
-        const nextSquares = new Array<Array<string | undefined>>();
-        for (let index = 0; index < squares.length; index++) {
-            nextSquares[index] = squares[index].slice();      
-        }
-
-        const nextSquaresStyling = new Array<Array<Array<string>>>(squaresStyling.length);
-        for (let cnt = 0; cnt < squaresStyling.length; cnt++) {
-            nextSquaresStyling[cnt] = new Array<Array<string>>(squaresStyling[cnt].length);
-            for (let inner = 0; inner < squaresStyling[cnt].length; inner++) {
-                nextSquaresStyling[cnt][inner] = squaresStyling[cnt][inner].slice();
-            }
-        }
-        nextSquares[row][column] = 'X';
-        nextSquaresStyling[row][column] = ['square--modified'];
-        onPlay(nextSquares, nextSquaresStyling);
-
-
-    }
 
     return (
         <>
@@ -129,27 +109,25 @@ export default function Game(): JSX.Element {
     for (let row = 0; row < 9; row++) {
         initialValues[row] = new Array<string|undefined>(9);
         initialStyling[row] = new Array<Array<string>>(9);
+        // gridToMoveNumMap[row] = new Array<number>(9);
         for (let col = 0; col < 9; col++) {
             initialStyling[row][col] = new Array<string>(0);
         }
     }
-    // const [valuesHistory, setValuesHistory] = useState([initialValues]);
-    // const [stylingHistory, setStylingHistory] = useState([initialStyling]);
-    const initialGameState: GameState = {values: initialValues, valuesStyling: initialStyling, status: "empty board", statusStyling: ""};
+
+    const initialGameState: GameState = {
+        values: initialValues, 
+        valuesStyling: initialStyling, 
+        status: "empty board", 
+        statusStyling: ""
+    };
     const [gameStateHistory, setGameStateHistory] = useState([initialGameState]);
     const [currentMove, setCurrentMove] = useState<number>(0);
     const [inSolveQuery, setInSolveQuery] = useState<boolean>(false);
-    // const currentValues = valuesHistory[currentMove];
-    // const currentStyling = stylingHistory[currentMove];
+    const [gridToMoveNumMap, setGridToMoveNumMap] = useState<Array<Array<number>>>(new Array<Array<number>>());
     const currentGameState = gameStateHistory[currentMove];
 
-    function handlePlay(nextSquares: Array<Array<string | undefined>>, nextSquaresStyling: Array<Array<Array<string>>>): void {
-        // const nextHistory = [...valuesHistory.slice(0, currentMove + 1), nextSquares];
-        // const nextStyling = [...stylingHistory.slice(0, currentMove + 1), nextSquaresStyling]; 
-        // setValuesHistory(nextHistory);
-        // setStylingHistory(nextStyling);
-        // setCurrentMove(nextHistory.length - 1);
-    }
+
 
     function jumpTo(nextMove: number): void {
         setCurrentMove(nextMove);
@@ -171,6 +149,15 @@ export default function Game(): JSX.Element {
         handleStartBoard(startValues);
     }
 
+    function handleSquareClicked(column: number, row: number) : void {
+        const nextMove = gridToMoveNumMap[row]?.[column];
+
+        if (nextMove !== undefined && nextMove !== currentMove) {
+            console.log(`Game handleSquareClicked(${column}, ${row}) gridToMoveNumMap:${nextMove}`);
+            setCurrentMove(nextMove);
+        }
+    }
+
     async function handleStartBoard(initialValues: Array<Array<string|undefined>>) {
         if (inSolveQuery) {
             return;
@@ -181,9 +168,16 @@ export default function Game(): JSX.Element {
             method: 'POST', 
             body: JSON.stringify(initialValues), 
             headers: { 'Content-Type': 'application/json'}
-        }).then((response) => response.json())
+        })
+        .then((response) => response.json())
         .then((solvedObject) => {
-            console.log(`${JSON.stringify(solvedObject)}`);
+            // reinitialize the gridToMoveNumMap
+            const baseMoveNumber = 1;
+            for (let row = 0; row < 9; row++) {
+                gridToMoveNumMap[row] = new Array<number>(9);
+                gridToMoveNumMap[row].fill(baseMoveNumber);
+            }
+            // console.log(`${JSON.stringify(solvedObject)}`);
             const solved = solvedObject.history as SudokuSolveResponse;
 
             let lastSquares = initialValues;
@@ -195,6 +189,7 @@ export default function Game(): JSX.Element {
                 statusStyling: ""
             } ];
             let lastEntry: HistoricalEntry|undefined;
+
             for (let index = 0; index < solved.length; index++) {
                 const curr = solved[index];
                 const entry = (curr as HistoricalEntry).entry;
@@ -213,6 +208,7 @@ export default function Game(): JSX.Element {
                             nextGameState.valuesStyling[row][col] = lastStyling[row][col].slice();
                         }
                     }
+                    gridToMoveNumMap[entry.row][entry.col] = baseMoveNumber + index + 1;
                     nextGameState.values[entry.row][entry.col] = entry.value;
                     nextGameState.status = entry.why;
                     switch (entry.why) {
@@ -252,6 +248,7 @@ export default function Game(): JSX.Element {
 
             const nextGameStateHistory = [...gameStateHistory, ...additionalGameStateHistory];
             setGameStateHistory(nextGameStateHistory);
+            setGridToMoveNumMap(gridToMoveNumMap);
             setCurrentMove(1);
 
         })
@@ -267,7 +264,7 @@ export default function Game(): JSX.Element {
 
         <div className="game">
             <div className="game-board">
-                <Board squares={currentGameState.values} squaresStyling={currentGameState.valuesStyling} onPlay={handlePlay} />
+                <Board squares={currentGameState.values} squaresStyling={currentGameState.valuesStyling} handleSquareClicked={handleSquareClicked} />
             </div>
             <div className="game-info">
                 <div>
