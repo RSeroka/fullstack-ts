@@ -49,7 +49,19 @@
 }
 
 .status {
-  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.status.status--modified {
+  color: goldenrod;
+}
+
+.status.status--inferred {
+  color: beige;
+}
+
+.status.status--column-complete, .status.status--row-complete, .status.status--section-complete, .status.status--value-complete {
+  color: lightgreen;
 }
 
 .board {
@@ -68,5 +80,7 @@
 }
 
 .game-info {
+  width:300px;
+  margin-top: 20px;
   margin-left: 20px;
 }

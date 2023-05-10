@@ -95,7 +95,6 @@ function Board({squares, squaresStyling, onPlay }: BoardParams): JSX.Element {
 
     return (
         <>
-            {/* <div className="status">{status}</div> */}
             <div className="board">
                 <div className="section-row">
                     <Section colOffset={0} rowOffset={0} handleSquareClicked={handleSquareClicked} squares={squares} squaresStyling={squaresStyling} />
@@ -119,8 +118,9 @@ function Board({squares, squaresStyling, onPlay }: BoardParams): JSX.Element {
 
 type GameState = {
     values: Array<Array<string | undefined>>;
-    styling: Array<Array<Array<string>>>;
+    valuesStyling: Array<Array<Array<string>>>;
     status: string;
+    statusStyling: string;
 };
 
 export default function Game(): JSX.Element {
@@ -135,7 +135,7 @@ export default function Game(): JSX.Element {
     }
     // const [valuesHistory, setValuesHistory] = useState([initialValues]);
     // const [stylingHistory, setStylingHistory] = useState([initialStyling]);
-    const initialGameState: GameState = {values: initialValues, styling: initialStyling, status: "empty board"};
+    const initialGameState: GameState = {values: initialValues, valuesStyling: initialStyling, status: "empty board", statusStyling: ""};
     const [gameStateHistory, setGameStateHistory] = useState([initialGameState]);
     const [currentMove, setCurrentMove] = useState<number>(0);
     const [inSolveQuery, setInSolveQuery] = useState<boolean>(false);
@@ -190,8 +190,9 @@ export default function Game(): JSX.Element {
             let lastStyling = initialStyling;
             const additionalGameStateHistory: Array<GameState> = [{
                 values: initialValues,
-                styling: initialStyling,
-                status: 'new game'
+                valuesStyling: initialStyling,
+                status: 'new game',
+                statusStyling: ""
             } ];
             let lastEntry: HistoricalEntry|undefined;
             for (let index = 0; index < solved.length; index++) {
@@ -201,43 +202,50 @@ export default function Game(): JSX.Element {
                 if (entry) {
                     const nextGameState: GameState = {
                         values: new Array<Array<string|undefined>>(9),
-                        styling: new Array<Array<Array<string>>>(9),
-                        status: 'TBD'
+                        valuesStyling: new Array<Array<Array<string>>>(9),
+                        status: '',
+                        statusStyling: ""
                     }
                     for (let row = 0; row < 9; row++) {
                         nextGameState.values[row] = lastSquares[row].slice();
-                        nextGameState.styling[row] = lastStyling[row].slice();
+                        nextGameState.valuesStyling[row] = lastStyling[row].slice();
                         for (let col = 0; col < 9; col++) {
-                            nextGameState.styling[row][col] = lastStyling[row][col].slice();
+                            nextGameState.valuesStyling[row][col] = lastStyling[row][col].slice();
                         }
                     }
                     nextGameState.values[entry.row][entry.col] = entry.value;
+                    nextGameState.status = entry.why;
                     switch (entry.why) {
                         case 'inferred':
-                            nextGameState.styling[entry.row][entry.col].push("square--inferred", "square--last");
+                            nextGameState.valuesStyling[entry.row][entry.col].push("square--inferred", "square--last");
+                            nextGameState.statusStyling = "status--inferred";
                             break;
                         case 'value complete':
-                            nextGameState.styling[entry.row][entry.col].push("square--value-complete", "square--last");
+                            nextGameState.valuesStyling[entry.row][entry.col].push("square--value-complete", "square--last");
+                            nextGameState.statusStyling = "status--value-complete";
                             break;
                         case 'row complete':
-                            nextGameState.styling[entry.row][entry.col].push("square--row-complete", "square--last");
+                            nextGameState.valuesStyling[entry.row][entry.col].push("square--row-complete", "square--last");
+                            nextGameState.statusStyling = "status--row-complete";
                             break;
                         case 'column complete':
-                            nextGameState.styling[entry.row][entry.col].push("square--column-complete", "square--last");
+                            nextGameState.valuesStyling[entry.row][entry.col].push("square--column-complete", "square--last");
+                            nextGameState.statusStyling = "status--column-complete";
                             break;
                         case 'section complete':
-                            nextGameState.styling[entry.row][entry.col].push("square--section-complete", "square--last");
+                            nextGameState.valuesStyling[entry.row][entry.col].push("square--section-complete", "square--last");
+                            nextGameState.statusStyling = "status--section-complete";
                             break;
                         default: 
                             // guess *
                             break;
                     }
                     if (lastEntry) {
-                        nextGameState.styling[lastEntry.entry.row][lastEntry.entry.col].pop(); // remove "square--last"
+                        nextGameState.valuesStyling[lastEntry.entry.row][lastEntry.entry.col].pop(); // remove "square--last"
                     }
                     lastEntry = curr as HistoricalEntry;
                     lastSquares = nextGameState.values;
-                    lastStyling = nextGameState.styling;
+                    lastStyling = nextGameState.valuesStyling;
                     additionalGameStateHistory.push(nextGameState);
                 }              
             }
@@ -259,13 +267,16 @@ export default function Game(): JSX.Element {
 
         <div className="game">
             <div className="game-board">
-                <Board squares={currentGameState.values} squaresStyling={currentGameState.styling} onPlay={handlePlay} />
+                <Board squares={currentGameState.values} squaresStyling={currentGameState.valuesStyling} onPlay={handlePlay} />
             </div>
             <div className="game-info">
-                <button className="game-nav-button" disabled={inSolveQuery || currentMove !== 0} onClick={() => start()}>Start</button>
-                <button className="game-nav-button" disabled={currentMove < 2} onClick={() => jumpTo(1)}>Initial</button>
-                <button className="game-nav-button" disabled={currentMove < 2} onClick={() => jumpTo(currentMove - 1)}>Prior</button>
-                <button className="game-nav-button" disabled={currentMove === 0 || currentMove >= gameStateHistory.length - 1} onClick={() => jumpTo(currentMove + 1)}>Next</button>
+                <div>
+                    <button className="game-nav-button" disabled={inSolveQuery || currentMove !== 0} onClick={() => start()}>Start</button>
+                    <button className="game-nav-button" disabled={currentMove < 2} onClick={() => jumpTo(1)}>Initial</button>
+                    <button className="game-nav-button" disabled={currentMove < 2} onClick={() => jumpTo(currentMove - 1)}>Prior</button>
+                    <button className="game-nav-button" disabled={currentMove === 0 || currentMove >= gameStateHistory.length - 1} onClick={() => jumpTo(currentMove + 1)}>Next</button>    
+                </div>
+                <div className={`status ${currentGameState.statusStyling}`}>{currentGameState.status}</div>
             </div>
         </div>
     );
