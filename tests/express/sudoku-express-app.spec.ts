@@ -47,7 +47,7 @@ describe('Sudoku Express App', () => {
                 ["2", "8", "7", "4", "1", "9", "6", "3", "5"],
                 ["3", "4", "5", "2", "8", "6", "1", "7", "9"]];
             chai.request(server)
-                .post('/solve')
+                .post('/sudoku/solve')
                 .send(input)
                 .end((err, res) => {
                     assert.equal(res.status, 200, "solve response status is not 200"); // should.have.status(200);
