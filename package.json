@@ -4,12 +4,13 @@
   "description": "",
   "main": "dist/src/express/server.js",
   "scripts": {
-    "clean": "rimraf ./dist",
-    "build": "tsc",
-    "test": "tsc && mocha \"dist/**/*.js\"",
-    "buildclient": "cd client && npm run build",
-    "rebuild:all": "npm run clean && concurrently -c auto \"npm:build\" \"npm:buildclient\"",
-    "express-server": "cd dist && node ./src/express/server.js"
+    "all-clean": "rimraf ./dist",
+    "server-build": "tsc",
+    "server-test": "tsc && mocha \"dist/**/*.js\"",
+    "client-build": "cd client && npm run build",
+    "all-rebuild": "npm run all-clean && concurrently -c auto \"npm:server-build\" \"npm:client-build\"",
+    "local-express-server": "node ./dist/src/express/server.js",
+    "docker-build": "docker build -t sudoku-ts ."
   },
   "author": "rseroka",
   "license": "UNLICENCED",
