@@ -84,3 +84,7 @@
   margin-top: 20px;
   margin-left: 20px;
 }
+
+.game__nav-button {
+  background-color: beige;
+}

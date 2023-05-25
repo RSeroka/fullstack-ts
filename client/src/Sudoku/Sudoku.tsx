@@ -2,6 +2,10 @@ import { MouseEventHandler, useState } from 'react';
 import './Sudoku.css';
 import { SolveResponse as SudokuSolveResponse, HistoricalEntry, HistoricalGuess}  from './sudoku-service';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // REMOVE ME
+import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
+
+
 type SquareParams = {
     value?: string;
     modifierClassList?: Array<String>;
@@ -268,10 +272,19 @@ export default function Game(): JSX.Element {
             </div>
             <div className="game-info">
                 <div>
-                    <button className="game-nav-button" disabled={inSolveQuery || currentMove !== 0} onClick={() => start()}>Start</button>
-                    <button className="game-nav-button" disabled={currentMove < 2} onClick={() => jumpTo(1)}>Initial</button>
-                    <button className="game-nav-button" disabled={currentMove < 2} onClick={() => jumpTo(currentMove - 1)}>Prior</button>
-                    <button className="game-nav-button" disabled={currentMove === 0 || currentMove >= gameStateHistory.length - 1} onClick={() => jumpTo(currentMove + 1)}>Next</button>    
+                    <button className="game__nav-button" disabled={inSolveQuery || currentMove !== 0} onClick={() => start()}>Start</button>
+                    <button className="game__nav-button" disabled={currentMove < 2} onClick={() => jumpTo(1)}>
+                        <FontAwesomeIcon icon={icon({name: 'backward-fast', style: 'solid'})} /> <br />
+                        Initial
+                    </button>
+                    <button className="game__nav-button" disabled={currentMove < 2} onClick={() => jumpTo(currentMove - 1)}>
+                        <FontAwesomeIcon icon={icon({name: 'backward-step', style: 'solid'})} /> <br />
+                        Prior
+                    </button>
+                    <button className="game__nav-button" disabled={currentMove === 0 || currentMove >= gameStateHistory.length - 1} onClick={() => jumpTo(currentMove + 1)}>
+                        <FontAwesomeIcon icon={icon({name: 'forward-step', style: 'solid'})} /> <br />
+                        Next
+                    </button>    
                 </div>
                 <div className={`status ${currentGameState.statusStyling}`}>{currentGameState.status}</div>
             </div>
