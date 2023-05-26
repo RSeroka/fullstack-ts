@@ -1,10 +1,7 @@
-import { MouseEventHandler, useState } from 'react';
+import React, { MouseEventHandler, useState } from 'react';
 import './Sudoku.css';
 import { SolveResponse as SudokuSolveResponse, HistoricalEntry, HistoricalGuess}  from './sudoku-service';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // REMOVE ME
-import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
-
+import FontAwesomeIconElementFactory from '../FontAwesomeFacade/FontAwesomeElementFactory';
 
 type SquareParams = {
     value?: string;
@@ -98,6 +95,34 @@ function Board({squares, squaresStyling, handleSquareClicked }: BoardParams): JS
             </div>
         </>
     );
+}
+
+type GameNavButtonState = {
+    label?: string;
+    faIconName?: string;
+    clickHandler?: MouseEventHandler<HTMLElement>;
+    disabled?: boolean;
+}
+class GameNavButton extends  React.Component<GameNavButtonState> {
+    private renderFAIcon(): JSX.Element {
+        if (this.props.faIconName) {
+            return <>{FontAwesomeIconElementFactory.create(this.props.faIconName)}<br /></>;
+        }
+        else {
+            return (<></>) ;
+        }
+
+    }
+    render() {
+        const buttonDisabled = this.props.disabled !== undefined ? this.props.disabled === true : this.props.disabled !== true;
+        return (
+            <button className="game__nav-button" disabled={buttonDisabled} onClick={this.props.clickHandler}>
+                {this.renderFAIcon()}
+                {this.props.label}
+            </button>
+        );
+    }
+
 }
 
 type GameState = {
@@ -271,20 +296,13 @@ export default function Game(): JSX.Element {
                 <Board squares={currentGameState.values} squaresStyling={currentGameState.valuesStyling} handleSquareClicked={handleSquareClicked} />
             </div>
             <div className="game-info">
+
                 <div>
-                    <button className="game__nav-button" disabled={inSolveQuery || currentMove !== 0} onClick={() => start()}>Start</button>
-                    <button className="game__nav-button" disabled={currentMove < 2} onClick={() => jumpTo(1)}>
-                        <FontAwesomeIcon icon={icon({name: 'backward-fast', style: 'solid'})} /> <br />
-                        Initial
-                    </button>
-                    <button className="game__nav-button" disabled={currentMove < 2} onClick={() => jumpTo(currentMove - 1)}>
-                        <FontAwesomeIcon icon={icon({name: 'backward-step', style: 'solid'})} /> <br />
-                        Prior
-                    </button>
-                    <button className="game__nav-button" disabled={currentMove === 0 || currentMove >= gameStateHistory.length - 1} onClick={() => jumpTo(currentMove + 1)}>
-                        <FontAwesomeIcon icon={icon({name: 'forward-step', style: 'solid'})} /> <br />
-                        Next
-                    </button>    
+                    <GameNavButton disabled={inSolveQuery || currentMove !== 0} clickHandler={() => start()} label="Start" />
+                    <GameNavButton disabled={currentMove < 2} clickHandler={() => jumpTo(1)} label="Initial" faIconName="backward-fast" />
+                    <GameNavButton disabled={currentMove < 2} clickHandler={() => jumpTo(currentMove - 1)} label="Prior" faIconName="backward-step" />
+                    <GameNavButton disabled={currentMove === 0 || currentMove >= gameStateHistory.length - 1} 
+                        clickHandler={() => jumpTo(currentMove + 1)} label="Next" faIconName="forward-step" />
                 </div>
                 <div className={`status ${currentGameState.statusStyling}`}>{currentGameState.status}</div>
             </div>
