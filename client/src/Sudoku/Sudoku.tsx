@@ -114,7 +114,7 @@ class GameNavButton extends  React.Component<GameNavButtonState> {
 
     }
     render() {
-        const buttonDisabled = this.props.disabled !== undefined ? this.props.disabled === true : this.props.disabled !== true;
+        const buttonDisabled = this.props.disabled !== undefined ? this.props.disabled === true : false;
         return (
             <button className="game__nav-button" disabled={buttonDisabled} onClick={this.props.clickHandler}>
                 {this.renderFAIcon()}
@@ -157,14 +157,20 @@ export default function Game(): JSX.Element {
     const currentGameState = gameStateHistory[currentMove];
 
 
+    function resetBoard(): void {
+        setGameStateHistory([initialGameState]);
+        setCurrentMove(0);
+        setInSolveQuery(false);
+        setGridToMoveNumMap([]);
+    }
 
     function jumpTo(nextMove: number): void {
         setCurrentMove(nextMove);
     }
 
-    function start(): void {
+    function start(boardName?: string): void {
         console.log('Game Start');
-        const startValues: Array<Array<string|undefined>> = [
+        const easyValues: Array<Array<string|undefined>> = [
             ["5", "3",    ,    , "7",    ,    ,    ,    ],// eslint-disable-line
             ["6",    ,    , "1", "9", "5",    ,    ,    ],// eslint-disable-line
             [   , "9", "8",    ,    ,    ,    , "6",    ],// eslint-disable-line
@@ -175,7 +181,43 @@ export default function Game(): JSX.Element {
             [   ,    ,    , "4", "1", "9",    ,    , "5"],// eslint-disable-line
             [   ,    ,    ,    , "8",    ,    , "7", "9"]]; // eslint-disable-line
 
-        handleStartBoard(startValues);
+        const book160Values = [
+            ["2",   ,"4",  "1",   ,   ,  "5",   ,   ],// eslint-disable-line
+            [   ,   ,"5",     ,   ,   ,     ,"9","7"],// eslint-disable-line
+            [   ,"3",   ,  "5",   ,   ,     ,   ,"1"],// eslint-disable-line
+    
+            [   ,   ,   ,     ,   ,"1",     ,   ,"2"],// eslint-disable-line
+            [   ,"8",   ,     ,   ,   ,     ,"6",   ],// eslint-disable-line
+            ["4",   ,   ,  "8",   ,   ,     ,   ,   ],// eslint-disable-line
+    
+            ["6",   ,   ,     ,   ,"2",     ,"1",   ],// eslint-disable-line
+            ["5","9",   ,     ,   ,   ,  "3",   ,   ],// eslint-disable-line
+            [   ,   ,"7",     ,   ,"3",  "4",   ,"6"]];// eslint-disable-line
+
+        const complexValues = [
+            [   ,   ,"9","7","4","8",   ,   ,   ],// eslint-disable-line
+            ["7",   ,   ,   ,   ,   ,   ,   ,   ],// eslint-disable-line
+            [   ,"2",   ,"1",   ,"9",   ,   ,   ],// eslint-disable-line
+            [   ,   ,"7",   ,   ,   ,"2","4",   ],// eslint-disable-line
+            [   ,"6","4",   ,"1",   ,"5","9",   ],// eslint-disable-line
+            [   ,"9","8",   ,   ,   ,"3",   ,   ],// eslint-disable-line
+            [   ,   ,   ,"8",   ,"3",   ,"2",   ],// eslint-disable-line
+            [   ,   ,   ,   ,   ,   ,   ,   ,"6"],// eslint-disable-line
+            [   ,   ,   ,"2","7","5","9",   ,   ]];// eslint-disable-line
+
+        switch(boardName) {
+            case 'complex': 
+                handleStartBoard(complexValues);
+                break;
+            case 'book160':
+                handleStartBoard(book160Values);
+                break;
+            case 'easy':
+            default:
+                handleStartBoard(easyValues);
+                break;
+        }
+
     }
 
     function handleSquareClicked(column: number, row: number) : void {
@@ -370,6 +412,39 @@ export default function Game(): JSX.Element {
         });
     }
 
+
+    function renderGameNav() : JSX.Element {
+
+
+        return (
+            <div>
+                {!inSolveQuery && currentMove === 0 ? (
+                    <>
+                        {/* <GameNavButton disabled={false} clickHandler={() => start()} label="Start" /> */}
+
+                            <select onChange={(ev) => start(ev.target.value)}>
+                                <option value="nochoice">Pick A Board</option>
+                                <option value="easy">Easy</option>
+                                <option value="book160">Complex</option>
+                                <option value="complex">Complex 2</option>
+                            </select>
+
+
+                    </>
+                ): (
+                    <>
+                        <GameNavButton faIconName="play" label="New Board" clickHandler={()=>resetBoard()}/>
+                        <GameNavButton disabled={currentMove < 2} clickHandler={() => jumpTo(1)} label="Reset Board" faIconName="backward-fast" />
+                        <GameNavButton disabled={currentMove < 2} clickHandler={() => jumpTo(currentMove - 1)} label="Prior" faIconName="backward-step" />
+                        <GameNavButton disabled={currentMove === 0 || currentMove >= gameStateHistory.length - 1} 
+                            clickHandler={() => jumpTo(currentMove + 1)} label="Next" faIconName="forward-step" />
+                    </>
+                )}
+
+            </div>
+        );
+    }
+
     return (
 
         <div className="game">
@@ -377,14 +452,14 @@ export default function Game(): JSX.Element {
                 <Board squares={currentGameState.values} squaresStyling={currentGameState.valuesStyling} handleSquareClicked={handleSquareClicked} />
             </div>
             <div className="game-info">
-
-                <div>
+                {renderGameNav()}
+                {/* <div>
                     <GameNavButton disabled={inSolveQuery || currentMove !== 0} clickHandler={() => start()} label="Start" />
                     <GameNavButton disabled={currentMove < 2} clickHandler={() => jumpTo(1)} label="Initial" faIconName="backward-fast" />
                     <GameNavButton disabled={currentMove < 2} clickHandler={() => jumpTo(currentMove - 1)} label="Prior" faIconName="backward-step" />
                     <GameNavButton disabled={currentMove === 0 || currentMove >= gameStateHistory.length - 1} 
                         clickHandler={() => jumpTo(currentMove + 1)} label="Next" faIconName="forward-step" />
-                </div>
+                </div> */}
                 <div className={`status ${currentGameState.statusStyling}`}>{currentGameState.status}</div>
             </div>
         </div>

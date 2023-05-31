@@ -100,4 +100,6 @@
 
 .game__nav-button {
   background-color: beige;
+  margin: 10px;
+  width: 100px;
 }

@@ -25,6 +25,7 @@ export default class FontAwesomeIconElementFactory {
                     'backward-fast': icon({name: 'backward-fast', style: 'solid', family: 'classic'}),
                     'backward-step': icon({name: 'backward-step', style: 'solid', family: 'classic'}),
                     'forward-step' : icon({name: 'forward-step', style: 'solid', family: 'classic'}),
+                    'play': icon({name: 'play', style: 'solid', family: 'classic'}),
                     'snowflake': icon({name: 'snowflake', style: 'solid', family: 'classic'})
                 },
                 regular: {
