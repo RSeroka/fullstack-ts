@@ -45,17 +45,17 @@ function Section({ colOffset, rowOffset, squares, squaresStyling, handleSquareCl
 
     return (
         <div className="section">
-            <div className="square-row">
+            <div className="section__square-row">
                 <SquareCell column={columnStart + 0} row={rowStart + 0} squares={squares} squaresStyling={squaresStyling} handleSquareClicked={handleSquareClicked} />
                 <SquareCell column={columnStart + 1} row={rowStart + 0} squares={squares} squaresStyling={squaresStyling} handleSquareClicked={handleSquareClicked} />
                 <SquareCell column={columnStart + 2} row={rowStart + 0} squares={squares} squaresStyling={squaresStyling} handleSquareClicked={handleSquareClicked} />
             </div>
-            <div className="square-row">
+            <div className="section__square-row">
                 <SquareCell column={columnStart + 0} row={rowStart + 1} squares={squares} squaresStyling={squaresStyling} handleSquareClicked={handleSquareClicked} />
                 <SquareCell column={columnStart + 1} row={rowStart + 1} squares={squares} squaresStyling={squaresStyling} handleSquareClicked={handleSquareClicked} />
                 <SquareCell column={columnStart + 2} row={rowStart + 1} squares={squares} squaresStyling={squaresStyling} handleSquareClicked={handleSquareClicked} />
             </div>
-            <div className="square-row">
+            <div className="section__square-row">
                 <SquareCell column={columnStart + 0} row={rowStart + 2} squares={squares} squaresStyling={squaresStyling} handleSquareClicked={handleSquareClicked} />
                 <SquareCell column={columnStart + 1} row={rowStart + 2} squares={squares} squaresStyling={squaresStyling} handleSquareClicked={handleSquareClicked} />
                 <SquareCell column={columnStart + 2} row={rowStart + 2} squares={squares} squaresStyling={squaresStyling} handleSquareClicked={handleSquareClicked} />
@@ -77,17 +77,17 @@ function Board({squares, squaresStyling, handleSquareClicked }: BoardParams): JS
     return (
         <>
             <div className="board">
-                <div className="section-row">
+                <div className="board__section-row">
                     <Section colOffset={0} rowOffset={0} handleSquareClicked={handleSquareClicked} squares={squares} squaresStyling={squaresStyling} />
                     <Section colOffset={1} rowOffset={0} handleSquareClicked={handleSquareClicked} squares={squares} squaresStyling={squaresStyling} />
                     <Section colOffset={2} rowOffset={0} handleSquareClicked={handleSquareClicked} squares={squares} squaresStyling={squaresStyling} />
                 </div>
-                <div className="section-row">
+                <div className="board__section-row">
                     <Section colOffset={0} rowOffset={1} handleSquareClicked={handleSquareClicked} squares={squares} squaresStyling={squaresStyling} />
                     <Section colOffset={1} rowOffset={1} handleSquareClicked={handleSquareClicked} squares={squares} squaresStyling={squaresStyling} />
                     <Section colOffset={2} rowOffset={1} handleSquareClicked={handleSquareClicked} squares={squares} squaresStyling={squaresStyling} />
                 </div>
-                <div className="section-row">
+                <div className="board__section-row">
                     <Section colOffset={0} rowOffset={2} handleSquareClicked={handleSquareClicked} squares={squares} squaresStyling={squaresStyling} />
                     <Section colOffset={1} rowOffset={2} handleSquareClicked={handleSquareClicked} squares={squares} squaresStyling={squaresStyling} />
                     <Section colOffset={2} rowOffset={2} handleSquareClicked={handleSquareClicked} squares={squares} squaresStyling={squaresStyling} />
@@ -217,7 +217,10 @@ export default function Game(): JSX.Element {
                 status: 'new game',
                 statusStyling: ""
             } ];
-            let lastEntry: HistoricalEntry|undefined;
+            // let lastEntry: HistoricalEntry|undefined;
+            const singleStateSquareStyling = new Array<{row: number, col: number}>();
+            const valuesCache: { [squareValue: string]: Array<{row: number, col: number}> } = {}; 
+            initializeValuesCache();
 
             for (let index = 0; index < solved.length; index++) {
                 const curr = solved[index];
@@ -237,38 +240,82 @@ export default function Game(): JSX.Element {
                             nextGameState.valuesStyling[row][col] = lastStyling[row][col].slice();
                         }
                     }
+                    while (singleStateSquareStyling.length > 0) {
+                        const squareWithTemporaryStyling = singleStateSquareStyling.pop()!;
+                        nextGameState.valuesStyling[squareWithTemporaryStyling.row][squareWithTemporaryStyling.col].pop();
+                    }
                     gridToMoveNumMap[entry.row][entry.col] = baseMoveNumber + index + 1;
                     nextGameState.values[entry.row][entry.col] = entry.value;
                     nextGameState.status = entry.why;
+                    let valuesCacheArray = valuesCache[entry.value];
+                    if (valuesCacheArray === undefined) {
+                        valuesCacheArray = valuesCache[entry.value] = new Array<{row: number, col:number}>(1);
+                    }
+                    valuesCacheArray.push({row: entry.row, col: entry.col});
+                    singleStateSquareStyling.push({row: entry.row, col: entry.col});  // "square--last" added in each case
                     switch (entry.why) {
                         case 'inferred':
                             nextGameState.valuesStyling[entry.row][entry.col].push("square--inferred", "square--last");
                             nextGameState.statusStyling = "status--inferred";
+                            valuesCacheArray.forEach(valueCacheElement => {
+                                if (valueCacheElement.row !== entry.row || valueCacheElement.col !== entry.col) {
+                                    addSingleStateSquareStyling(nextGameState.valuesStyling, valueCacheElement.row, valueCacheElement.col, 
+                                        "square--complete-transform");
+                                    // nextGameState.valuesStyling[valueCacheElement.row][valueCacheElement.col].push("square--complete-transform");
+                                    // singleStateSquareStyling.push({row: valueCacheElement.row, col: valueCacheElement.col});
+                                }
+                            });
                             break;
                         case 'value complete':
                             nextGameState.valuesStyling[entry.row][entry.col].push("square--value-complete", "square--last");
                             nextGameState.statusStyling = "status--value-complete";
+                            valuesCacheArray.forEach(valueCacheElement => {
+                                if (valueCacheElement.row !== entry.row || valueCacheElement.col !== entry.col) {
+                                    addSingleStateSquareStyling(nextGameState.valuesStyling, valueCacheElement.row, valueCacheElement.col,
+                                        "square--complete-transform");
+                                    // nextGameState.valuesStyling[valueCacheElement.row][valueCacheElement.col].push("square--complete-transform");
+                                    // singleStateSquareStyling.push({row: valueCacheElement.row, col: valueCacheElement.col});
+                                }
+                            });
                             break;
                         case 'row complete':
                             nextGameState.valuesStyling[entry.row][entry.col].push("square--row-complete", "square--last");
                             nextGameState.statusStyling = "status--row-complete";
+                            for (let col = 0; col < 9; col++) {
+                                if (col !== entry.col) {
+                                    addSingleStateSquareStyling(nextGameState.valuesStyling, entry.row, col, "square--complete-transform");
+                                    // nextGameState.valuesStyling[entry.row][col].push("square--complete-transform");
+                                    // singleStateSquareStyling.push({row: entry.row, col: col});
+                                }
+                            }
                             break;
                         case 'column complete':
                             nextGameState.valuesStyling[entry.row][entry.col].push("square--column-complete", "square--last");
                             nextGameState.statusStyling = "status--column-complete";
+                            for (let row = 0; row < 9; row++) {
+                                if (row !== entry.row) {
+                                    addSingleStateSquareStyling(nextGameState.valuesStyling, row, entry.col, "square--complete-transform");
+                                    // nextGameState.valuesStyling[row][entry.col].push("square--complete-transform");
+                                    // singleStateSquareStyling.push({row: row, col: entry.col});
+                                }
+                            }
                             break;
                         case 'section complete':
                             nextGameState.valuesStyling[entry.row][entry.col].push("square--section-complete", "square--last");
                             nextGameState.statusStyling = "status--section-complete";
+                            otherSectionSquares(entry.row, entry.col).forEach(otherSectionSquare => {
+                                addSingleStateSquareStyling(nextGameState.valuesStyling, otherSectionSquare.row, otherSectionSquare.col,
+                                    "square--complete-transform");
+                            });
                             break;
                         default: 
                             // guess *
                             break;
                     }
-                    if (lastEntry) {
-                        nextGameState.valuesStyling[lastEntry.entry.row][lastEntry.entry.col].pop(); // remove "square--last"
-                    }
-                    lastEntry = curr as HistoricalEntry;
+                    // if (lastEntry) {
+                    //     nextGameState.valuesStyling[lastEntry.entry.row][lastEntry.entry.col].pop(); // remove "square--last"
+                    // }
+                    // lastEntry = curr as HistoricalEntry;
                     lastSquares = nextGameState.values;
                     lastStyling = nextGameState.valuesStyling;
                     additionalGameStateHistory.push(nextGameState);
@@ -280,6 +327,40 @@ export default function Game(): JSX.Element {
             setGridToMoveNumMap(gridToMoveNumMap);
             setCurrentMove(1);
 
+
+            function initializeValuesCache() {
+                for (let row = 0; row < initialValues.length; row++) {
+                    for (let col = 0; col < initialValues[row].length; col++) {
+                        const squareValue = initialValues[row][col];
+                        if (squareValue !== undefined) {
+                            let valuesCacheArray = valuesCache[squareValue];
+                            if (valuesCacheArray === undefined) {
+                                valuesCacheArray = valuesCache[squareValue] = new Array<{ row: number; col: number; }>(1);
+                            }
+                            valuesCacheArray.push({ row, col });
+                        }
+                    }
+                }
+            }
+
+            function addSingleStateSquareStyling(valuesStyling: Array<Array<Array<string>>>, row: number, col: number, className: string) {
+                valuesStyling[row][col].push(className);
+                singleStateSquareStyling.push({row, col});
+            }
+
+            function otherSectionSquares(squareRow: number, squareCol: number): Array<{row: number, col: number}> {
+                const otherSquares = new Array<{row: number, col: number}>(8);
+
+                for (let row = 3 * Math.trunc(squareRow / 3); row < 3 * Math.trunc(squareRow / 3) + 3; row++) {
+                    for (let col = 3 * Math.trunc(squareCol / 3); col < 3 * Math.trunc(squareCol / 3) + 3; col++) {
+                        if (row !== squareRow || col !== squareCol) {
+                            otherSquares.push({row, col});
+                        }
+                    }
+                }
+                 
+                return otherSquares;
+            }
         })
         .catch((reason:any) => {
             console.error(`Failed to retrieve solved sudoku reason:${reason}`);

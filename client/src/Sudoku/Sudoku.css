@@ -1,5 +1,5 @@
 .square {
-  background: #fff;
+  background-color: #fff;
   border: 1px solid #999;
   float: left;
   font-size: 24px;
@@ -12,6 +12,15 @@
   text-align: center;
   width: 34px;
   color: black;
+}
+
+.square.square--complete-transform {
+  transition-property: background-color, color;
+  transition-duration: 1s;
+  transition-timing-function: ease-in-out;
+  background-color: blue;
+  color: white;
+  border-color: black;
 }
 
 .square--modified {
@@ -28,6 +37,8 @@
 
 .square--last {
   color: red;
+  font-size: 30px;
+  border-color: black;
 }
 
 
@@ -36,13 +47,8 @@
   float: left;
 }
 
-.section-row:after {
-  clear: both;
-  content: '';
-  display: table;
-}
 
-.square-row:after {
+.section__square-row:after {
   clear: both;
   content: '';
   display: table;
@@ -66,6 +72,13 @@
 
 .board {
   border: 2px solid #999;
+}
+
+
+.board__section-row:after {
+  clear: both;
+  content: '';
+  display: table;
 }
 
 .game {
