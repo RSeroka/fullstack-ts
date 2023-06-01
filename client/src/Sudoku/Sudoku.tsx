@@ -169,7 +169,7 @@ export default function Game(): JSX.Element {
     }
 
     function start(boardName?: string): void {
-        console.log('Game Start');
+        // console.log('Game Start');
         const easyValues: Array<Array<string|undefined>> = [
             ["5", "3",    ,    , "7",    ,    ,    ,    ],// eslint-disable-line
             ["6",    ,    , "1", "9", "5",    ,    ,    ],// eslint-disable-line
@@ -205,12 +205,77 @@ export default function Game(): JSX.Element {
             [   ,   ,   ,   ,   ,   ,   ,   ,"6"],// eslint-disable-line
             [   ,   ,   ,"2","7","5","9",   ,   ]];// eslint-disable-line
 
+        const evilValues = [
+            ["1",   ,"6",  "4","3",   ,     ,"5",   ],// eslint-disable-line
+            [   ,   ,"5",     ,   ,   ,  "9",   ,   ],// eslint-disable-line
+            [   ,   ,   ,     ,"2",   ,     ,   ,   ],// eslint-disable-line
+    
+            [   ,   ,   ,     ,   ,"6",     ,   ,   ],// eslint-disable-line
+            [   ,"8",   ,     ,   ,   ,     ,   ,"7"],// eslint-disable-line
+            ["3",   ,   ,  "1","5",   ,     ,"9",   ],// eslint-disable-line
+    
+            [   ,"3",   ,  "6","4",   ,  "8",   ,   ],// eslint-disable-line
+            [   ,   ,   ,     ,   ,"2",     ,"4",   ],// eslint-disable-line
+            ["6",   ,   ,     ,   ,"9",     ,   ,   ]];// eslint-disable-line
+        
+        const evil2Values = [
+            [   ,"4",   ,     ,"1","9",  "8",   ,"6"],// eslint-disable-line
+            ["3",   ,   ,     ,   ,   ,  "7",   ,   ],// eslint-disable-line
+            [   ,   ,   ,  "8",   ,   ,     ,   ,   ],// eslint-disable-line
+    
+            [   ,   ,"4",     ,   ,   ,     ,"9",   ],// eslint-disable-line
+            [   ,   ,   ,     ,   ,"2",     ,   ,   ],// eslint-disable-line
+            [   ,"9",   ,     ,"5","6",     ,   ,"1"],// eslint-disable-line
+    
+            [   ,"5",   ,  "2",   ,   ,     ,   ,   ],// eslint-disable-line
+            [   ,   ,   ,  "4",   ,   ,     ,   ,"8"],// eslint-disable-line
+            [   ,   ,"7",     ,"8","5",  "6",   ,   ]]; // eslint-disable-line
+                
+        const evil3Values = [
+            [   ,   ,"4",     ,"6",   ,     ,   ,   ],// eslint-disable-line
+            ["2",   ,"5",     ,   ,"1",  "8",   ,   ],// eslint-disable-line
+            [   ,   ,   ,  "8",   ,   ,     ,   ,"3"],// eslint-disable-line
+    
+            [   ,"9",   ,     ,   ,   ,     ,   ,   ],// eslint-disable-line
+            [   ,   ,   ,     ,"7",   ,     ,"6",   ],// eslint-disable-line
+            ["1",   ,"8",     ,   ,"5",  "3",   ,   ],// eslint-disable-line
+    
+            [   ,"3",   ,     ,   ,"9",     ,   ,   ],// eslint-disable-line
+            [   ,"4",   ,     ,   ,   ,  "2",   ,   ],// eslint-disable-line
+            ["9",   ,"2",     ,"5",   ,     ,   ,"7"]];// eslint-disable-line
+
+        const complex3Values = [
+            [   ,   ,   ,     ,   ,"7",     ,   ,"9"],// eslint-disable-line
+            [   ,"4",   ,     ,"8","1",  "2",   ,   ],// eslint-disable-line
+            [   ,   ,   ,  "9",   ,   ,     ,"1",   ],// eslint-disable-line
+        
+            [   ,   ,"5",  "3",   ,   ,     ,"7","2"],// eslint-disable-line
+            ["2","9","3",     ,   ,   ,     ,"5",   ],// eslint-disable-line
+            [   ,   ,   ,     ,   ,"5",  "3",   ,   ],// eslint-disable-line
+        
+            ["8",   ,   ,     ,"2","3",     ,   ,   ],// eslint-disable-line
+            ["7",   ,   ,     ,"5",   ,     ,"4",   ],// eslint-disable-line
+            ["5","3","1",     ,"7",   ,     ,   ,   ]];// eslint-disable-line
+               
+
         switch(boardName) {
             case 'complex': 
                 handleStartBoard(complexValues);
                 break;
             case 'book160':
                 handleStartBoard(book160Values);
+                break;
+            case 'complex3': 
+                handleStartBoard(complex3Values);
+                break;
+            case 'evil1':
+                handleStartBoard(evilValues);
+                break;
+            case 'evil2':
+                handleStartBoard(evil2Values);
+                break;
+            case 'evil3':
+                handleStartBoard(evil3Values);
                 break;
             case 'easy':
             default:
@@ -224,7 +289,7 @@ export default function Game(): JSX.Element {
         const nextMove = gridToMoveNumMap[row]?.[column];
 
         if (nextMove !== undefined && nextMove !== currentMove) {
-            console.log(`Game handleSquareClicked(${column}, ${row}) gridToMoveNumMap:${nextMove}`);
+            // console.log(`Game handleSquareClicked(${column}, ${row}) gridToMoveNumMap:${nextMove}`);
             setCurrentMove(nextMove);
         }
     }
@@ -469,6 +534,10 @@ export default function Game(): JSX.Element {
                                 <option value="easy">Easy</option>
                                 <option value="book160">Complex</option>
                                 <option value="complex">Complex 2</option>
+                                <option value="complex3">Complex 3</option>
+                                <option value="evil1">Evil</option>
+                                <option value="evil2">Evil 2</option>
+                                <option value="evil3">Evil 3</option>
                             </select>
                     </>
                 ): (
