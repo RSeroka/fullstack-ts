@@ -35,6 +35,10 @@
   background-color: lightgreen;
 }
 
+.square--guess {
+  background-color: darksalmon;
+}
+
 .square--last {
   color: red;
   font-size: 30px;
@@ -64,6 +68,10 @@
 
 .status.status--inferred {
   color: beige;
+}
+
+.status.status--guess {
+  color: darksalmon;
 }
 
 .status.status--column-complete, .status.status--row-complete, .status.status--section-complete, .status.status--value-complete {

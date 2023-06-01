@@ -243,10 +243,10 @@ export default function Game(): JSX.Element {
         .then((response) => response.json())
         .then((solvedObject) => {
             // reinitialize the gridToMoveNumMap
-            const baseMoveNumber = 1;
+            let moveNumber = 1;
             for (let row = 0; row < 9; row++) {
                 gridToMoveNumMap[row] = new Array<number>(9);
-                gridToMoveNumMap[row].fill(baseMoveNumber);
+                gridToMoveNumMap[row].fill(moveNumber);
             }
             // console.log(`${JSON.stringify(solvedObject)}`);
             const solved = solvedObject.history as SudokuSolveResponse;
@@ -262,102 +262,23 @@ export default function Game(): JSX.Element {
             // let lastEntry: HistoricalEntry|undefined;
             const singleStateSquareStyling = new Array<{row: number, col: number}>();
             const valuesCache: { [squareValue: string]: Array<{row: number, col: number}> } = {}; 
-            initializeValuesCache();
+            const guessStack = new Array<{row: number, col: number, value: string, 
+                additionalGameStateHistoryIndex: number, 
+                transitoryStyling: typeof singleStateSquareStyling,
+                guessName: string}>();
+            initializeValuesCache(initialValues);
 
             for (let index = 0; index < solved.length; index++) {
                 const curr = solved[index];
-                const entry = (curr as HistoricalEntry).entry;
-                // const guess = (curr as HistoricalGuess).guess;
-                if (entry) {
-                    const nextGameState: GameState = {
-                        values: new Array<Array<string|undefined>>(9),
-                        valuesStyling: new Array<Array<Array<string>>>(9),
-                        status: '',
-                        statusStyling: ""
-                    }
-                    for (let row = 0; row < 9; row++) {
-                        nextGameState.values[row] = lastSquares[row].slice();
-                        nextGameState.valuesStyling[row] = lastStyling[row].slice();
-                        for (let col = 0; col < 9; col++) {
-                            nextGameState.valuesStyling[row][col] = lastStyling[row][col].slice();
-                        }
-                    }
-                    while (singleStateSquareStyling.length > 0) {
-                        const squareWithTemporaryStyling = singleStateSquareStyling.pop()!;
-                        nextGameState.valuesStyling[squareWithTemporaryStyling.row][squareWithTemporaryStyling.col].pop();
-                    }
-                    gridToMoveNumMap[entry.row][entry.col] = baseMoveNumber + index + 1;
-                    nextGameState.values[entry.row][entry.col] = entry.value;
-                    nextGameState.status = entry.why;
-                    let valuesCacheArray = valuesCache[entry.value];
-                    if (valuesCacheArray === undefined) {
-                        valuesCacheArray = valuesCache[entry.value] = new Array<{row: number, col:number}>(1);
-                    }
-                    valuesCacheArray.push({row: entry.row, col: entry.col});
-                    singleStateSquareStyling.push({row: entry.row, col: entry.col});  // "square--last" added in each case
-                    switch (entry.why) {
-                        case 'inferred':
-                            nextGameState.valuesStyling[entry.row][entry.col].push("square--inferred", "square--last");
-                            nextGameState.statusStyling = "status--inferred";
-                            valuesCacheArray.forEach(valueCacheElement => {
-                                if (valueCacheElement.row !== entry.row || valueCacheElement.col !== entry.col) {
-                                    addSingleStateSquareStyling(nextGameState.valuesStyling, valueCacheElement.row, valueCacheElement.col, 
-                                        "square--complete-transform");
-                                    // nextGameState.valuesStyling[valueCacheElement.row][valueCacheElement.col].push("square--complete-transform");
-                                    // singleStateSquareStyling.push({row: valueCacheElement.row, col: valueCacheElement.col});
-                                }
-                            });
-                            break;
-                        case 'value complete':
-                            nextGameState.valuesStyling[entry.row][entry.col].push("square--value-complete", "square--last");
-                            nextGameState.statusStyling = "status--value-complete";
-                            valuesCacheArray.forEach(valueCacheElement => {
-                                if (valueCacheElement.row !== entry.row || valueCacheElement.col !== entry.col) {
-                                    addSingleStateSquareStyling(nextGameState.valuesStyling, valueCacheElement.row, valueCacheElement.col,
-                                        "square--complete-transform");
-                                    // nextGameState.valuesStyling[valueCacheElement.row][valueCacheElement.col].push("square--complete-transform");
-                                    // singleStateSquareStyling.push({row: valueCacheElement.row, col: valueCacheElement.col});
-                                }
-                            });
-                            break;
-                        case 'row complete':
-                            nextGameState.valuesStyling[entry.row][entry.col].push("square--row-complete", "square--last");
-                            nextGameState.statusStyling = "status--row-complete";
-                            for (let col = 0; col < 9; col++) {
-                                if (col !== entry.col) {
-                                    addSingleStateSquareStyling(nextGameState.valuesStyling, entry.row, col, "square--complete-transform");
-                                    // nextGameState.valuesStyling[entry.row][col].push("square--complete-transform");
-                                    // singleStateSquareStyling.push({row: entry.row, col: col});
-                                }
-                            }
-                            break;
-                        case 'column complete':
-                            nextGameState.valuesStyling[entry.row][entry.col].push("square--column-complete", "square--last");
-                            nextGameState.statusStyling = "status--column-complete";
-                            for (let row = 0; row < 9; row++) {
-                                if (row !== entry.row) {
-                                    addSingleStateSquareStyling(nextGameState.valuesStyling, row, entry.col, "square--complete-transform");
-                                    // nextGameState.valuesStyling[row][entry.col].push("square--complete-transform");
-                                    // singleStateSquareStyling.push({row: row, col: entry.col});
-                                }
-                            }
-                            break;
-                        case 'section complete':
-                            nextGameState.valuesStyling[entry.row][entry.col].push("square--section-complete", "square--last");
-                            nextGameState.statusStyling = "status--section-complete";
-                            otherSectionSquares(entry.row, entry.col).forEach(otherSectionSquare => {
-                                addSingleStateSquareStyling(nextGameState.valuesStyling, otherSectionSquare.row, otherSectionSquare.col,
-                                    "square--complete-transform");
-                            });
-                            break;
-                        default: 
-                            // guess *
-                            break;
-                    }
-                    // if (lastEntry) {
-                    //     nextGameState.valuesStyling[lastEntry.entry.row][lastEntry.entry.col].pop(); // remove "square--last"
-                    // }
-                    // lastEntry = curr as HistoricalEntry;
+                let nextGameState: GameState | undefined ;
+                if ((curr as HistoricalEntry).entry) {
+                    nextGameState = processHistoricalEntry(curr as HistoricalEntry, moveNumber);
+                }
+                else if ((curr as HistoricalGuess).guess) {
+                    nextGameState = processHistoricalGuess(curr as HistoricalGuess, moveNumber); 
+                }
+                if (nextGameState) {
+                    moveNumber++;
                     lastSquares = nextGameState.values;
                     lastStyling = nextGameState.valuesStyling;
                     additionalGameStateHistory.push(nextGameState);
@@ -369,11 +290,134 @@ export default function Game(): JSX.Element {
             setGridToMoveNumMap(gridToMoveNumMap);
             setCurrentMove(1);
 
+            function processHistoricalGuess(historicalGuess: HistoricalGuess, currentMoveNumber: number): GameState | undefined {
+                let nextGameState: GameState | undefined = undefined;
+                if (historicalGuess.guess.pushOrPop === 'pop') {
+                    const lastGuess = guessStack.pop();
+                    if (lastGuess) {
+                        const priorToGuess = additionalGameStateHistory[lastGuess.additionalGameStateHistoryIndex - 1];
+                        // quick and dirty clone values styling
+                        const newValuesStyling: typeof priorToGuess.valuesStyling = JSON.parse(JSON.stringify(priorToGuess.valuesStyling));
 
-            function initializeValuesCache() {
-                for (let row = 0; row < initialValues.length; row++) {
-                    for (let col = 0; col < initialValues[row].length; col++) {
-                        const squareValue = initialValues[row][col];
+                        while (lastGuess.transitoryStyling.length > 0) {
+                            const squareWithTemporaryStyling = lastGuess.transitoryStyling.pop()!;
+                            newValuesStyling[squareWithTemporaryStyling.row][squareWithTemporaryStyling.col].pop();
+                        }
+
+
+                        initializeValuesCache(priorToGuess.values);
+
+                        nextGameState = {
+                            status: `reverted ${lastGuess.guessName}`,
+                            statusStyling: "status--guess",
+                            values: priorToGuess.values, 
+                            valuesStyling: newValuesStyling
+                        }
+                        
+                    }
+                }
+                return nextGameState;
+            }
+
+            function processHistoricalEntry(historicalEntry: HistoricalEntry, moveNumber: number): GameState  {
+                const entry = historicalEntry.entry;
+                const nextGameState: GameState = {
+                    values: new Array<Array<string | undefined>>(9),
+                    valuesStyling: new Array<Array<Array<string>>>(9),
+                    status: '',
+                    statusStyling: ""
+                };
+                for (let row = 0; row < 9; row++) {
+                    nextGameState.values[row] = lastSquares[row].slice();
+                    nextGameState.valuesStyling[row] = lastStyling[row].slice();
+                    for (let col = 0; col < 9; col++) {
+                        nextGameState.valuesStyling[row][col] = lastStyling[row][col].slice();
+                    }
+                }
+                const guessTransitoryStyling: typeof singleStateSquareStyling = [];
+                while (singleStateSquareStyling.length > 0) {
+                    const squareWithTemporaryStyling = singleStateSquareStyling.pop()!;
+                    guessTransitoryStyling.unshift(squareWithTemporaryStyling);
+                    nextGameState.valuesStyling[squareWithTemporaryStyling.row][squareWithTemporaryStyling.col].pop();
+                }
+                gridToMoveNumMap[entry.row][entry.col] = moveNumber + 1;
+                nextGameState.values[entry.row][entry.col] = entry.value;
+                nextGameState.status = entry.why;
+                let valuesCacheArray = valuesCache[entry.value];
+                if (valuesCacheArray === undefined) {
+                    valuesCacheArray = valuesCache[entry.value] = new Array<{ row: number; col: number; }>(1);
+                }
+                valuesCacheArray.push({ row: entry.row, col: entry.col });
+                singleStateSquareStyling.push({ row: entry.row, col: entry.col }); // "square--last" added in each case
+                switch (entry.why) {
+                    case 'inferred':
+                        nextGameState.valuesStyling[entry.row][entry.col].push("square--inferred", "square--last");
+                        nextGameState.statusStyling = "status--inferred";
+                        valuesCacheArray.forEach(valueCacheElement => {
+                            if (valueCacheElement.row !== entry.row || valueCacheElement.col !== entry.col) {
+                                addSingleStateSquareStyling(nextGameState.valuesStyling, valueCacheElement.row, valueCacheElement.col,
+                                    "square--complete-transform");
+                            }
+                        });
+                        break;
+                    case 'value complete':
+                        nextGameState.valuesStyling[entry.row][entry.col].push("square--value-complete", "square--last");
+                        nextGameState.statusStyling = "status--value-complete";
+                        valuesCacheArray.forEach(valueCacheElement => {
+                            if (valueCacheElement.row !== entry.row || valueCacheElement.col !== entry.col) {
+                                addSingleStateSquareStyling(nextGameState.valuesStyling, valueCacheElement.row, valueCacheElement.col,
+                                    "square--complete-transform");
+                            }
+                        });
+                        break;
+                    case 'row complete':
+                        nextGameState.valuesStyling[entry.row][entry.col].push("square--row-complete", "square--last");
+                        nextGameState.statusStyling = "status--row-complete";
+                        for (let col = 0; col < 9; col++) {
+                            if (col !== entry.col) {
+                                addSingleStateSquareStyling(nextGameState.valuesStyling, entry.row, col, "square--complete-transform");
+                            }
+                        }
+                        break;
+                    case 'column complete':
+                        nextGameState.valuesStyling[entry.row][entry.col].push("square--column-complete", "square--last");
+                        nextGameState.statusStyling = "status--column-complete";
+                        for (let row = 0; row < 9; row++) {
+                            if (row !== entry.row) {
+                                addSingleStateSquareStyling(nextGameState.valuesStyling, row, entry.col, "square--complete-transform");
+                            }
+                        }
+                        break;
+                    case 'section complete':
+                        nextGameState.valuesStyling[entry.row][entry.col].push("square--section-complete", "square--last");
+                        nextGameState.statusStyling = "status--section-complete";
+                        otherSectionSquares(entry.row, entry.col).forEach(otherSectionSquare => {
+                            addSingleStateSquareStyling(nextGameState.valuesStyling, otherSectionSquare.row, otherSectionSquare.col,
+                                "square--complete-transform");
+                        });
+                        break;
+                    default:
+                        // guess *
+                        if ("guess" === entry.why.substring(0, 5)) {
+                            guessStack.push({row: entry.row, col: entry.col, value: entry.value, 
+                                additionalGameStateHistoryIndex: additionalGameStateHistory.length,
+                                transitoryStyling: guessTransitoryStyling, 
+                                guessName: entry.why});
+                            nextGameState.valuesStyling[entry.row][entry.col].push("square--guess", "square--last");
+                            nextGameState.statusStyling = "status--guess";
+                            // TODO add the some styling for this entry
+                        }
+                        break;
+                }
+
+                return nextGameState;
+            }
+
+            function initializeValuesCache(values: Array<Array<string|undefined>>) {
+                Object.keys(valuesCache).forEach(key => delete valuesCache[key]);
+                for (let row = 0; row < values.length; row++) {
+                    for (let col = 0; col < values[row].length; col++) {
+                        const squareValue = values[row][col];
                         if (squareValue !== undefined) {
                             let valuesCacheArray = valuesCache[squareValue];
                             if (valuesCacheArray === undefined) {
@@ -420,16 +464,12 @@ export default function Game(): JSX.Element {
             <div>
                 {!inSolveQuery && currentMove === 0 ? (
                     <>
-                        {/* <GameNavButton disabled={false} clickHandler={() => start()} label="Start" /> */}
-
                             <select onChange={(ev) => start(ev.target.value)}>
                                 <option value="nochoice">Pick A Board</option>
                                 <option value="easy">Easy</option>
                                 <option value="book160">Complex</option>
                                 <option value="complex">Complex 2</option>
                             </select>
-
-
                     </>
                 ): (
                     <>
