@@ -526,10 +526,11 @@ export default function Game(): JSX.Element {
 
 
         return (
-            <div>
+            <>
                 {!inSolveQuery && currentMove === 0 ? (
                     <>
-                            <select onChange={(ev) => start(ev.target.value)}>
+                            <select className="game-info__select"
+                                onChange={(ev) => start(ev.target.value)}>
                                 <option value="nochoice">Pick A Board</option>
                                 <option value="easy">Easy</option>
                                 <option value="book160">Complex</option>
@@ -541,16 +542,16 @@ export default function Game(): JSX.Element {
                             </select>
                     </>
                 ): (
-                    <>
+                    <div className="game-info__navigation">
                         <GameNavButton faIconName="play" label="New Board" clickHandler={()=>resetBoard()}/>
                         <GameNavButton disabled={currentMove < 2} clickHandler={() => jumpTo(1)} label="Reset Board" faIconName="backward-fast" />
                         <GameNavButton disabled={currentMove < 2} clickHandler={() => jumpTo(currentMove - 1)} label="Prior" faIconName="backward-step" />
                         <GameNavButton disabled={currentMove === 0 || currentMove >= gameStateHistory.length - 1} 
                             clickHandler={() => jumpTo(currentMove + 1)} label="Next" faIconName="forward-step" />
-                    </>
+                    </div>
                 )}
 
-            </div>
+            </>
         );
     }
 
@@ -561,15 +562,17 @@ export default function Game(): JSX.Element {
                 <Board squares={currentGameState.values} squaresStyling={currentGameState.valuesStyling} handleSquareClicked={handleSquareClicked} />
             </div>
             <div className="game-info">
-                {renderGameNav()}
-                {/* <div>
-                    <GameNavButton disabled={inSolveQuery || currentMove !== 0} clickHandler={() => start()} label="Start" />
-                    <GameNavButton disabled={currentMove < 2} clickHandler={() => jumpTo(1)} label="Initial" faIconName="backward-fast" />
-                    <GameNavButton disabled={currentMove < 2} clickHandler={() => jumpTo(currentMove - 1)} label="Prior" faIconName="backward-step" />
-                    <GameNavButton disabled={currentMove === 0 || currentMove >= gameStateHistory.length - 1} 
-                        clickHandler={() => jumpTo(currentMove + 1)} label="Next" faIconName="forward-step" />
-                </div> */}
-                <div className={`status ${currentGameState.statusStyling}`}>{currentGameState.status}</div>
+                <div className="game-info__column">
+                    {renderGameNav()}
+                    {/* <div>
+                        <GameNavButton disabled={inSolveQuery || currentMove !== 0} clickHandler={() => start()} label="Start" />
+                        <GameNavButton disabled={currentMove < 2} clickHandler={() => jumpTo(1)} label="Initial" faIconName="backward-fast" />
+                        <GameNavButton disabled={currentMove < 2} clickHandler={() => jumpTo(currentMove - 1)} label="Prior" faIconName="backward-step" />
+                        <GameNavButton disabled={currentMove === 0 || currentMove >= gameStateHistory.length - 1} 
+                            clickHandler={() => jumpTo(currentMove + 1)} label="Next" faIconName="forward-step" />
+                    </div> */}
+                    <div className={`game_info__status ${currentGameState.statusStyling}`}>{currentGameState.status}</div>
+                </div>
             </div>
         </div>
     );
