@@ -5,11 +5,11 @@ import SudokuSolver9 from '../sudoku/sudoku-solver';
 import ExpressApp from './express-app';
 
 
-export default class SudokuExpressApp extends ExpressApp {
+export default class FullStackExpressApp extends ExpressApp {
 
 
     public constructor() {
-        super("Sudoku", [{folderName: './dist/client/build'}]);
+        super("Richard Seroka Fullstack", [{folderName: './dist/client/build'}]);
 
 
         super.expressApp.post('/sudoku/solve', (req, res) => {

@@ -1,2 +1,2 @@
-# sudoku-ts
+# fullstack-ts
  

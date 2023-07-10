@@ -1,11 +1,11 @@
 
 
 
-import SudokuExpressApp from './sudoku-express-app';
+import FullStackExpressApp from './fullstack-express-app';
 
 
-const sudokuExpressApp = new SudokuExpressApp();
+const fullstackExpressApp = new FullStackExpressApp();
 
-sudokuExpressApp.startHttpServer();
+fullstackExpressApp.startHttpServer();
 
 

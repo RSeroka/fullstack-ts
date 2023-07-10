@@ -1,5 +1,5 @@
 {
-  "name": "suduko-ts",
+  "name": "fullstack-ts",
   "version": "1.0.0",
   "description": "",
   "main": "dist/src/express/server.js",

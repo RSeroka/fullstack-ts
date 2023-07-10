@@ -4,17 +4,17 @@ import chai, { assert } from 'chai';
 import chaiHttp from 'chai-http';
 import type * as core from 'express-serve-static-core';
 import { after, before } from 'mocha';
-import SudokuExpressApp from '../../src/express/sudoku-express-app';
+import FullStackExpressApp from '../../src/express/fullstack-express-app';
 
 
 chai.use(chaiHttp);
 
 describe('Sudoku Express App', () => {
-    let sudokuExpressApp: SudokuExpressApp;
+    let sudokuExpressApp: FullStackExpressApp;
     let server: core.Express;
 
     before((done) => {
-        sudokuExpressApp = new SudokuExpressApp();
+        sudokuExpressApp = new FullStackExpressApp();
         server = sudokuExpressApp.expressApp;
         // setTimeout(() => {
         //     done();

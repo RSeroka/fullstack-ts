@@ -1,12 +1,20 @@
 #!/bin/bash
 
-if [ ! -e $1 ]; then 
+dataFile=$1
+solveUrl=http://localhost:8080/sudoku/solve
+
+if [ -z $dataFile ]; then
+    echo 'usage:  $0 <jsonfile>'
+    echo where jsonfile is file that has a request to the $solveUrl
+    exit -1
+fi
+
+if [ ! -e $dataFile ]; then 
     echo parameter file $1 does not exist
     exit -1
 fi
 
-dataFile=$1
-solveUrl=http://localhost:8080/solve
+
 
 echo input ....
 cat $dataFile
