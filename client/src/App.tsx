@@ -5,6 +5,7 @@ import './App.css';
 import { Routes, Route, Link} from "react-router-dom";
 import Sudoku from './Sudoku/Sudoku';
 import Navbar from './NavBar/NavBar';
+import Resume from "./Resume/Resume";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="sudoku" element={<Sudoku />} />
+        <Route path="resume" element={<Resume />} />
         <Route path="*" element={<NoMatch />} />
       </Routes>
     </>
@@ -50,6 +52,10 @@ function Home() {
   return (
     <div>
       <h2>Home</h2>
+
+      <div>
+        <Resume />
+      </div>
     </div>
   );
 }
