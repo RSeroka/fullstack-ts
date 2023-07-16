@@ -1,7 +1,7 @@
 import { assert } from "chai";
-import Card, { CardSuit } from "../../src/blackjack/card";
-import type Shoe from "../../src/blackjack/shoe";
-import ShuffledShoe from "../../src/blackjack/shuffled-shoe";
+import Card, { CardSuit } from "../../../src/blackjack/cards/card";
+import type Shoe from "../../../src/blackjack/cards/shoe";
+import ShuffledShoe from "../../../src/blackjack/cards/shuffled-shoe";
 
 
 describe("Shoe Tests", () => {

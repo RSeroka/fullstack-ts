@@ -1,5 +1,5 @@
 import { assert } from "chai"; 
-import Card, {CardSuit, CardValue} from "../../src/blackjack/card";
+import Card, {CardSuit, CardValue} from "../../../src/blackjack/cards/card";
 
 describe("CardValue Tests", () => {
     it("CardValue Ace Test", () => {

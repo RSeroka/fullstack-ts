@@ -1,7 +1,7 @@
 
 import { assert } from "chai";
-import BlackJackCard from "../../src/blackjack/blackjack-card";
-import Card from "../../src/blackjack/card";
+import BlackJackCard from "../../../src/blackjack/cards/blackjack-card";
+import Card from "../../../src/blackjack/cards/card";
 
 describe("BlackJackCard Tests", () => {
 
