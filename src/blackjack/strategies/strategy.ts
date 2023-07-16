@@ -1,33 +1,30 @@
 
 
-export enum PlayerPlay {
-    HIT,
-    STAND,
-    DOUBLE,
-}
+
+import type { PlayerDecisionHitStandOrDouble } from "./decsision";
 
 type PerDealerUpcard = {
     hard: {
-        "8AndUnder": PlayerPlay;
-        "9": PlayerPlay;
-        "10": PlayerPlay;
-        "11": PlayerPlay;
-        "12": PlayerPlay;
-        "13": PlayerPlay;
-        "14": PlayerPlay;
-        "15": PlayerPlay;
-        "16": PlayerPlay;
-        "17AndOver": PlayerPlay;
+        "8AndUnder": PlayerDecisionHitStandOrDouble;
+        "9": PlayerDecisionHitStandOrDouble;
+        "10": PlayerDecisionHitStandOrDouble;
+        "11": PlayerDecisionHitStandOrDouble;
+        "12": PlayerDecisionHitStandOrDouble;
+        "13": PlayerDecisionHitStandOrDouble;
+        "14": PlayerDecisionHitStandOrDouble;
+        "15": PlayerDecisionHitStandOrDouble;
+        "16": PlayerDecisionHitStandOrDouble;
+        "17AndOver": PlayerDecisionHitStandOrDouble;
     },
     soft: {
-        "13": PlayerPlay;
-        "14": PlayerPlay;
-        "15": PlayerPlay;
-        "16": PlayerPlay;
-        "17": PlayerPlay;        
-        "18": PlayerPlay;        
-        "19": PlayerPlay;        
-        "20": PlayerPlay;        
+        "13": PlayerDecisionHitStandOrDouble;
+        "14": PlayerDecisionHitStandOrDouble;
+        "15": PlayerDecisionHitStandOrDouble;
+        "16": PlayerDecisionHitStandOrDouble;
+        "17": PlayerDecisionHitStandOrDouble;        
+        "18": PlayerDecisionHitStandOrDouble;        
+        "19": PlayerDecisionHitStandOrDouble;        
+        "20": PlayerDecisionHitStandOrDouble;        
     },
     "split": {
         "A"?: boolean;

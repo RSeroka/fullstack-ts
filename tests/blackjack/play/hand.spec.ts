@@ -1,7 +1,7 @@
 
 import { assert } from "chai"; 
-import Hand from "../src/blackjack/hand";
-import BlackJackCard from "../src/blackjack/cards/blackjack-card";
+import Hand from "../../../src/blackjack/play/hand";
+import BlackJackCard from "../../../src/blackjack/cards/blackjack-card";
 
 describe("Hand tests", () => {
     it("Single Ace", () => {

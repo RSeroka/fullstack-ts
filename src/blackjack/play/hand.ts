@@ -1,5 +1,5 @@
 
-import type BlackJackCard from "./cards/blackjack-card"
+import type BlackJackCard from "../cards/blackjack-card"
 
 export default class Hand {
 

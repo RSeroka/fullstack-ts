@@ -2,36 +2,37 @@
 
 // https://www.blackjackapprenticeship.com/blackjack-strategy-charts/
 
-import Strategy, { PlayerPlay } from "./strategy";
+import type Strategy from "./strategy";
+import { PlayerDecisionHitStandOrDouble } from "./decsision";
 
 
 // Double after split allowed
 // Double on soft 18, 19 allowed
-const BasicStrategy: Strategy = {
+export const BasicStrategy: Strategy = {
     dealerUpcards: [
         // ACE
         {
             hard: {
-                "8AndUnder": PlayerPlay.HIT,
-                "9": PlayerPlay.HIT, 
-                "10": PlayerPlay.HIT,
-                "11": PlayerPlay.DOUBLE,
-                "12": PlayerPlay.HIT,
-                "13": PlayerPlay.HIT,
-                "14": PlayerPlay.HIT,
-                "15": PlayerPlay.HIT,
-                "16": PlayerPlay.HIT,
-                "17AndOver": PlayerPlay.STAND
+                "8AndUnder": PlayerDecisionHitStandOrDouble.HIT,
+                "9": PlayerDecisionHitStandOrDouble.HIT, 
+                "10": PlayerDecisionHitStandOrDouble.HIT,
+                "11": PlayerDecisionHitStandOrDouble.DOUBLE,
+                "12": PlayerDecisionHitStandOrDouble.HIT,
+                "13": PlayerDecisionHitStandOrDouble.HIT,
+                "14": PlayerDecisionHitStandOrDouble.HIT,
+                "15": PlayerDecisionHitStandOrDouble.HIT,
+                "16": PlayerDecisionHitStandOrDouble.HIT,
+                "17AndOver": PlayerDecisionHitStandOrDouble.STAND
             },
             soft: {
-                "13": PlayerPlay.HIT,
-                "14": PlayerPlay.HIT,
-                "15": PlayerPlay.HIT,
-                "16": PlayerPlay.HIT,
-                "17": PlayerPlay.HIT,        
-                "18": PlayerPlay.HIT,        
-                "19": PlayerPlay.STAND,        
-                "20": PlayerPlay.STAND, 
+                "13": PlayerDecisionHitStandOrDouble.HIT,
+                "14": PlayerDecisionHitStandOrDouble.HIT,
+                "15": PlayerDecisionHitStandOrDouble.HIT,
+                "16": PlayerDecisionHitStandOrDouble.HIT,
+                "17": PlayerDecisionHitStandOrDouble.HIT,        
+                "18": PlayerDecisionHitStandOrDouble.HIT,        
+                "19": PlayerDecisionHitStandOrDouble.STAND,        
+                "20": PlayerDecisionHitStandOrDouble.STAND, 
             },
             split: {
                 "A": true,
@@ -44,26 +45,26 @@ const BasicStrategy: Strategy = {
         // 2 
         {
             hard: {
-                "8AndUnder": PlayerPlay.HIT,
-                "9": PlayerPlay.HIT, 
-                "10": PlayerPlay.DOUBLE,
-                "11": PlayerPlay.DOUBLE,
-                "12": PlayerPlay.HIT,
-                "13": PlayerPlay.STAND,
-                "14": PlayerPlay.STAND,
-                "15": PlayerPlay.STAND,
-                "16": PlayerPlay.STAND,
-                "17AndOver": PlayerPlay.STAND
+                "8AndUnder": PlayerDecisionHitStandOrDouble.HIT,
+                "9": PlayerDecisionHitStandOrDouble.HIT, 
+                "10": PlayerDecisionHitStandOrDouble.DOUBLE,
+                "11": PlayerDecisionHitStandOrDouble.DOUBLE,
+                "12": PlayerDecisionHitStandOrDouble.HIT,
+                "13": PlayerDecisionHitStandOrDouble.STAND,
+                "14": PlayerDecisionHitStandOrDouble.STAND,
+                "15": PlayerDecisionHitStandOrDouble.STAND,
+                "16": PlayerDecisionHitStandOrDouble.STAND,
+                "17AndOver": PlayerDecisionHitStandOrDouble.STAND
             },
             soft: {
-                "13": PlayerPlay.HIT,
-                "14": PlayerPlay.HIT,
-                "15": PlayerPlay.HIT,
-                "16": PlayerPlay.HIT,
-                "17": PlayerPlay.HIT,        
-                "18": PlayerPlay.DOUBLE,        
-                "19": PlayerPlay.STAND,        
-                "20": PlayerPlay.STAND, 
+                "13": PlayerDecisionHitStandOrDouble.HIT,
+                "14": PlayerDecisionHitStandOrDouble.HIT,
+                "15": PlayerDecisionHitStandOrDouble.HIT,
+                "16": PlayerDecisionHitStandOrDouble.HIT,
+                "17": PlayerDecisionHitStandOrDouble.HIT,        
+                "18": PlayerDecisionHitStandOrDouble.DOUBLE,        
+                "19": PlayerDecisionHitStandOrDouble.STAND,        
+                "20": PlayerDecisionHitStandOrDouble.STAND, 
             },
             split: {
                 "A": true,
@@ -81,26 +82,26 @@ const BasicStrategy: Strategy = {
         // 3
         {
             hard: {
-                "8AndUnder": PlayerPlay.HIT,
-                "9": PlayerPlay.DOUBLE, 
-                "10": PlayerPlay.DOUBLE,
-                "11": PlayerPlay.DOUBLE,
-                "12": PlayerPlay.HIT,
-                "13": PlayerPlay.STAND,
-                "14": PlayerPlay.STAND,
-                "15": PlayerPlay.STAND,
-                "16": PlayerPlay.STAND,
-                "17AndOver": PlayerPlay.STAND
+                "8AndUnder": PlayerDecisionHitStandOrDouble.HIT,
+                "9": PlayerDecisionHitStandOrDouble.DOUBLE, 
+                "10": PlayerDecisionHitStandOrDouble.DOUBLE,
+                "11": PlayerDecisionHitStandOrDouble.DOUBLE,
+                "12": PlayerDecisionHitStandOrDouble.HIT,
+                "13": PlayerDecisionHitStandOrDouble.STAND,
+                "14": PlayerDecisionHitStandOrDouble.STAND,
+                "15": PlayerDecisionHitStandOrDouble.STAND,
+                "16": PlayerDecisionHitStandOrDouble.STAND,
+                "17AndOver": PlayerDecisionHitStandOrDouble.STAND
             },
             soft: {
-                "13": PlayerPlay.HIT,
-                "14": PlayerPlay.HIT,
-                "15": PlayerPlay.HIT,
-                "16": PlayerPlay.HIT,
-                "17": PlayerPlay.DOUBLE,        
-                "18": PlayerPlay.DOUBLE,        
-                "19": PlayerPlay.STAND,        
-                "20": PlayerPlay.STAND, 
+                "13": PlayerDecisionHitStandOrDouble.HIT,
+                "14": PlayerDecisionHitStandOrDouble.HIT,
+                "15": PlayerDecisionHitStandOrDouble.HIT,
+                "16": PlayerDecisionHitStandOrDouble.HIT,
+                "17": PlayerDecisionHitStandOrDouble.DOUBLE,        
+                "18": PlayerDecisionHitStandOrDouble.DOUBLE,        
+                "19": PlayerDecisionHitStandOrDouble.STAND,        
+                "20": PlayerDecisionHitStandOrDouble.STAND, 
             },
             split: {
                 "A": true,
@@ -118,26 +119,26 @@ const BasicStrategy: Strategy = {
         // 4
         {
             hard: {
-                "8AndUnder": PlayerPlay.HIT,
-                "9": PlayerPlay.DOUBLE, 
-                "10": PlayerPlay.DOUBLE,
-                "11": PlayerPlay.DOUBLE,
-                "12": PlayerPlay.STAND,
-                "13": PlayerPlay.STAND,
-                "14": PlayerPlay.STAND,
-                "15": PlayerPlay.STAND,
-                "16": PlayerPlay.STAND,
-                "17AndOver": PlayerPlay.STAND
+                "8AndUnder": PlayerDecisionHitStandOrDouble.HIT,
+                "9": PlayerDecisionHitStandOrDouble.DOUBLE, 
+                "10": PlayerDecisionHitStandOrDouble.DOUBLE,
+                "11": PlayerDecisionHitStandOrDouble.DOUBLE,
+                "12": PlayerDecisionHitStandOrDouble.STAND,
+                "13": PlayerDecisionHitStandOrDouble.STAND,
+                "14": PlayerDecisionHitStandOrDouble.STAND,
+                "15": PlayerDecisionHitStandOrDouble.STAND,
+                "16": PlayerDecisionHitStandOrDouble.STAND,
+                "17AndOver": PlayerDecisionHitStandOrDouble.STAND
             },
             soft: {
-                "13": PlayerPlay.HIT,
-                "14": PlayerPlay.HIT,
-                "15": PlayerPlay.DOUBLE,
-                "16": PlayerPlay.DOUBLE,
-                "17": PlayerPlay.DOUBLE,        
-                "18": PlayerPlay.DOUBLE,        
-                "19": PlayerPlay.STAND,        
-                "20": PlayerPlay.STAND, 
+                "13": PlayerDecisionHitStandOrDouble.HIT,
+                "14": PlayerDecisionHitStandOrDouble.HIT,
+                "15": PlayerDecisionHitStandOrDouble.DOUBLE,
+                "16": PlayerDecisionHitStandOrDouble.DOUBLE,
+                "17": PlayerDecisionHitStandOrDouble.DOUBLE,        
+                "18": PlayerDecisionHitStandOrDouble.DOUBLE,        
+                "19": PlayerDecisionHitStandOrDouble.STAND,        
+                "20": PlayerDecisionHitStandOrDouble.STAND, 
             },
             split: {
                 "A": true,
@@ -155,26 +156,26 @@ const BasicStrategy: Strategy = {
         // 5
         {
             hard: {
-                "8AndUnder": PlayerPlay.HIT,
-                "9": PlayerPlay.DOUBLE, 
-                "10": PlayerPlay.DOUBLE,
-                "11": PlayerPlay.DOUBLE,
-                "12": PlayerPlay.STAND,
-                "13": PlayerPlay.STAND,
-                "14": PlayerPlay.STAND,
-                "15": PlayerPlay.STAND,
-                "16": PlayerPlay.STAND,
-                "17AndOver": PlayerPlay.STAND
+                "8AndUnder": PlayerDecisionHitStandOrDouble.HIT,
+                "9": PlayerDecisionHitStandOrDouble.DOUBLE, 
+                "10": PlayerDecisionHitStandOrDouble.DOUBLE,
+                "11": PlayerDecisionHitStandOrDouble.DOUBLE,
+                "12": PlayerDecisionHitStandOrDouble.STAND,
+                "13": PlayerDecisionHitStandOrDouble.STAND,
+                "14": PlayerDecisionHitStandOrDouble.STAND,
+                "15": PlayerDecisionHitStandOrDouble.STAND,
+                "16": PlayerDecisionHitStandOrDouble.STAND,
+                "17AndOver": PlayerDecisionHitStandOrDouble.STAND
             },
             soft: {
-                "13": PlayerPlay.DOUBLE,
-                "14": PlayerPlay.DOUBLE,
-                "15": PlayerPlay.DOUBLE,
-                "16": PlayerPlay.DOUBLE,
-                "17": PlayerPlay.DOUBLE,        
-                "18": PlayerPlay.DOUBLE,        
-                "19": PlayerPlay.STAND,        
-                "20": PlayerPlay.STAND, 
+                "13": PlayerDecisionHitStandOrDouble.DOUBLE,
+                "14": PlayerDecisionHitStandOrDouble.DOUBLE,
+                "15": PlayerDecisionHitStandOrDouble.DOUBLE,
+                "16": PlayerDecisionHitStandOrDouble.DOUBLE,
+                "17": PlayerDecisionHitStandOrDouble.DOUBLE,        
+                "18": PlayerDecisionHitStandOrDouble.DOUBLE,        
+                "19": PlayerDecisionHitStandOrDouble.STAND,        
+                "20": PlayerDecisionHitStandOrDouble.STAND, 
             },
             split: {
                 "A": true,
@@ -194,26 +195,26 @@ const BasicStrategy: Strategy = {
         // 6
         {
             hard: {
-                "8AndUnder": PlayerPlay.HIT,
-                "9": PlayerPlay.DOUBLE, 
-                "10": PlayerPlay.DOUBLE,
-                "11": PlayerPlay.DOUBLE,
-                "12": PlayerPlay.STAND,
-                "13": PlayerPlay.STAND,
-                "14": PlayerPlay.STAND,
-                "15": PlayerPlay.STAND,
-                "16": PlayerPlay.STAND,
-                "17AndOver": PlayerPlay.STAND
+                "8AndUnder": PlayerDecisionHitStandOrDouble.HIT,
+                "9": PlayerDecisionHitStandOrDouble.DOUBLE, 
+                "10": PlayerDecisionHitStandOrDouble.DOUBLE,
+                "11": PlayerDecisionHitStandOrDouble.DOUBLE,
+                "12": PlayerDecisionHitStandOrDouble.STAND,
+                "13": PlayerDecisionHitStandOrDouble.STAND,
+                "14": PlayerDecisionHitStandOrDouble.STAND,
+                "15": PlayerDecisionHitStandOrDouble.STAND,
+                "16": PlayerDecisionHitStandOrDouble.STAND,
+                "17AndOver": PlayerDecisionHitStandOrDouble.STAND
             },
             soft: {
-                "13": PlayerPlay.DOUBLE,
-                "14": PlayerPlay.DOUBLE,
-                "15": PlayerPlay.DOUBLE,
-                "16": PlayerPlay.DOUBLE,
-                "17": PlayerPlay.DOUBLE,        
-                "18": PlayerPlay.DOUBLE,        
-                "19": PlayerPlay.DOUBLE,        
-                "20": PlayerPlay.STAND, 
+                "13": PlayerDecisionHitStandOrDouble.DOUBLE,
+                "14": PlayerDecisionHitStandOrDouble.DOUBLE,
+                "15": PlayerDecisionHitStandOrDouble.DOUBLE,
+                "16": PlayerDecisionHitStandOrDouble.DOUBLE,
+                "17": PlayerDecisionHitStandOrDouble.DOUBLE,        
+                "18": PlayerDecisionHitStandOrDouble.DOUBLE,        
+                "19": PlayerDecisionHitStandOrDouble.DOUBLE,        
+                "20": PlayerDecisionHitStandOrDouble.STAND, 
             },
             split: {
                 "A": true,
@@ -233,26 +234,26 @@ const BasicStrategy: Strategy = {
         // 7 
         {
             hard: {
-                "8AndUnder": PlayerPlay.HIT,
-                "9": PlayerPlay.HIT, 
-                "10": PlayerPlay.DOUBLE,
-                "11": PlayerPlay.DOUBLE,
-                "12": PlayerPlay.HIT,
-                "13": PlayerPlay.HIT,
-                "14": PlayerPlay.HIT,
-                "15": PlayerPlay.HIT,
-                "16": PlayerPlay.HIT,
-                "17AndOver": PlayerPlay.STAND
+                "8AndUnder": PlayerDecisionHitStandOrDouble.HIT,
+                "9": PlayerDecisionHitStandOrDouble.HIT, 
+                "10": PlayerDecisionHitStandOrDouble.DOUBLE,
+                "11": PlayerDecisionHitStandOrDouble.DOUBLE,
+                "12": PlayerDecisionHitStandOrDouble.HIT,
+                "13": PlayerDecisionHitStandOrDouble.HIT,
+                "14": PlayerDecisionHitStandOrDouble.HIT,
+                "15": PlayerDecisionHitStandOrDouble.HIT,
+                "16": PlayerDecisionHitStandOrDouble.HIT,
+                "17AndOver": PlayerDecisionHitStandOrDouble.STAND
             },
             soft: {
-                "13": PlayerPlay.HIT,
-                "14": PlayerPlay.HIT,
-                "15": PlayerPlay.HIT,
-                "16": PlayerPlay.HIT,
-                "17": PlayerPlay.HIT,        
-                "18": PlayerPlay.STAND,        
-                "19": PlayerPlay.STAND,        
-                "20": PlayerPlay.STAND, 
+                "13": PlayerDecisionHitStandOrDouble.HIT,
+                "14": PlayerDecisionHitStandOrDouble.HIT,
+                "15": PlayerDecisionHitStandOrDouble.HIT,
+                "16": PlayerDecisionHitStandOrDouble.HIT,
+                "17": PlayerDecisionHitStandOrDouble.HIT,        
+                "18": PlayerDecisionHitStandOrDouble.STAND,        
+                "19": PlayerDecisionHitStandOrDouble.STAND,        
+                "20": PlayerDecisionHitStandOrDouble.STAND, 
             },
             split: {
                 "A": true,
@@ -269,26 +270,26 @@ const BasicStrategy: Strategy = {
         // 8
         {
             hard: {
-                "8AndUnder": PlayerPlay.HIT,
-                "9": PlayerPlay.HIT, 
-                "10": PlayerPlay.DOUBLE,
-                "11": PlayerPlay.DOUBLE,
-                "12": PlayerPlay.HIT,
-                "13": PlayerPlay.HIT,
-                "14": PlayerPlay.HIT,
-                "15": PlayerPlay.HIT,
-                "16": PlayerPlay.HIT,
-                "17AndOver": PlayerPlay.STAND
+                "8AndUnder": PlayerDecisionHitStandOrDouble.HIT,
+                "9": PlayerDecisionHitStandOrDouble.HIT, 
+                "10": PlayerDecisionHitStandOrDouble.DOUBLE,
+                "11": PlayerDecisionHitStandOrDouble.DOUBLE,
+                "12": PlayerDecisionHitStandOrDouble.HIT,
+                "13": PlayerDecisionHitStandOrDouble.HIT,
+                "14": PlayerDecisionHitStandOrDouble.HIT,
+                "15": PlayerDecisionHitStandOrDouble.HIT,
+                "16": PlayerDecisionHitStandOrDouble.HIT,
+                "17AndOver": PlayerDecisionHitStandOrDouble.STAND
             },
             soft: {
-                "13": PlayerPlay.HIT,
-                "14": PlayerPlay.HIT,
-                "15": PlayerPlay.HIT,
-                "16": PlayerPlay.HIT,
-                "17": PlayerPlay.HIT,        
-                "18": PlayerPlay.STAND,        
-                "19": PlayerPlay.STAND,        
-                "20": PlayerPlay.STAND, 
+                "13": PlayerDecisionHitStandOrDouble.HIT,
+                "14": PlayerDecisionHitStandOrDouble.HIT,
+                "15": PlayerDecisionHitStandOrDouble.HIT,
+                "16": PlayerDecisionHitStandOrDouble.HIT,
+                "17": PlayerDecisionHitStandOrDouble.HIT,        
+                "18": PlayerDecisionHitStandOrDouble.STAND,        
+                "19": PlayerDecisionHitStandOrDouble.STAND,        
+                "20": PlayerDecisionHitStandOrDouble.STAND, 
             },
             split: {
                 "A": true,
@@ -303,26 +304,26 @@ const BasicStrategy: Strategy = {
         // 9
         {
             hard: {
-                "8AndUnder": PlayerPlay.HIT,
-                "9": PlayerPlay.HIT, 
-                "10": PlayerPlay.DOUBLE,
-                "11": PlayerPlay.DOUBLE,
-                "12": PlayerPlay.HIT,
-                "13": PlayerPlay.HIT,
-                "14": PlayerPlay.HIT,
-                "15": PlayerPlay.HIT,
-                "16": PlayerPlay.HIT,
-                "17AndOver": PlayerPlay.STAND
+                "8AndUnder": PlayerDecisionHitStandOrDouble.HIT,
+                "9": PlayerDecisionHitStandOrDouble.HIT, 
+                "10": PlayerDecisionHitStandOrDouble.DOUBLE,
+                "11": PlayerDecisionHitStandOrDouble.DOUBLE,
+                "12": PlayerDecisionHitStandOrDouble.HIT,
+                "13": PlayerDecisionHitStandOrDouble.HIT,
+                "14": PlayerDecisionHitStandOrDouble.HIT,
+                "15": PlayerDecisionHitStandOrDouble.HIT,
+                "16": PlayerDecisionHitStandOrDouble.HIT,
+                "17AndOver": PlayerDecisionHitStandOrDouble.STAND
             },
             soft: {
-                "13": PlayerPlay.HIT,
-                "14": PlayerPlay.HIT,
-                "15": PlayerPlay.HIT,
-                "16": PlayerPlay.HIT,
-                "17": PlayerPlay.HIT,        
-                "18": PlayerPlay.HIT,        
-                "19": PlayerPlay.STAND,        
-                "20": PlayerPlay.STAND, 
+                "13": PlayerDecisionHitStandOrDouble.HIT,
+                "14": PlayerDecisionHitStandOrDouble.HIT,
+                "15": PlayerDecisionHitStandOrDouble.HIT,
+                "16": PlayerDecisionHitStandOrDouble.HIT,
+                "17": PlayerDecisionHitStandOrDouble.HIT,        
+                "18": PlayerDecisionHitStandOrDouble.HIT,        
+                "19": PlayerDecisionHitStandOrDouble.STAND,        
+                "20": PlayerDecisionHitStandOrDouble.STAND, 
             },
             split: {
                 "A": true,
@@ -337,26 +338,26 @@ const BasicStrategy: Strategy = {
         // 10
         {
             hard: {
-                "8AndUnder": PlayerPlay.HIT,
-                "9": PlayerPlay.HIT, 
-                "10": PlayerPlay.HIT,
-                "11": PlayerPlay.DOUBLE,
-                "12": PlayerPlay.HIT,
-                "13": PlayerPlay.HIT,
-                "14": PlayerPlay.HIT,
-                "15": PlayerPlay.HIT,
-                "16": PlayerPlay.HIT,
-                "17AndOver": PlayerPlay.STAND
+                "8AndUnder": PlayerDecisionHitStandOrDouble.HIT,
+                "9": PlayerDecisionHitStandOrDouble.HIT, 
+                "10": PlayerDecisionHitStandOrDouble.HIT,
+                "11": PlayerDecisionHitStandOrDouble.DOUBLE,
+                "12": PlayerDecisionHitStandOrDouble.HIT,
+                "13": PlayerDecisionHitStandOrDouble.HIT,
+                "14": PlayerDecisionHitStandOrDouble.HIT,
+                "15": PlayerDecisionHitStandOrDouble.HIT,
+                "16": PlayerDecisionHitStandOrDouble.HIT,
+                "17AndOver": PlayerDecisionHitStandOrDouble.STAND
             },
             soft: {
-                "13": PlayerPlay.HIT,
-                "14": PlayerPlay.HIT,
-                "15": PlayerPlay.HIT,
-                "16": PlayerPlay.HIT,
-                "17": PlayerPlay.HIT,        
-                "18": PlayerPlay.HIT,        
-                "19": PlayerPlay.STAND,        
-                "20": PlayerPlay.STAND, 
+                "13": PlayerDecisionHitStandOrDouble.HIT,
+                "14": PlayerDecisionHitStandOrDouble.HIT,
+                "15": PlayerDecisionHitStandOrDouble.HIT,
+                "16": PlayerDecisionHitStandOrDouble.HIT,
+                "17": PlayerDecisionHitStandOrDouble.HIT,        
+                "18": PlayerDecisionHitStandOrDouble.HIT,        
+                "19": PlayerDecisionHitStandOrDouble.STAND,        
+                "20": PlayerDecisionHitStandOrDouble.STAND, 
             },
             split: {
                 "A": true,

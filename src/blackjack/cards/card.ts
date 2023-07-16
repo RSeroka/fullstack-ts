@@ -8,7 +8,6 @@ export enum CardSuit {
 }
 
 type CardValueIntValue = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13;
-type CardValueBJValue = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 export class CardValue {
     
     private _intValue: CardValueIntValue;
@@ -21,22 +20,6 @@ export class CardValue {
         return this._intValue;
     }
 
-    // public get blackJackValue() : CardValueBJValue {
-    //     let retValue: CardValueBJValue;
-
-    //     switch (this._intValue) {
-    //         case 11:
-    //         case 12:
-    //         case 13:
-    //             retValue = 10;
-    //             break;
-    //         default:
-    //             retValue = this._intValue;
-    //             break;
-    //     }
-
-    //     return retValue;
-    // }
 
     public toString() : string {
         let retValue: string;
