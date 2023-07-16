@@ -1,4 +1,5 @@
 
+
 export enum CardSuit {
     Clubs = 0,
     Diamonds = 1,
@@ -20,22 +21,22 @@ export class CardValue {
         return this._intValue;
     }
 
-    public get blackJackValue() : CardValueBJValue {
-        let retValue: CardValueBJValue;
+    // public get blackJackValue() : CardValueBJValue {
+    //     let retValue: CardValueBJValue;
 
-        switch (this._intValue) {
-            case 11:
-            case 12:
-            case 13:
-                retValue = 10;
-                break;
-            default:
-                retValue = this._intValue;
-                break;
-        }
+    //     switch (this._intValue) {
+    //         case 11:
+    //         case 12:
+    //         case 13:
+    //             retValue = 10;
+    //             break;
+    //         default:
+    //             retValue = this._intValue;
+    //             break;
+    //     }
 
-        return retValue;
-    }
+    //     return retValue;
+    // }
 
     public toString() : string {
         let retValue: string;
