@@ -8,7 +8,7 @@ import { PlayerDecisionHitStandOrDouble } from "./decsision";
 
 // Double after split allowed
 // Double on soft 18, 19 allowed
-export const BasicStrategy: Strategy = {
+export const basicStrategy: Strategy = {
     dealerUpcards: [
         // ACE
         {
@@ -62,7 +62,7 @@ export const BasicStrategy: Strategy = {
                 "15": PlayerDecisionHitStandOrDouble.HIT,
                 "16": PlayerDecisionHitStandOrDouble.HIT,
                 "17": PlayerDecisionHitStandOrDouble.HIT,        
-                "18": PlayerDecisionHitStandOrDouble.DOUBLE,        
+                "18": PlayerDecisionHitStandOrDouble.DOUBLE_OR_STAND,        
                 "19": PlayerDecisionHitStandOrDouble.STAND,        
                 "20": PlayerDecisionHitStandOrDouble.STAND, 
             },
@@ -99,7 +99,7 @@ export const BasicStrategy: Strategy = {
                 "15": PlayerDecisionHitStandOrDouble.HIT,
                 "16": PlayerDecisionHitStandOrDouble.HIT,
                 "17": PlayerDecisionHitStandOrDouble.DOUBLE,        
-                "18": PlayerDecisionHitStandOrDouble.DOUBLE,        
+                "18": PlayerDecisionHitStandOrDouble.DOUBLE_OR_STAND,        
                 "19": PlayerDecisionHitStandOrDouble.STAND,        
                 "20": PlayerDecisionHitStandOrDouble.STAND, 
             },
@@ -136,7 +136,7 @@ export const BasicStrategy: Strategy = {
                 "15": PlayerDecisionHitStandOrDouble.DOUBLE,
                 "16": PlayerDecisionHitStandOrDouble.DOUBLE,
                 "17": PlayerDecisionHitStandOrDouble.DOUBLE,        
-                "18": PlayerDecisionHitStandOrDouble.DOUBLE,        
+                "18": PlayerDecisionHitStandOrDouble.DOUBLE_OR_STAND,        
                 "19": PlayerDecisionHitStandOrDouble.STAND,        
                 "20": PlayerDecisionHitStandOrDouble.STAND, 
             },
@@ -173,7 +173,7 @@ export const BasicStrategy: Strategy = {
                 "15": PlayerDecisionHitStandOrDouble.DOUBLE,
                 "16": PlayerDecisionHitStandOrDouble.DOUBLE,
                 "17": PlayerDecisionHitStandOrDouble.DOUBLE,        
-                "18": PlayerDecisionHitStandOrDouble.DOUBLE,        
+                "18": PlayerDecisionHitStandOrDouble.DOUBLE_OR_STAND,        
                 "19": PlayerDecisionHitStandOrDouble.STAND,        
                 "20": PlayerDecisionHitStandOrDouble.STAND, 
             },
@@ -212,8 +212,8 @@ export const BasicStrategy: Strategy = {
                 "15": PlayerDecisionHitStandOrDouble.DOUBLE,
                 "16": PlayerDecisionHitStandOrDouble.DOUBLE,
                 "17": PlayerDecisionHitStandOrDouble.DOUBLE,        
-                "18": PlayerDecisionHitStandOrDouble.DOUBLE,        
-                "19": PlayerDecisionHitStandOrDouble.DOUBLE,        
+                "18": PlayerDecisionHitStandOrDouble.DOUBLE_OR_STAND,        
+                "19": PlayerDecisionHitStandOrDouble.DOUBLE_OR_STAND,        
                 "20": PlayerDecisionHitStandOrDouble.STAND, 
             },
             split: {

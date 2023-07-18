@@ -6,6 +6,8 @@ import FullStackExpressApp from './fullstack-express-app';
 
 const fullstackExpressApp = new FullStackExpressApp();
 
-fullstackExpressApp.startHttpServer();
+if (!process.env.hasOwnProperty("NO_SERVER_MODE")) {
+    fullstackExpressApp.startHttpServer();
+}
 
 

@@ -6,7 +6,7 @@
   "scripts": {
     "all-clean": "rimraf ./dist",
     "server-build": "tsc",
-    "server-test": "tsc && mocha \"dist/**/*.js\"",
+    "server-test": "tsc && env-cmd -e mocha-test mocha \"dist/**/*.js\"",
     "client-build": "cd client && npm run build",
     "all-rebuild": "npm run all-clean && concurrently -c auto \"npm:server-build\" \"npm:client-build\"",
     "local-express-server": "node ./dist/src/express/server.js",
@@ -26,6 +26,7 @@
     "chai-http": "^4.3.0",
     "concurrently": "^8.0.1",
     "create-react-app": "^5.0.1",
+    "env-cmd": "^10.1.0",
     "mocha": "^10.2.0",
     "rimraf": "^4.1.2",
     "sinon": "^15.0.1",
