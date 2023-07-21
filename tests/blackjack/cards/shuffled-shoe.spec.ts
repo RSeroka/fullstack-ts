@@ -4,7 +4,7 @@ import type Shoe from "../../../src/blackjack/cards/shoe";
 import ShuffledShoe from "../../../src/blackjack/cards/shuffled-shoe";
 
 
-describe("Shoe Tests", () => {
+export default function shoeTests() {
 
     const hasAllExpectedCards = (shoe: Shoe): void => {
         const suitsBins = new Array<number>(4);
@@ -73,4 +73,4 @@ describe("Shoe Tests", () => {
 
         hasAllExpectedCards(shoe);
     });
-});
+}

@@ -2,7 +2,7 @@
 import { assert } from "chai"; 
 import { getSectionNumber9, getSectionNumber } from "../../src/sudoku/sudoku-section";
 
-describe("getSectionNumber Tests", () => {
+export default function getSectionNumberTests()  {
     it("getSectionNumber 0", () => {
         const result = getSectionNumber(9, 0, 0);
         assert.equal(result, 0);
@@ -52,4 +52,4 @@ describe("getSectionNumber Tests", () => {
         assert.equal(result, 1);
     });
   
-});
+}

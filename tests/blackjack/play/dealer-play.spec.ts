@@ -6,7 +6,7 @@ import BlackJackCard from "../../../src/blackjack/cards/blackjack-card";
 import { DealerPlayDecision } from "../../../src/blackjack/strategies/decision";
 import DealerPlay from "../../../src/blackjack/play/dealer-play";
 
-describe("Dealer Play Tests", () => {
+export default function dealerPlayTests() {
     let hitOnSoft17DealerPlay: DealerPlay;
     let stickOnSoft17DealerPlay: DealerPlay;
     before(() => {
@@ -65,4 +65,4 @@ describe("Dealer Play Tests", () => {
 
         assert.equal(decision, DealerPlayDecision.HIT);
     });
-});
+}

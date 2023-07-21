@@ -37,7 +37,7 @@ const logBoard = (board: Board9) => {
     console.log(majorRow);
 };
 
-describe("SudokuSolver9 Tests", () => {
+export default function sudokuSolver9Tests()  {
     it("warmup 0", () => {
         const result = 0;
         assert.equal(result, 0);
@@ -264,4 +264,4 @@ describe("SudokuSolver9 Tests", () => {
         // logBoard(input);
         assert.isTrue(isEqualArrayOfArrays<Board9Char>(expectedResult, input));
     });
-});
+}

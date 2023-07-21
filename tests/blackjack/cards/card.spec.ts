@@ -1,7 +1,7 @@
 import { assert } from "chai"; 
 import Card, {CardSuit, CardValue} from "../../../src/blackjack/cards/card";
 
-describe("CardValue Tests", () => {
+export function cardValueTests() {
     it("CardValue Ace Test", () => {
         const cardValue = new CardValue(1);
         assert.equal(cardValue.intValue, 1);
@@ -23,9 +23,9 @@ describe("CardValue Tests", () => {
         assert.equal(cardValue.toString(), 'J');
 
     });
-});
+}
 
-describe("Card Tests", () => {
+export function individualCardTests() {
     it("Ace Clubs Test", () => {
         const card = new Card(0);
         const cardValue = card.value;
@@ -57,4 +57,4 @@ describe("Card Tests", () => {
         assert.equal(cardValue.intValue, 1);
         assert.equal(cardSuit, CardSuit.Spades);
     });
-});
+}

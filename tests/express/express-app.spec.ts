@@ -9,7 +9,7 @@ import ExpressApp from '../../src/express/express-app';
 
 chai.use(chaiHttp);
 
-describe('Base Express App', () => {
+export default function expressAppTests()  {
     let expressApp: ExpressApp;
     let server: core.Express;
 
@@ -44,4 +44,4 @@ describe('Base Express App', () => {
         expressApp.shutdown();
     });
 
-});
+}

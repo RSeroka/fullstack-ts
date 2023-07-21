@@ -6,7 +6,7 @@ import BlackJackCard from "../../../src/blackjack/cards/blackjack-card";
 import { PlayerPlayDecision } from "../../../src/blackjack/strategies/decision";
 import PlayerPlay from "../../../src/blackjack/play/player-play";
 
-describe("Player Play Tests", () => {
+export default function playerPlayTests() {
     let defaultPlayerPlay: PlayerPlay;
     before(() => {
         defaultPlayerPlay = new PlayerPlay({});
@@ -116,4 +116,4 @@ describe("Player Play Tests", () => {
 
         assert.equal(decision, PlayerPlayDecision.HIT);
     });
-});
+}

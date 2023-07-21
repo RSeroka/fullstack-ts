@@ -2,7 +2,7 @@
 import { assert } from "chai"; 
 import getSortedRemaining from "../../src/sudoku/get-sorted-remaining";
 
-describe("getSortedRemaining Tests", () => {
+export default function getSortedRemainingTests() {
     it("presorted below 8", () => {
         const numsQuantity = [8, 7, 6, 5, 4, 3, 2, 1, 0];
         const result = getSortedRemaining(numsQuantity);
@@ -20,5 +20,6 @@ describe("getSortedRemaining Tests", () => {
         const result = getSortedRemaining(numsQuantity);
         assert.deepEqual(result, [1, 2,  4, 5,   7,  9]);
     });
-});
+}
+
 

@@ -9,7 +9,7 @@ import FullStackExpressApp from '../../src/express/fullstack-express-app';
 
 chai.use(chaiHttp);
 
-describe('Sudoku Express App', () => {
+export default function sudokuExpressAppTests() {
     let sudokuExpressApp: FullStackExpressApp;
     let server: core.Express;
 
@@ -63,4 +63,4 @@ describe('Sudoku Express App', () => {
         sudokuExpressApp.shutdown();
     });
 
-});
+}

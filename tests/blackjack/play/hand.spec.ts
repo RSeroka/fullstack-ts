@@ -3,7 +3,7 @@ import { assert } from "chai";
 import Hand from "../../../src/blackjack/play/hand";
 import BlackJackCard from "../../../src/blackjack/cards/blackjack-card";
 
-describe("Hand tests", () => {
+export default function handTests() {
     it("Single Ace", () => {
         const hand = new Hand();
         hand.addCard(BlackJackCard.ACE);
@@ -113,4 +113,4 @@ describe("Hand tests", () => {
         assert.equal(hand.total, 21, "total of two cards");
     });
 
-});
+}

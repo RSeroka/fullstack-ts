@@ -3,7 +3,7 @@ import { assert } from "chai";
 import BlackJackCard from "../../../src/blackjack/cards/blackjack-card";
 import Card from "../../../src/blackjack/cards/card";
 
-describe("BlackJackCard Tests", () => {
+export default function blackjackCardTests() {
 
     const perCardTest = (card: Card, expectedValue: number, 
         expectedName: string, expectedBJCard: BlackJackCard): void => {
@@ -48,4 +48,4 @@ describe("BlackJackCard Tests", () => {
         perCardTest(new Card(12), 10, '10', BlackJackCard.TEN);
     });
 
-});
+}
