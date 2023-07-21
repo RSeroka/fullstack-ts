@@ -1,30 +1,30 @@
 
 
 
-import type { PlayerDecisionHitStandOrDouble } from "./decsision";
+import type { PlayerStrategyHitStandOrDouble } from "./decision";
 
-type PerDealerUpcard = {
+export type PerDealerUpcard = {
     hard: {
-        "8AndUnder": PlayerDecisionHitStandOrDouble;
-        "9": PlayerDecisionHitStandOrDouble;
-        "10": PlayerDecisionHitStandOrDouble;
-        "11": PlayerDecisionHitStandOrDouble;
-        "12": PlayerDecisionHitStandOrDouble;
-        "13": PlayerDecisionHitStandOrDouble;
-        "14": PlayerDecisionHitStandOrDouble;
-        "15": PlayerDecisionHitStandOrDouble;
-        "16": PlayerDecisionHitStandOrDouble;
-        "17AndOver": PlayerDecisionHitStandOrDouble;
+        "8AndUnder": PlayerStrategyHitStandOrDouble;
+        "9": PlayerStrategyHitStandOrDouble;
+        "10": PlayerStrategyHitStandOrDouble;
+        "11": PlayerStrategyHitStandOrDouble;
+        "12": PlayerStrategyHitStandOrDouble;
+        "13": PlayerStrategyHitStandOrDouble;
+        "14": PlayerStrategyHitStandOrDouble;
+        "15": PlayerStrategyHitStandOrDouble;
+        "16": PlayerStrategyHitStandOrDouble;
+        "17AndOver": PlayerStrategyHitStandOrDouble;
     },
     soft: {
-        "13": PlayerDecisionHitStandOrDouble;
-        "14": PlayerDecisionHitStandOrDouble;
-        "15": PlayerDecisionHitStandOrDouble;
-        "16": PlayerDecisionHitStandOrDouble;
-        "17": PlayerDecisionHitStandOrDouble;        
-        "18": PlayerDecisionHitStandOrDouble;        
-        "19": PlayerDecisionHitStandOrDouble;        
-        "20": PlayerDecisionHitStandOrDouble;        
+        "13": PlayerStrategyHitStandOrDouble;
+        "14": PlayerStrategyHitStandOrDouble;
+        "15": PlayerStrategyHitStandOrDouble;
+        "16": PlayerStrategyHitStandOrDouble;
+        "17": PlayerStrategyHitStandOrDouble;        
+        "18": PlayerStrategyHitStandOrDouble;        
+        "19": PlayerStrategyHitStandOrDouble;        
+        "20": PlayerStrategyHitStandOrDouble;        
     },
     "split": {
         "A"?: boolean;

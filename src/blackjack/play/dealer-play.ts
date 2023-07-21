@@ -2,7 +2,7 @@
 
 import type Hand from "./hand";
 import type Play from "./play";
-import  { DealerPlayDecision} from "../strategies/decsision";
+import  { DealerPlayDecision} from "../strategies/decision";
 
 
 export type DealerPlayConfiguration = {
@@ -22,12 +22,7 @@ export default class DealerPlay implements Play {
         // default the configuration to the static
         this.configuration = {
             ...DealerPlay.defaultConfiguration,
-        }
-
-        // apply optional configuration on top of default configuration
-        let configKey: keyof typeof config_;
-        for (configKey in config_) {
-            this.configuration[configKey] = config_[configKey]!;
+            ...config_
         }
     }
 

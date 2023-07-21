@@ -3,7 +3,7 @@
 import { assert } from "chai"; 
 import Hand from "../../../src/blackjack/play/hand";
 import BlackJackCard from "../../../src/blackjack/cards/blackjack-card";
-import { DealerPlayDecision } from "../../../src/blackjack/strategies/decsision";
+import { DealerPlayDecision } from "../../../src/blackjack/strategies/decision";
 import DealerPlay from "../../../src/blackjack/play/dealer-play";
 
 describe("Dealer Play Tests", () => {

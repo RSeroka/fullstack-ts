@@ -22,6 +22,15 @@ export const PlayerDecisionHitStandOrDouble = {
 
 export type PlayerDecisionHitStandOrDouble = typeof PlayerDecisionHitStandOrDouble[keyof typeof PlayerDecisionHitStandOrDouble];
 
+
+
+export const PlayerStrategyHitStandOrDouble = {
+    ...PlayerDecisionHitStandOrDouble,
+    DOUBLE_OR_STAND: 'Double or Stand'
+} as const;
+
+export type PlayerStrategyHitStandOrDouble = typeof PlayerStrategyHitStandOrDouble[keyof typeof PlayerStrategyHitStandOrDouble];
+
 export const PlayerPlayDecision = {
     ...PlayerDecisionHitStandOrDouble,
     SPLIT: 'Split',
