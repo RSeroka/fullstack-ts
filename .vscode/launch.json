@@ -17,7 +17,10 @@
             ],
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
-            ]
+            ],
+            "env": {
+                "NO_SERVER_MODE": "true"
+            }
         }
     ]
 }
