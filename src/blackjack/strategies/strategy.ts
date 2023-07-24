@@ -36,7 +36,6 @@ export type PerDealerUpcard = {
         "7"?: boolean;
         "8"?: boolean;
         "9"?: boolean;
-        "10"?: boolean;
     }, 
     "surrender": {
         "15"?: boolean;

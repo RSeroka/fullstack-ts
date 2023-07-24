@@ -106,11 +106,35 @@ export default function handTests() {
         hand.addDownCard(BlackJackCard.TEN);
         hand.addCard(BlackJackCard.ACE);
 
-        assert.equal(hand.total, 11, "before is value of one card")
+        assert.equal(hand.total, 11, "before is value of one card");
 
         hand.flipDownCard();
 
         assert.equal(hand.total, 21, "total of two cards");
     });
+
+    it("isBlackjack", () => {
+        const hand = new Hand();
+        hand.addDownCard(BlackJackCard.TEN);
+        hand.addCard(BlackJackCard.ACE);
+
+        assert.equal(hand.isBlackJack, true, "before flip")
+
+        hand.flipDownCard();
+
+        assert.equal(hand.isBlackJack, true, "after flip");
+    });
+
+    it("three cards not isBlackjack", () => {
+        const hand = new Hand();
+        hand.addCard(BlackJackCard.TEN);
+        hand.addCard(BlackJackCard.FIVE);
+        hand.addCard(BlackJackCard.SIX);
+
+        assert.equal(hand.isBlackJack, false, "not blackjack")
+
+
+    });
+
 
 }

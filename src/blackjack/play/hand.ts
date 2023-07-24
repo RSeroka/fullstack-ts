@@ -53,5 +53,20 @@ export default class Hand {
         return this._isSoft;
     }
 
+    public get isBlackJack(): boolean {
+        if (this.downCard !== undefined && this._cards.length == 1 && (this._cards[0]?.value == 10 || this._cards[0]?.value == 1) ){
+            const newHand = new Hand();
+            newHand.addCard(this.downCard);
+            newHand.addCard(this._cards[0]);
+            if (newHand.total == 21) {
+                return true;
+            }
+        }
+        else if (this.downCard === undefined && this._cards.length === 2 && this.total === 21) {
+            return true;
+        }
+        return false;
+    }
+
 
 }

@@ -3,10 +3,11 @@
 import type Card from "./card";
 
 export default abstract class Shoe {
+    public static readonly CARDS_PER_DECK = 52;
+    private initialized: boolean;
     private _numDecks: number;
     private cutoff: number;
     protected cards: Array<Card>;
-    public static readonly CARDS_PER_DECK = 52;
 
 
     /**
@@ -19,32 +20,51 @@ export default abstract class Shoe {
         const cuttoffFraction_ = cutoffFraction !== undefined && cutoffFraction >= 0 && cutoffFraction <= 1 ? cutoffFraction : .40;
         this.cutoff = Math.trunc(cuttoffFraction_ * Shoe.CARDS_PER_DECK * this._numDecks);
         this.cards = [];
+        this.initialized = false;
+    }
 
-        const unsuffledCards = new Array<number>(Shoe.CARDS_PER_DECK * this._numDecks);
-        for (let index = 0; index < Shoe.CARDS_PER_DECK * this._numDecks; index++) {
-            unsuffledCards[index] = index;
+    private insureShuffled(): void {
+        if (!this.initialized) {
+            const unsuffledCards = new Array<number>(Shoe.CARDS_PER_DECK * this._numDecks);
+            for (let index = 0; index < Shoe.CARDS_PER_DECK * this._numDecks; index++) {
+                unsuffledCards[index] = index;
+            }
+
+            this.shuffleCards(unsuffledCards);
+            this.initialized = true;
         }
-        this.shuffleCards(unsuffledCards);
     }
 
     public nextCard(): Card | undefined {
-        return this.cards.pop();
+        this.insureShuffled();
+        const nextCard = this.cards.pop();
+        // console.log(`REMOVE ME nextCard() returns ${nextCard}`);
+        return nextCard;
     }
 
     public isPastCutoff(): boolean {
+        this.insureShuffled();
         return this.cards.length < this.cutoff;
     }
 
     public get remainingNumberOfCards(): number {
+        this.insureShuffled();
         return this.cards.length - this.cutoff;
     }
 
     public get numDecks(): number {
+        this.insureShuffled();
         return this._numDecks;
     }
 
     public get totalNumberOfCards(): number {
+        this.insureShuffled();
         return this._numDecks * Shoe.CARDS_PER_DECK;
+    }
+
+    public get cardsLeftInShoe(): number {
+        this.insureShuffled();
+        return this.cards.length;
     }
 
     protected abstract shuffleCards(unsuffledCards: Array<number>): void;
