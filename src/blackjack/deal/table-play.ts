@@ -19,6 +19,7 @@ export enum BlackJackResult {
 // splits would have more than one SingleHandResult
 export type PlayerSingleHandResult = {  
     hand: Hand,
+    wasSplit: boolean,
     lastPlayerDecision: PlayerPlayDecision,
     result: BlackJackResult, 
     singleHandNetChips: number
@@ -96,12 +97,7 @@ export default class TablePlay {
 
         for (let playerIdx = 0; playerIdx < handResult.playerResults.length; playerIdx++) {
             handResult.playerResults[playerIdx] = new Array<PlayerSingleHandResult>(1);
-            handResult.playerResults[playerIdx]![0] = {
-                hand: new Hand(),
-                lastPlayerDecision: PlayerPlayDecision.STAND, 
-                result: BlackJackResult.BJ_PUSH,
-                singleHandNetChips: 0
-            }
+            handResult.playerResults[playerIdx]![0] = this.createInitialPlayerSingleHandResult(); 
             playerHands[playerIdx] = handResult.playerResults[playerIdx]![0]!.hand;
         }
 
@@ -121,7 +117,7 @@ export default class TablePlay {
         for (let playerIdx = 0; playerIdx < handResult.playerResults.length; playerIdx++) {
             handResult.playerResults[playerIdx]!.forEach(playerSingleHandResult => {
                 if (playerSingleHandResult.result !== BlackJackResult.BJ_LOSE) {
-                    if (playerSingleHandResult.hand.isBlackJack && !handResult.dealerHand.isBlackJack) {
+                    if (playerSingleHandResult.hand.isBlackJack && !playerSingleHandResult.wasSplit && !handResult.dealerHand.isBlackJack) {
                         // blackjack pays 3:2 
                         // TODO make this configurable
                         playerSingleHandResult.result = BlackJackResult.BJ_WIN;
@@ -158,6 +154,24 @@ export default class TablePlay {
         return handResult;
     }
 
+    private createInitialPlayerSingleHandResult() : PlayerSingleHandResult {
+        return {
+            hand: new Hand(),
+            wasSplit: false,
+            lastPlayerDecision: PlayerPlayDecision.STAND, 
+            result: BlackJackResult.BJ_PUSH,
+            singleHandNetChips: 0
+        };
+    }
+
+    private createSplitPlayerSingleHandResult(card: BlackJackCard) : PlayerSingleHandResult {
+        const shr = this.createInitialPlayerSingleHandResult();
+        shr.wasSplit = true;
+        shr.hand.addCard(card);
+        shr.lastPlayerDecision = PlayerPlayDecision.SPLIT;
+        return shr; 
+    }
+
     private dealerPlaying(handResult: DealtHandResult) {
         handResult.dealerHand.flipDownCard();
         let dealerTakeCard = true;
@@ -166,13 +180,13 @@ export default class TablePlay {
             switch (dealerPlayDecision) {
                 case DealerPlayDecision.HIT:
                     dealerTakeCard = true;
- //                   console.log(`dealer has ${handResult.dealerHand.total}, dealer hits`);
+                    if (this.logging) {console.debug(`dealer has ${handResult.dealerHand.total}, dealer hits`)};
                     handResult.dealerHand.addCard(BlackJackCard.fromCard(this.shoe.nextCard()!));
                     break;
                 case DealerPlayDecision.STAND:
                 default:
                     dealerTakeCard = false;
- //                   console.log(`dealer has ${handResult.dealerHand.total}, dealer stands`);
+                    if (this.logging) {console.log(`dealer has ${handResult.dealerHand.total}, dealer stands`)};
                     break;
             }
         }
@@ -182,43 +196,70 @@ export default class TablePlay {
 
         /* players play until over 21 or STAND */
         for (let playerIdx = 0; playerIdx < handResult.playerResults.length; playerIdx++) {
-            let playerChoose = true;
-            while (playerChoose) {
-                const lastPlayerDecision = this.players[playerIdx]!.play(handResult.dealerHand, handResult.playerResults[playerIdx]![0]!.hand);
-                handResult.playerResults[playerIdx]![0]!.lastPlayerDecision = lastPlayerDecision;
-                switch (lastPlayerDecision) {
-                    case PlayerPlayDecision.DOUBLE:
-                        playerChoose = false;
-                        if (this.logging) {console.debug(`player has ${handResult.playerResults[playerIdx]![0]!.hand.total}, dealer has ${handResult.dealerHand.total}, player doubles}`);}
-                        this.applyPlayerCard(handResult.playerResults[playerIdx]![0]!);
-                        break;
-                    case PlayerPlayDecision.HIT:
-                        playerChoose = true;
-                        if (this.logging) {console.debug(`player has ${handResult.playerResults[playerIdx]![0]!.hand.total}, dealer has ${handResult.dealerHand.total}, player hits}`);}
-                        this.applyPlayerCard(handResult.playerResults[playerIdx]![0]!);
-                        break;
-                    case PlayerPlayDecision.SPLIT:
-                        if (this.logging) {console.debug(`player has ${handResult.playerResults[playerIdx]![0]!.hand.total}, dealer has ${handResult.dealerHand.total}, player splits}`);}
+            const singlePlayerResults = handResult.playerResults[playerIdx]!;
 
-                        // TODO figure out what to do for split!!
-                        playerChoose = false;
-                        break;
+            // note that the number of hands may increase as splits occur...
+            for (let handIdx = 0; handIdx < singlePlayerResults.length; handIdx++) {
+                let playerChoose = true;
+                while (playerChoose) {
+                    const playerSingleHandResult = singlePlayerResults[handIdx]!; 
 
-                    case PlayerPlayDecision.SURRENDER:
-                        playerChoose = false;
-                        if (this.logging) {console.debug(`player has ${handResult.playerResults[playerIdx]![0]!.hand.total}, dealer has ${handResult.dealerHand.total}, player surrenders}`);}
-                        handResult.playerResults[playerIdx]![0]!.result = BlackJackResult.BJ_LOSE;
-                        handResult.playerResults[playerIdx]![0]!.singleHandNetChips = 0.5 * BlackJackResult.BJ_LOSE;
-                        break;
+                    if (playerSingleHandResult.wasSplit && playerSingleHandResult.hand.cards.length === 1) {
+                        if (playerSingleHandResult.hand.total === 11) {
+                            // splitting Aces can only get one card
+                            playerChoose = false; // break the loop
+                            playerSingleHandResult.lastPlayerDecision = PlayerPlayDecision.STAND;
+                            this.applyPlayerCard(playerSingleHandResult);
+                            break;  // get out of while (playerChoose) loop
+                        }
+                        this.applyPlayerCard(playerSingleHandResult);
+                    }
+                    const lastPlayerDecision = this.players[playerIdx]!.play(handResult.dealerHand, playerSingleHandResult.hand);
+                    playerSingleHandResult.lastPlayerDecision = lastPlayerDecision;
 
-                    case PlayerPlayDecision.STAND:
-                    default:
-                        playerChoose = false;
-                        break;
+                    switch (lastPlayerDecision) {
+                        case PlayerPlayDecision.DOUBLE:
+                            playerChoose = false;
+                            if (this.logging) {console.debug(`player has ${playerSingleHandResult.hand.total}, dealer has ${handResult.dealerHand.total}, player doubles`);}
+                            this.applyPlayerCard(playerSingleHandResult);
+                            break;
+                        case PlayerPlayDecision.HIT:
+                            playerChoose = true;
+                            if (this.logging) {console.debug(`player has ${playerSingleHandResult.hand.total}, dealer has ${handResult.dealerHand.total}, player hits`);}
+                            this.applyPlayerCard(playerSingleHandResult);
+                            break;
+                        case PlayerPlayDecision.SPLIT:
+                            playerChoose = true;
+                            if (this.logging) {console.debug(`player has ${playerSingleHandResult.hand.total}, dealer has ${handResult.dealerHand.total}, player splits`);}
+    
+                            const split1 = this.createSplitPlayerSingleHandResult(playerSingleHandResult.hand.cards[0]!);
+                            const split2 = this.createSplitPlayerSingleHandResult(playerSingleHandResult.hand.cards[1]!);
+                            
+                            singlePlayerResults[handIdx] = split1; 
+                            singlePlayerResults.splice(handIdx + 1, 0, split2);
 
+                            break;
+    
+                        case PlayerPlayDecision.SURRENDER:
+                            playerChoose = false;
+                            if (this.logging) {console.debug(`player has ${playerSingleHandResult.hand.total}, dealer has ${handResult.dealerHand.total}, player surrenders`);}
+                            playerSingleHandResult.result = BlackJackResult.BJ_LOSE;
+                            playerSingleHandResult.singleHandNetChips = 0.5 * BlackJackResult.BJ_LOSE;
+                            break;
+    
+                        case PlayerPlayDecision.STAND:
+                        default:
+                            playerChoose = false;
+                            if (this.logging) {console.debug(`player has ${playerSingleHandResult.hand.total}, dealer has ${handResult.dealerHand.total}, player stands`);}
+                            break;
+    
+                    }
+
+                    // console.log(`DELETE ME ${handIdx}, ${playerChoose}, ${JSON.stringify(playerSingleHandResult)}`);
                 }
+
             }
-        }
+        } 
     }
 
     private applyPlayerCard(playerSingleHandResult: PlayerSingleHandResult) : void {

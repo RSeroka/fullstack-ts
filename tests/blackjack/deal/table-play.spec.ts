@@ -95,6 +95,22 @@ export default function tablePlayTests()  {
             }
         },
         {
+            name: "Push Again",
+            cards: {
+                player: [7, 12], // 8,  and King (18 hand 1)
+                dealer: [3, 5, 7] //  4 in the hole, 6 showing, 8 (total 18)
+            },
+            expect: {
+                playerSingleHands: [
+                    {total: 18, result: BlackJackResult.BJ_PUSH, netChips: 0},
+                ],
+                dealer: {
+                    total: 18
+                },
+                dealtHandNetChips: 0
+            }
+        },
+        {
             name: "Push multicard",
             cards: {
                 player: [6, 5, 4], // 7, 6, 5
@@ -129,7 +145,7 @@ export default function tablePlayTests()  {
         {
             name: "Dealer BlackJack Wins right away",
             cards: {
-                player: [4, 5, 11], // 5, 6, Queen should not really be pulled, no double 
+                player: [4, 5], // 5, 6, Queen should not really be pulled, no double 
                 dealer: [11, 0] //  Queen in hole, Ace showing
             },
             expect: {
@@ -177,8 +193,8 @@ export default function tablePlayTests()  {
         {
             name: "Surrender",
             cards: {
-                player: [5, 9, 8], // 6, 10
-                dealer: [5, 0, 3] //  6 in the hole, Ace showing, 4
+                player: [5, 9], // 6, 10
+                dealer: [5, 0, 2] //  6 in the hole, Ace showing, 3
             },
             expect: {
                 playerSingleHands: [
@@ -187,7 +203,8 @@ export default function tablePlayTests()  {
                 dealer: {
                     total: 20
                 },
-                dealtHandNetChips: -0.5            }
+                dealtHandNetChips: -0.5
+            }
         },
         {
             name: "split 8s and win both",
@@ -197,15 +214,68 @@ export default function tablePlayTests()  {
             },
             expect: {
                 playerSingleHands: [
-                    {total: 18, result: BlackJackResult.BJ_WIN, netChips: 2},
-                    {total: 18, result: BlackJackResult.BJ_WIN, netChips: 2}
+                    {total: 18, result: BlackJackResult.BJ_WIN, netChips: 1},
+                    {total: 18, result: BlackJackResult.BJ_WIN, netChips: 1}
                 ],
                 dealer: {
                     total: 25
                 },
-                dealtHandNetChips: 4
+                dealtHandNetChips: 2
             }
         },
+        {
+            name: "split Aces get only one card each",
+            cards: {
+                player: [0, 0, 1, 4], // A, A (split), add 2 and 5 for each hand
+                dealer: [4, 5, 8] //  5 in the hole, 6 showing, and 9 
+            },
+            expect: {
+                playerSingleHands: [
+                    {total: 13, result: BlackJackResult.BJ_LOSE, netChips: -1},
+                    {total: 16, result: BlackJackResult.BJ_LOSE, netChips: -1}
+                ],
+                dealer: {
+                    total: 20
+                },
+                dealtHandNetChips: -2
+            }
+        },
+        {
+            name: "split Aces get blackjack only pays 1:1",
+            cards: {
+                player: [0, 0, 10, 4], // A, A (split), add jack and 5 for each hand
+                dealer: [4, 5, 8] //  5 in the hole, 6 showing, and 9 
+            },
+            expect: {
+                playerSingleHands: [
+                    {total: 21, result: BlackJackResult.BJ_WIN, netChips: 1},
+                    {total: 16, result: BlackJackResult.BJ_LOSE, netChips: -1}
+                ],
+                dealer: {
+                    total: 20
+                },
+                dealtHandNetChips: 0
+            }
+        },
+        {
+            name: "split 8s twice, total of three hands",
+            cards: {
+                player: [7, 7, 7, 12, 2, 7, 6], // 8, 8 (split), add 8 (split) and King (18 hand 1), 3 (double), 8 (19 hand 2), 7 (15 hand 3)
+                dealer: [3, 5, 2, 4] //  4 in the hole, 6 showing, 3, 5 (total 18)
+            },
+            expect: {
+                playerSingleHands: [
+                    {total: 18, result: BlackJackResult.BJ_PUSH, netChips: 0},
+                    {total: 19, result: BlackJackResult.BJ_WIN, netChips: 2},
+                    {total: 15, result: BlackJackResult.BJ_LOSE, netChips: -1},
+                ],
+                dealer: {
+                    total: 18
+                },
+                dealtHandNetChips: 1
+            }
+        },
+        
 
 
     ];
@@ -253,6 +323,7 @@ export default function tablePlayTests()  {
                     return new Card(offsetIntoDeck);
                 }
             }
+            console.error(`test error retrieveCard() could not provide card ${zeroBasedOffsetOf13}`);
             return new Card(51);  // if not founc return King of Spades?
         }
 
@@ -296,28 +367,45 @@ export default function tablePlayTests()  {
         });
 
 
-        scenarios.forEach((scenario) => {
+        for (let scenarioOffset = 0; scenarioOffset < scenarios.length; scenarioOffset++) {
+            const scenario = scenarios[scenarioOffset]!;
+
+
             it(scenario.name, () => {
-
-                const scenarioOffset = expectedOffset++;
-                const scenario = scenarios[scenarioOffset];
                 const dealtHandResult = tablePlay.dealHand();
-                assert.equal(shoeFactory.currScenarioOffset, expectedOffset, "shoe shuffled for test correctly");
+                // console.log(`XXX DELETE ME ${JSON.stringify(dealtHandResult)}`);
 
-                for (let expectedPlayerHands = 0; expectedPlayerHands < scenario!.expect.playerSingleHands.length; expectedPlayerHands++) {
+                assert.equal(shoeFactory.currScenarioOffset, scenarioOffset + 1, "shoe shuffled for test correctly");
+                assert.equal(dealtHandResult.playerResults[0]!.length,  scenario.expect.playerSingleHands.length, "number of player hands correct");
+                assert.equal(dealtHandResult.dealerHand.cards.length, scenario.cards.dealer.length, "Dealer has correct number of cards");
+                const expectedPlayerCards = scenario.cards.player.length;
+                let actualPlayerCards = 0;
+                dealtHandResult.playerResults[0]!.forEach(perPlayerHand => {
+                    actualPlayerCards += perPlayerHand.hand.cards.length;
+                });
+                assert.equal(expectedPlayerCards, actualPlayerCards, "Players have correct number of cards");
+
+
+
+                for (let expectedPlayerHands = 0; expectedPlayerHands < scenario.expect.playerSingleHands.length; expectedPlayerHands++) {
+ 
                     assert.equal(dealtHandResult.playerResults[0]![expectedPlayerHands]?.hand.total, 
-                        scenario!.expect.playerSingleHands[expectedPlayerHands]?.total, "Player total is correct");
+                        scenario.expect.playerSingleHands[expectedPlayerHands]?.total, `Player hand ${expectedPlayerHands} total is correct`);
                     assert.equal(dealtHandResult.playerResults[0]![expectedPlayerHands]?.result, 
-                        scenario!.expect.playerSingleHands[expectedPlayerHands]?.result, "Player results correct");
+                        scenario.expect.playerSingleHands[expectedPlayerHands]?.result, `Player hand ${expectedPlayerHands} results correct`);
                     assert.equal(dealtHandResult.playerResults[0]![expectedPlayerHands]?.singleHandNetChips, 
-                        scenario!.expect.playerSingleHands[expectedPlayerHands]?.netChips, "Player hand chips correct");
+                        scenario.expect.playerSingleHands[expectedPlayerHands]?.netChips, `Player hand ${expectedPlayerHands} chips correct`);
 
                 }
-                assert.equal(dealtHandResult.dealerHand.total, scenario!.expect.dealer.total, "Dealer value is correct");
-                assert.equal(dealtHandResult.dealtHandNetChips, scenario!.expect.dealtHandNetChips, "All hands net chips correct");
 
-            })
-        });
+
+                assert.equal(dealtHandResult.dealerHand.total, scenario.expect.dealer.total, "Dealer value is correct");
+                assert.equal(dealtHandResult.dealtHandNetChips, scenario.expect.dealtHandNetChips, "All hands net chips correct");
+
+            });
+
+        }
+
 
     })
 }
