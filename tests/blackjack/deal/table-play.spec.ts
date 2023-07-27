@@ -145,7 +145,7 @@ export default function tablePlayTests()  {
         {
             name: "Dealer BlackJack Wins right away",
             cards: {
-                player: [4, 5], // 5, 6, Queen should not really be pulled, no double 
+                player: [4, 5], // 5, 6, next card not pulled, no double 
                 dealer: [11, 0] //  Queen in hole, Ace showing
             },
             expect: {
@@ -378,27 +378,24 @@ export default function tablePlayTests()  {
                 assert.equal(shoeFactory.currScenarioOffset, scenarioOffset + 1, "shoe shuffled for test correctly");
                 assert.equal(dealtHandResult.playerResults[0]!.length,  scenario.expect.playerSingleHands.length, "number of player hands correct");
                 assert.equal(dealtHandResult.dealerHand.cards.length, scenario.cards.dealer.length, "Dealer has correct number of cards");
-                const expectedPlayerCards = scenario.cards.player.length;
-                let actualPlayerCards = 0;
-                dealtHandResult.playerResults[0]!.forEach(perPlayerHand => {
-                    actualPlayerCards += perPlayerHand.hand.cards.length;
-                });
-                assert.equal(expectedPlayerCards, actualPlayerCards, "Players have correct number of cards");
 
+                let actualNumberOfPlayerCards = 0;
 
+                for (let expectedPlayerHandCnt = 0; expectedPlayerHandCnt < scenario.expect.playerSingleHands.length; expectedPlayerHandCnt++) {
+                    const actualPlayerHand = dealtHandResult.playerResults[0]![expectedPlayerHandCnt]!;
+                    const expectedPlayerHand = scenario.expect.playerSingleHands[expectedPlayerHandCnt]!;
 
-                for (let expectedPlayerHands = 0; expectedPlayerHands < scenario.expect.playerSingleHands.length; expectedPlayerHands++) {
- 
-                    assert.equal(dealtHandResult.playerResults[0]![expectedPlayerHands]?.hand.total, 
-                        scenario.expect.playerSingleHands[expectedPlayerHands]?.total, `Player hand ${expectedPlayerHands} total is correct`);
-                    assert.equal(dealtHandResult.playerResults[0]![expectedPlayerHands]?.result, 
-                        scenario.expect.playerSingleHands[expectedPlayerHands]?.result, `Player hand ${expectedPlayerHands} results correct`);
-                    assert.equal(dealtHandResult.playerResults[0]![expectedPlayerHands]?.singleHandNetChips, 
-                        scenario.expect.playerSingleHands[expectedPlayerHands]?.netChips, `Player hand ${expectedPlayerHands} chips correct`);
-
+                    actualNumberOfPlayerCards += actualPlayerHand.hand.cards.length;
+                    assert.equal(actualPlayerHand.hand.total, expectedPlayerHand.total, 
+                        `Player hand ${expectedPlayerHandCnt} total is correct`);
+                    assert.equal(actualPlayerHand.result, expectedPlayerHand.result, 
+                        `Player hand ${expectedPlayerHandCnt} results correct`);
+                    assert.equal(actualPlayerHand.singleHandNetChips, expectedPlayerHand.netChips, 
+                        `Player hand ${expectedPlayerHandCnt} chips correct`);
                 }
 
 
+                assert.equal(actualNumberOfPlayerCards, scenario.cards.player.length, "Players have correct number of cards");
                 assert.equal(dealtHandResult.dealerHand.total, scenario.expect.dealer.total, "Dealer value is correct");
                 assert.equal(dealtHandResult.dealtHandNetChips, scenario.expect.dealtHandNetChips, "All hands net chips correct");
 
