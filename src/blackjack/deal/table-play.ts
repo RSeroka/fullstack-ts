@@ -8,6 +8,8 @@ import Hand from "../play/hand";
 import type { PlayerPlayConfiguration } from "../play/player-play";
 import PlayerPlay from "../play/player-play";
 import { DealerPlayDecision, PlayerPlayDecision } from "../strategies/decision";
+import type StrategyResults from "../strategies/strategy-results";
+import StrategyResultsCollector from "./strategy-results-collector";  // circular import needs review....
 
 
 export enum BlackJackResult {
@@ -23,26 +25,13 @@ export type PlayerSingleHandResult = {
     lastPlayerDecision: PlayerPlayDecision,
     result: BlackJackResult, 
     singleHandNetChips: number
-}
+};
 
 export type DealtHandResult = {
     playerResults: Array<Array<PlayerSingleHandResult>>; 
     dealerHand: Hand;
     dealtHandNetChips: number; // positive players win, negative house wins
 };
-
-// export type AggregateResultPerPlayer = {
-//     numDeals: number;
-//     numHands: number;
-//     netResults: number; // positive players win, negative house wins
-// }
-
-// export type AggregateResult = {
-//     playerResults: Array<AggregateResultPerPlayer>;
-//     numDeals: number;
-//     numHands: number;
-//     netResults: number; // positive players win, negative house wins
-// }
 
 export default class TablePlay {
 
@@ -52,6 +41,8 @@ export default class TablePlay {
     private shoe: Shoe;
     private shoeCnt: number;
     private shoeFactory: IShoeFactory;
+    private strategyResultsCollectors: Array<StrategyResultsCollector>;
+
     public constructor(playerPlayConfigs: Array<Partial<PlayerPlayConfiguration>>, dealerPlayConfiguration: DealerPlayConfiguration,
         shoeFact: IShoeFactory) {
         this.players = new Array<PlayerPlay>(playerPlayConfigs.length);
@@ -62,6 +53,11 @@ export default class TablePlay {
         this.shoeFactory = shoeFact;
         this.shoe = this.shoeFactory.createShoe();  
         this.shoeCnt = 1;
+
+        this.strategyResultsCollectors = new Array<StrategyResultsCollector>(playerPlayConfigs.length);
+        for (let collectorCnt = 0; collectorCnt < playerPlayConfigs.length; collectorCnt++) {
+            this.strategyResultsCollectors[collectorCnt] = new StrategyResultsCollector(this.players[collectorCnt]?.playerStrategy!);
+        }
     }
 
 
@@ -143,6 +139,9 @@ export default class TablePlay {
                     }
                     // other permutation is a push which was initialization of the playerSingleHandResult
                 }
+
+
+                this.strategyResultsCollectors[playerIdx]?.applyHandResult(playerSingleHandResult, handResult.dealerHand.cards[0]!);
 
                 handResult.dealtHandNetChips += playerSingleHandResult.singleHandNetChips;
     
@@ -273,5 +272,13 @@ export default class TablePlay {
                 playerSingleHandResult.singleHandNetChips = 1 * BlackJackResult.BJ_LOSE;
             }
         }
+    }
+
+    public get strategyResults(): Array<StrategyResults> {
+        const results = new Array<StrategyResults>(this.strategyResultsCollectors.length);
+        for(let cnt = 0; cnt < this.strategyResultsCollectors.length; cnt++) {
+            results[cnt] = this.strategyResultsCollectors[cnt]!.results;
+        }
+        return results;
     }
 };

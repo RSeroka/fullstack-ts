@@ -121,4 +121,9 @@ export default class PlayerPlay implements Play {
 
         return this.shouldHitStandOrDouble(playerHand, perDealerCardStrategy);
     }
+
+
+    public get playerStrategy() : Strategy {
+        return this.configuration.playerStrategy;
+    }
 }

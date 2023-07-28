@@ -10,7 +10,7 @@
 export const  DealerPlayDecision = {
     HIT: 'Hit',
     STAND: 'Stand'
-} as const
+} as const;
   
 
 export type DealerPlayDecision = typeof DealerPlayDecision[keyof typeof DealerPlayDecision];

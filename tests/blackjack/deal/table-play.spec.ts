@@ -1,30 +1,42 @@
 
 import { assert } from "chai"; 
-import TablePlay, {BlackJackResult, PlayerSingleHandResult, DealtHandResult} from "../../../src/blackjack/deal/table-play";
+import TablePlay, {BlackJackResult} from "../../../src/blackjack/deal/table-play";
 import ShoeFactory from "../../../src/blackjack/cards/shoe-factory";
 import Shoe from "../../../src/blackjack/cards/shoe";
 import Card from "../../../src/blackjack/cards/card";
+import type {PerDealerUpcardStrategyResults, PerIndividualStrategyResults, StrategyResultsStats} from "../../../src/blackjack/strategies/strategy-results";
+import { PlayerPlayDecision } from "../../../src/blackjack/strategies/decision";
+import BlackJackCard from "../../../src/blackjack/cards/blackjack-card";
+
 
 
 type ZeroBasedCardValue = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 type Scenario = {
-    name: string,
+    name: string;
     cards: {
         player: Array<ZeroBasedCardValue>;
         dealer: Array<ZeroBasedCardValue>;
-    }
+    };
 
     expect: {
         playerSingleHands: Array<{
             total: number;
             result: BlackJackResult;
             netChips: number;
+
+            bucket: {
+                surrender?: keyof PerDealerUpcardStrategyResults["surrender"];
+                soft?: keyof PerDealerUpcardStrategyResults["soft"];
+                hard?: keyof PerDealerUpcardStrategyResults["hard"];
+            }
+
         }>;
         dealer: {
             total: number;
         }
         dealtHandNetChips: number; // positive players win, negative house wins
-    }
+    };
+
 }
 
 export default function tablePlayTests()  {
@@ -38,7 +50,7 @@ export default function tablePlayTests()  {
             },
             expect: {
                 playerSingleHands: [
-                    {total: 21, result: BlackJackResult.BJ_WIN, netChips: 1.5}
+                    {total: 21, result: BlackJackResult.BJ_WIN, netChips: 1.5, bucket: {"hard": "17AndOver"}}
                 ],
                 dealer: {
                     total: 21
@@ -54,7 +66,7 @@ export default function tablePlayTests()  {
             },
             expect: {
                 playerSingleHands: [
-                    {total: 21, result: BlackJackResult.BJ_WIN, netChips: 2}
+                    {total: 21, result: BlackJackResult.BJ_WIN, netChips: 2, bucket: {"hard": "11"}}
                 ],
                 dealer: {
                     total: 26
@@ -70,7 +82,7 @@ export default function tablePlayTests()  {
             },
             expect: {
                 playerSingleHands: [
-                    {total: 13, result: BlackJackResult.BJ_LOSE, netChips: -2}
+                    {total: 13, result: BlackJackResult.BJ_LOSE, netChips: -2, bucket:{"hard": "11"}}
                 ],
                 dealer: {
                     total: 21
@@ -86,7 +98,7 @@ export default function tablePlayTests()  {
             },
             expect: {
                 playerSingleHands: [
-                    {total: 17, result: BlackJackResult.BJ_PUSH, netChips: 0}
+                    {total: 17, result: BlackJackResult.BJ_PUSH, netChips: 0, bucket: {"hard": "17AndOver"}}
                 ],
                 dealer: {
                     total: 17
@@ -102,7 +114,7 @@ export default function tablePlayTests()  {
             },
             expect: {
                 playerSingleHands: [
-                    {total: 18, result: BlackJackResult.BJ_PUSH, netChips: 0},
+                    {total: 18, result: BlackJackResult.BJ_PUSH, netChips: 0, bucket: {"hard": "17AndOver"}},
                 ],
                 dealer: {
                     total: 18
@@ -118,7 +130,7 @@ export default function tablePlayTests()  {
             },
             expect: {
                 playerSingleHands: [
-                    {total: 18, result: BlackJackResult.BJ_PUSH, netChips: 0}
+                    {total: 18, result: BlackJackResult.BJ_PUSH, netChips: 0, bucket: {"hard": "13"}}
                 ],
                 dealer: {
                     total: 18
@@ -134,7 +146,7 @@ export default function tablePlayTests()  {
             },
             expect: {
                 playerSingleHands: [
-                    {total: 21, result: BlackJackResult.BJ_PUSH, netChips: 0}
+                    {total: 21, result: BlackJackResult.BJ_PUSH, netChips: 0, bucket: {"hard": "17AndOver"}}
                 ],
                 dealer: {
                     total: 21
@@ -150,7 +162,7 @@ export default function tablePlayTests()  {
             },
             expect: {
                 playerSingleHands: [
-                    {total: 11, result: BlackJackResult.BJ_LOSE, netChips: -1}
+                    {total: 11, result: BlackJackResult.BJ_LOSE, netChips: -1, bucket:{"hard": "11"}}
                 ],
                 dealer: {
                     total: 21
@@ -166,7 +178,7 @@ export default function tablePlayTests()  {
             },
             expect: {
                 playerSingleHands: [
-                    {total: 20, result: BlackJackResult.BJ_WIN, netChips: 2}
+                    {total: 20, result: BlackJackResult.BJ_WIN, netChips: 2, bucket: {"soft": "17"}}
                 ],
                 dealer: {
                     total: 17
@@ -182,7 +194,7 @@ export default function tablePlayTests()  {
             },
             expect: {
                 playerSingleHands: [
-                    {total: 16, result: BlackJackResult.BJ_LOSE, netChips: -2}
+                    {total: 16, result: BlackJackResult.BJ_LOSE, netChips: -2, bucket: {"soft": "17"}}
                 ],
                 dealer: {
                     total: 17
@@ -198,7 +210,7 @@ export default function tablePlayTests()  {
             },
             expect: {
                 playerSingleHands: [
-                    {total: 16, result: BlackJackResult.BJ_LOSE, netChips: -0.5}
+                    {total: 16, result: BlackJackResult.BJ_LOSE, netChips: -0.5, bucket: {"surrender": "16"}}
                 ],
                 dealer: {
                     total: 20
@@ -214,8 +226,8 @@ export default function tablePlayTests()  {
             },
             expect: {
                 playerSingleHands: [
-                    {total: 18, result: BlackJackResult.BJ_WIN, netChips: 1},
-                    {total: 18, result: BlackJackResult.BJ_WIN, netChips: 1}
+                    {total: 18, result: BlackJackResult.BJ_WIN, netChips: 1, bucket: {"hard": "17AndOver"}},
+                    {total: 18, result: BlackJackResult.BJ_WIN, netChips: 1, bucket: {"hard": "17AndOver"}}
                 ],
                 dealer: {
                     total: 25
@@ -231,8 +243,8 @@ export default function tablePlayTests()  {
             },
             expect: {
                 playerSingleHands: [
-                    {total: 13, result: BlackJackResult.BJ_LOSE, netChips: -1},
-                    {total: 16, result: BlackJackResult.BJ_LOSE, netChips: -1}
+                    {total: 13, result: BlackJackResult.BJ_LOSE, netChips: -1, bucket: {"hard": "13"}},
+                    {total: 16, result: BlackJackResult.BJ_LOSE, netChips: -1, bucket: {"hard": "16"}}
                 ],
                 dealer: {
                     total: 20
@@ -248,8 +260,8 @@ export default function tablePlayTests()  {
             },
             expect: {
                 playerSingleHands: [
-                    {total: 21, result: BlackJackResult.BJ_WIN, netChips: 1},
-                    {total: 16, result: BlackJackResult.BJ_LOSE, netChips: -1}
+                    {total: 21, result: BlackJackResult.BJ_WIN, netChips: 1, bucket: {hard: "17AndOver"}},
+                    {total: 16, result: BlackJackResult.BJ_LOSE, netChips: -1, bucket: {hard: "16"}}
                 ],
                 dealer: {
                     total: 20
@@ -265,9 +277,9 @@ export default function tablePlayTests()  {
             },
             expect: {
                 playerSingleHands: [
-                    {total: 18, result: BlackJackResult.BJ_PUSH, netChips: 0},
-                    {total: 19, result: BlackJackResult.BJ_WIN, netChips: 2},
-                    {total: 15, result: BlackJackResult.BJ_LOSE, netChips: -1},
+                    {total: 18, result: BlackJackResult.BJ_PUSH, netChips: 0, bucket: {hard: "17AndOver"}},
+                    {total: 19, result: BlackJackResult.BJ_WIN, netChips: 2, bucket:{hard: "11"}},
+                    {total: 15, result: BlackJackResult.BJ_LOSE, netChips: -1, bucket: {hard: "15"}},
                 ],
                 dealer: {
                     total: 18
@@ -275,8 +287,6 @@ export default function tablePlayTests()  {
                 dealtHandNetChips: 1
             }
         },
-        
-
 
     ];
 
@@ -366,12 +376,18 @@ export default function tablePlayTests()  {
             tablePlay = new TablePlay([{}], {dealerHitsOnSoft17: true}, shoeFactory);
         });
 
+        after(() => {
+            // console.log(`DELETE ME ... ${JSON.stringify(tablePlay.strategyResults)}`)
+
+        });
+
 
         for (let scenarioOffset = 0; scenarioOffset < scenarios.length; scenarioOffset++) {
             const scenario = scenarios[scenarioOffset]!;
 
 
             it(scenario.name, () => {
+                const expectedStrategyResults = structuredClone(tablePlay.strategyResults[0])!;
                 const dealtHandResult = tablePlay.dealHand();
                 // console.log(`XXX DELETE ME ${JSON.stringify(dealtHandResult)}`);
 
@@ -381,9 +397,53 @@ export default function tablePlayTests()  {
 
                 let actualNumberOfPlayerCards = 0;
 
+                
+                const expectedBucketsDealerUpCard = expectedStrategyResults.dealerUpcards[scenario.cards.dealer[1]!];
+                const overallBucket = expectedStrategyResults.overall; 
+                let splitBucket: StrategyResultsStats | undefined = undefined;
+                if (scenario.expect.playerSingleHands.length > 1) {
+                    // assume the good assumption that all the hands are splits
+                    const splitBucketKey 
+                        = BlackJackCard.fromCard(new Card(scenario.cards.player[0]!)).name as keyof PerDealerUpcardStrategyResults["split"] 
+                    splitBucket = expectedBucketsDealerUpCard?.split[splitBucketKey];
+                }
                 for (let expectedPlayerHandCnt = 0; expectedPlayerHandCnt < scenario.expect.playerSingleHands.length; expectedPlayerHandCnt++) {
                     const actualPlayerHand = dealtHandResult.playerResults[0]![expectedPlayerHandCnt]!;
                     const expectedPlayerHand = scenario.expect.playerSingleHands[expectedPlayerHandCnt]!;
+                    let expectedBucket: StrategyResultsStats;
+
+                    if (expectedPlayerHand.bucket.hasOwnProperty("surrender")) {
+                        expectedBucket = expectedBucketsDealerUpCard!.surrender[expectedPlayerHand.bucket.surrender]!;
+                    }
+                    else if (expectedPlayerHand.bucket.hasOwnProperty("hard") || expectedPlayerHand.bucket.hasOwnProperty("soft") ) {
+                        let doubleOrSingle: keyof PerIndividualStrategyResults = "single";
+                        if (expectedPlayerHand.netChips == 2 || expectedPlayerHand.netChips == -2 || 
+                            (expectedPlayerHand.netChips == 0 && actualPlayerHand.lastPlayerDecision == PlayerPlayDecision.DOUBLE)) {
+                            doubleOrSingle = "double";
+                        }
+                        if (expectedPlayerHand.bucket.hasOwnProperty("hard")) {
+                            expectedBucket = expectedBucketsDealerUpCard!.hard[expectedPlayerHand.bucket.hard][doubleOrSingle];
+                        }
+                        else { //soft 
+                            expectedBucket = expectedBucketsDealerUpCard!.soft[expectedPlayerHand.bucket.soft!][doubleOrSingle];
+                        }      
+                    }
+                    expectedBucket!.netValue += expectedPlayerHand.netChips;
+                    expectedBucket!.numberHands++;
+                    expectedBucket!.numberWins += expectedPlayerHand.result == BlackJackResult.BJ_WIN ? 1 : 0;
+                    expectedBucket!.numberLosses += expectedPlayerHand.result == BlackJackResult.BJ_LOSE ? 1 : 0;
+
+                    overallBucket.netValue += expectedPlayerHand.netChips;
+                    overallBucket.numberHands++;
+                    overallBucket.numberWins += expectedPlayerHand.result == BlackJackResult.BJ_WIN ? 1 : 0;
+                    overallBucket.numberLosses += expectedPlayerHand.result == BlackJackResult.BJ_LOSE ? 1 : 0;
+
+                    if (splitBucket !== undefined) {
+                        splitBucket.netValue += expectedPlayerHand.netChips;
+                        splitBucket.numberHands++;
+                        splitBucket.numberWins += expectedPlayerHand.result == BlackJackResult.BJ_WIN ? 1 : 0;
+                        splitBucket.numberLosses += expectedPlayerHand.result == BlackJackResult.BJ_LOSE ? 1 : 0;
+                    }
 
                     actualNumberOfPlayerCards += actualPlayerHand.hand.cards.length;
                     assert.equal(actualPlayerHand.hand.total, expectedPlayerHand.total, 
@@ -398,6 +458,16 @@ export default function tablePlayTests()  {
                 assert.equal(actualNumberOfPlayerCards, scenario.cards.player.length, "Players have correct number of cards");
                 assert.equal(dealtHandResult.dealerHand.total, scenario.expect.dealer.total, "Dealer value is correct");
                 assert.equal(dealtHandResult.dealtHandNetChips, scenario.expect.dealtHandNetChips, "All hands net chips correct");
+
+                const afterStrategyResults = tablePlay.strategyResults[0]!;
+               //  console.log(`DELETE ME ... ${JSON.stringify(afterStrategyResults)}`);
+
+                assert.deepEqual(afterStrategyResults.dealerUpcards[scenario.cards.dealer[1]!], expectedStrategyResults.dealerUpcards[scenario.cards.dealer[1]!], 
+                    "specific buckets updated correctly");
+
+                assert.deepEqual(afterStrategyResults.overall, expectedStrategyResults.overall, 
+                        "overall buckets updated correctly");
+
 
             });
 
