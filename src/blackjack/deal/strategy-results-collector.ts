@@ -5,7 +5,7 @@ import { PlayerPlayDecision } from "../strategies/decision";
 import type Strategy from "../strategies/strategy";
 import type { PerDealerUpcard } from "../strategies/strategy";
 import type StrategyResults from "../strategies/strategy-results";
-import type { PerDealerUpcardStrategyResults, PerIndividualStrategyResults, StrategyResultsStats } from "../strategies/strategy-results";
+import { PerDealerUpcardStrategyResults, PerIndividualStrategyResults, StrategyResultsStats } from "../strategies/strategy-results";
 import { BlackJackResult, PlayerSingleHandResult } from "./table-play"; // circular import needs review......
 
 
@@ -14,14 +14,7 @@ export default class StrategyResultsCollector {
     private _results: StrategyResults;
 
     private createEmptyStats(): StrategyResultsStats {
-        const empty: StrategyResultsStats = {
-            numberWins: 0,
-            numberLosses: 0, 
-            numberHands: 0,
-            netValue: 0
-        };
-
-        return empty;
+        return new StrategyResultsStats();
     }
 
     private createEmptyPerIndividualStrategyResults(): PerIndividualStrategyResults {
