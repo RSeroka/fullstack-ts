@@ -219,6 +219,39 @@ export default function tablePlayTests()  {
             }
         },
         {
+            name: "Don't Surrender on Soft 16",
+            cards: {
+                player: [0, 4, 5, 7], // A, 5 (soft 16), 6 and 8
+                dealer: [3, 0, 3] //  4 in the hole, Ace showing, 4 
+            },
+            expect: {
+                playerSingleHands: [
+                    {total: 20, result: BlackJackResult.BJ_WIN, netChips: 1, bucket: {"soft": "16"}}
+                ],
+                dealer: {
+                    total: 19
+                },
+                dealtHandNetChips: 1
+            }
+        },
+        {
+            name: "Don't Surrender on Pair of 8s",
+            cards: {
+                player: [7, 7, 9, 4, 9], // 8, 8, 10 (first split 18), 5, 10 (2nd bust)
+                dealer: [3, 9, 9] //  4 in the hole, 10 showing, 10
+            },
+            expect: {
+                playerSingleHands: [
+                    {total: 18, result: BlackJackResult.BJ_WIN, netChips: 1, bucket: {"hard": "17AndOver"}},
+                    {total: 23, result: BlackJackResult.BJ_LOSE, netChips: -1, bucket: {"hard": "13"}}
+                ],
+                dealer: {
+                    total: 24
+                },
+                dealtHandNetChips: 0
+            }
+        },
+        {
             name: "split 8s and win both",
             cards: {
                 player: [7, 7, 10, 12], // 8, 8 (split), add Jack and King

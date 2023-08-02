@@ -33,11 +33,13 @@ export default class PlayerPlay implements Play {
     }
 
     private shouldSurrender(playerHand: Hand, perDealerCardStrategy: PerDealerUpcard): boolean {
-        const playerValueString = "" + playerHand.total;
-        if (perDealerCardStrategy.surrender.hasOwnProperty(playerValueString)
-            && perDealerCardStrategy.surrender[playerValueString as keyof typeof perDealerCardStrategy.surrender] == true) {
-            return true;
-        } 
+        if (!playerHand.isSoft) {  // don't surrender on soft hands
+            const playerValueString = "" + playerHand.total;
+            if (perDealerCardStrategy.surrender.hasOwnProperty(playerValueString)
+                && perDealerCardStrategy.surrender[playerValueString as keyof typeof perDealerCardStrategy.surrender] == true) {
+                return true;
+            } 
+        }
         return false;
     }
 
@@ -109,12 +111,12 @@ export default class PlayerPlay implements Play {
 
         if (playerHand.cards.length == 2) {
             // two cards, allow possible split and surrender
-            if (this.shouldSurrender(playerHand, perDealerCardStrategy)) {
+            if (this.shouldSplitPair(playerHand, perDealerCardStrategy)) {
+                return PlayerPlayDecision.SPLIT;
+            }
+            else if (this.shouldSurrender(playerHand, perDealerCardStrategy)) {
                 // TODO - put in logic to check if surrender is allowed
                 return PlayerPlayDecision.SURRENDER;
-            }
-            else if (this.shouldSplitPair(playerHand, perDealerCardStrategy)) {
-                return PlayerPlayDecision.SPLIT;
             }
         }
 
