@@ -61,6 +61,7 @@ export type PerDealerUpcardStrategyResults = {
     surrender: {
         "15"?: StrategyResultsStats;
         "16"?: StrategyResultsStats;
+        "17"?: StrategyResultsStats;
     }
 };
 

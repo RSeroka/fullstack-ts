@@ -4,7 +4,7 @@ import type Hand from "./hand";
 import type Play from "./play";
 import  {PlayerStrategyHitStandOrDouble, PlayerDecisionHitStandOrDouble, PlayerPlayDecision} from "../strategies/decision";
 import type {Strategy, PerDealerUpcard} from "../strategies/strategy";
-import { basicStrategy } from "../strategies/basic-strategy";
+import { basicDealerHitsOnSoft17Strategy } from "../strategies/basic-strategy";
 
 
 export type PlayerPlayConfiguration = {
@@ -16,7 +16,7 @@ export type PlayerPlayConfiguration = {
 
 export default class PlayerPlay implements Play {
     private static defaultConfiguration: PlayerPlayConfiguration = {
-        playerStrategy: structuredClone(basicStrategy),
+        playerStrategy: structuredClone(basicDealerHitsOnSoft17Strategy),
         dealerHitsOnSoft17: true
     }
 

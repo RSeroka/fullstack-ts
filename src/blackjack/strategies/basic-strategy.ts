@@ -1,14 +1,14 @@
 
 
 // https://www.blackjackapprenticeship.com/blackjack-strategy-charts/
-
+// https://wizardofodds.com/games/blackjack/strategy/4-decks/
 import type Strategy from "./strategy";
 import { PlayerStrategyHitStandOrDouble } from "./decision";
 
 
 // Double after split allowed
 // Double on soft 18, 19 allowed
-export const basicStrategy: Strategy = {
+export const basicDealerHitsOnSoft17Strategy: Strategy = {
     dealerUpcards: [
         // ACE
         {
@@ -39,7 +39,9 @@ export const basicStrategy: Strategy = {
                 "8": true,
             },
             surrender: {
-                "16": true
+                "15": true,
+                "16": true,
+                "17": true
             }
         }, 
         // 2 
@@ -370,3 +372,23 @@ export const basicStrategy: Strategy = {
         }, 
     ]
 }
+
+/*
+ * As I've said many times, the above strategy will be fine under any set of rules. However, for you perfectionists out there, here are the modifications to make if the dealer hits a soft 17.
+
+    Surrender 15, a pair of 8s, and 17 vs. dealer A.
+    Double 11 vs. dealer A.
+    Double soft 18 vs. dealer 2.
+    Double soft 19 vs. dealer 6.
+
+ */
+
+let _basicDealerStandsOn17Strategy: Strategy = structuredClone(basicDealerHitsOnSoft17Strategy);
+delete _basicDealerStandsOn17Strategy.dealerUpcards[0]!.surrender["15"]; 
+delete _basicDealerStandsOn17Strategy.dealerUpcards[0]!.surrender["17"]; 
+_basicDealerStandsOn17Strategy.dealerUpcards[0]!.hard["11"] = PlayerStrategyHitStandOrDouble.HIT;
+_basicDealerStandsOn17Strategy.dealerUpcards[1]!.soft["18"] = PlayerStrategyHitStandOrDouble.STAND; 
+_basicDealerStandsOn17Strategy.dealerUpcards[5]!.soft["19"] = PlayerStrategyHitStandOrDouble.STAND; 
+
+
+export const basicDealerStandsOnSoft17Strategy = _basicDealerStandsOn17Strategy;
