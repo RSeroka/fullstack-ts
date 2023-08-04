@@ -2,38 +2,19 @@
 import BlackJackCard from "../cards/blackjack-card";
 import type Shoe from "../cards/shoe";
 import type IShoeFactory from "../cards/shoe-factory";
-import {HouseRules, ShoeConfig, defaultHouseRules } from "../play/house-rules";
+import { CryptoRandomInt, MersenneTwisterRandomInt, type IRandomInt } from "../cards/shuffled-shoe";
+import ShuffledShoeFactory from "../cards/shuffled-shoe-factory";
 import DealerPlay from "../play/dealer-play";
 import Hand from "../play/hand";
+import { HouseRules, ShoeConfig, defaultHouseRules } from "../play/house-rules";
 import PlayerPlay from "../play/player-play";
 import { DealerPlayDecision, PlayerPlayDecision } from "../strategies/decision";
-import type StrategyResults from "../strategies/strategy-results";
-import StrategyResultsCollector from "./strategy-results-collector";  // circular import needs review....
 import type Strategy from "../strategies/strategy";
-import ShuffledShoeFactory from "../cards/shuffled-shoe-factory";
-import { CryptoRandomInt, MersenneTwisterRandomInt, type IRandomInt } from "../cards/shuffled-shoe";
+import type StrategyResults from "../strategies/strategy-results";
+import StrategyResultsCollector from "./strategy-results-collector"; // circular import needs review....
+import { BlackJackResult, PlayerSingleHandResult, DealtHandResult } from "./hand-result";
 
 
-export enum BlackJackResult {
-    BJ_LOSE = -1,
-    BJ_PUSH = 0, 
-    BJ_WIN  = 1,
-}
-
-// splits would have more than one SingleHandResult
-export type PlayerSingleHandResult = {  
-    hand: Hand,
-    wasSplit: boolean,
-    lastPlayerDecision: PlayerPlayDecision,
-    result: BlackJackResult, 
-    singleHandNetChips: number
-};
-
-export type DealtHandResult = {
-    playerResults: Array<Array<PlayerSingleHandResult>>; 
-    dealerHand: Hand;
-    dealtHandNetChips: number; // positive players win, negative house wins
-};
 
 export default class TablePlay {
 
@@ -69,7 +50,7 @@ export default class TablePlay {
         else {
             this.shoeFactory = shoeFactory;
         }
-        this.shoe = this.shoeFactory.createShoe();  
+        this.shoe = this.shoeFactory.createShoe();
         this.shoeCnt = 1;
 
         this.strategyResultsCollectors = new Array<StrategyResultsCollector>(playersStrategies.length);
@@ -80,7 +61,7 @@ export default class TablePlay {
 
     public get strategyResults(): Array<StrategyResults> {
         const results = new Array<StrategyResults>(this.strategyResultsCollectors.length);
-        for(let cnt = 0; cnt < this.strategyResultsCollectors.length; cnt++) {
+        for (let cnt = 0; cnt < this.strategyResultsCollectors.length; cnt++) {
             results[cnt] = this.strategyResultsCollectors[cnt]!.results;
         }
         return results;
@@ -91,14 +72,14 @@ export default class TablePlay {
         /* initialize */
         const playerHands: Array<Hand> = [];
         const handResult: DealtHandResult = {
-            playerResults : new Array<Array<PlayerSingleHandResult>>(this.players.length),
-            dealerHand: new Hand(), 
+            playerResults: new Array<Array<PlayerSingleHandResult>>(this.players.length),
+            dealerHand: new Hand(),
             dealtHandNetChips: 0
         }
 
         for (let playerIdx = 0; playerIdx < handResult.playerResults.length; playerIdx++) {
             handResult.playerResults[playerIdx] = new Array<PlayerSingleHandResult>(1);
-            handResult.playerResults[playerIdx]![0] = this.createInitialPlayerSingleHandResult(); 
+            handResult.playerResults[playerIdx]![0] = this.createInitialPlayerSingleHandResult();
             playerHands[playerIdx] = handResult.playerResults[playerIdx]![0]!.hand;
         }
 
@@ -106,7 +87,7 @@ export default class TablePlay {
         this.twoCardsEach(playerHands, handResult.dealerHand);
 
         /* players get to play only if dealer doesn't have blackjack */
-        if (! handResult.dealerHand.isBlackJack) {
+        if (!handResult.dealerHand.isBlackJack) {
             this.playerPlaying(handResult);
         }
 
@@ -149,8 +130,6 @@ export default class TablePlay {
                 this.strategyResultsCollectors[playerIdx]?.applyHandResult(playerSingleHandResult, handResult.dealerHand.cards[0]!);
 
                 handResult.dealtHandNetChips += playerSingleHandResult.singleHandNetChips;
-    
- 
             });
         }
 
@@ -160,11 +139,11 @@ export default class TablePlay {
 
 
     private twoCardsEach(playerHands: Array<Hand>, dealerHand: Hand): void {
-        
-        if (this.shoe.isPastCutoff() || this.shoe.cardsLeftInShoe < 5 * (playerHands.length + 1))  {
-            if (this.logging) {console.debug("Shuffling....");}
+
+        if (this.shoe.isPastCutoff() || this.shoe.cardsLeftInShoe < 5 * (playerHands.length + 1)) {
+            if (this.logging) { console.debug("Shuffling...."); }
             this.shoeCnt++;
-            this.shoe = this.shoeFactory.createShoe();  
+            this.shoe = this.shoeFactory.createShoe();
         }
         for (let cardNum = 0; cardNum < 2; cardNum++) {
             playerHands.forEach(playerHand => {
@@ -174,7 +153,7 @@ export default class TablePlay {
                 dealerHand.addDownCard(BlackJackCard.fromCard(this.shoe.nextCard()!));
             }
             else {
-                dealerHand.addCard(BlackJackCard.fromCard(this.shoe.nextCard()!));                
+                dealerHand.addCard(BlackJackCard.fromCard(this.shoe.nextCard()!));
             }
         }
     }
@@ -182,22 +161,22 @@ export default class TablePlay {
 
 
 
-    private createInitialPlayerSingleHandResult() : PlayerSingleHandResult {
+    private createInitialPlayerSingleHandResult(): PlayerSingleHandResult {
         return {
             hand: new Hand(),
             wasSplit: false,
-            lastPlayerDecision: PlayerPlayDecision.STAND, 
+            lastPlayerDecision: PlayerPlayDecision.STAND,
             result: BlackJackResult.BJ_PUSH,
             singleHandNetChips: 0
         };
     }
 
-    private createSplitPlayerSingleHandResult(card: BlackJackCard) : PlayerSingleHandResult {
+    private createSplitPlayerSingleHandResult(card: BlackJackCard): PlayerSingleHandResult {
         const shr = this.createInitialPlayerSingleHandResult();
         shr.wasSplit = true;
         shr.hand.addCard(card);
         shr.lastPlayerDecision = PlayerPlayDecision.SPLIT;
-        return shr; 
+        return shr;
     }
 
     private dealerPlaying(handResult: DealtHandResult) {
@@ -208,13 +187,13 @@ export default class TablePlay {
             switch (dealerPlayDecision) {
                 case DealerPlayDecision.HIT:
                     dealerTakeCard = true;
-                    if (this.logging) {console.debug(`dealer has ${handResult.dealerHand.total}, dealer hits`)};
+                    if (this.logging) { console.debug(`dealer has ${handResult.dealerHand.total}, dealer hits`) };
                     handResult.dealerHand.addCard(BlackJackCard.fromCard(this.shoe.nextCard()!));
                     break;
                 case DealerPlayDecision.STAND:
                 default:
                     dealerTakeCard = false;
-                    if (this.logging) {console.log(`dealer has ${handResult.dealerHand.total}, dealer stands`)};
+                    if (this.logging) { console.log(`dealer has ${handResult.dealerHand.total}, dealer stands`) };
                     break;
             }
         }
@@ -230,7 +209,7 @@ export default class TablePlay {
             for (let handIdx = 0; handIdx < singlePlayerResults.length; handIdx++) {
                 let playerChoose = true;
                 while (playerChoose) {
-                    const playerSingleHandResult = singlePlayerResults[handIdx]!; 
+                    const playerSingleHandResult = singlePlayerResults[handIdx]!;
 
                     if (playerSingleHandResult.wasSplit && playerSingleHandResult.hand.cards.length === 1) {
                         if (playerSingleHandResult.hand.total === 11) {
@@ -248,49 +227,49 @@ export default class TablePlay {
                     switch (lastPlayerDecision) {
                         case PlayerPlayDecision.DOUBLE:
                             playerChoose = false;
-                            if (this.logging) {console.debug(`player has ${playerSingleHandResult.hand.total}, dealer has ${handResult.dealerHand.total}, player doubles`);}
+                            if (this.logging) { console.debug(`player has ${playerSingleHandResult.hand.total}, dealer has ${handResult.dealerHand.total}, player doubles`); }
                             this.applyPlayerCard(playerSingleHandResult);
                             break;
                         case PlayerPlayDecision.HIT:
                             playerChoose = true;
-                            if (this.logging) {console.debug(`player has ${playerSingleHandResult.hand.total}, dealer has ${handResult.dealerHand.total}, player hits`);}
+                            if (this.logging) { console.debug(`player has ${playerSingleHandResult.hand.total}, dealer has ${handResult.dealerHand.total}, player hits`); }
                             this.applyPlayerCard(playerSingleHandResult);
                             break;
                         case PlayerPlayDecision.SPLIT:
                             playerChoose = true;
-                            if (this.logging) {console.debug(`player has ${playerSingleHandResult.hand.total}, dealer has ${handResult.dealerHand.total}, player splits`);}
-    
+                            if (this.logging) { console.debug(`player has ${playerSingleHandResult.hand.total}, dealer has ${handResult.dealerHand.total}, player splits`); }
+
                             const split1 = this.createSplitPlayerSingleHandResult(playerSingleHandResult.hand.cards[0]!);
                             const split2 = this.createSplitPlayerSingleHandResult(playerSingleHandResult.hand.cards[1]!);
-                            
-                            singlePlayerResults[handIdx] = split1; 
+
+                            singlePlayerResults[handIdx] = split1;
                             singlePlayerResults.splice(handIdx + 1, 0, split2);
 
                             break;
-    
+
                         case PlayerPlayDecision.SURRENDER:
                             playerChoose = false;
-                            if (this.logging) {console.debug(`player has ${playerSingleHandResult.hand.total}, dealer has ${handResult.dealerHand.total}, player surrenders`);}
+                            if (this.logging) { console.debug(`player has ${playerSingleHandResult.hand.total}, dealer has ${handResult.dealerHand.total}, player surrenders`); }
                             playerSingleHandResult.result = BlackJackResult.BJ_LOSE;
                             playerSingleHandResult.singleHandNetChips = 0.5 * BlackJackResult.BJ_LOSE;
                             break;
-    
+
                         case PlayerPlayDecision.STAND:
                         default:
                             playerChoose = false;
-                            if (this.logging) {console.debug(`player has ${playerSingleHandResult.hand.total}, dealer has ${handResult.dealerHand.total}, player stands`);}
+                            if (this.logging) { console.debug(`player has ${playerSingleHandResult.hand.total}, dealer has ${handResult.dealerHand.total}, player stands`); }
                             break;
-    
+
                     }
 
                     // console.log(`DELETE ME ${handIdx}, ${playerChoose}, ${JSON.stringify(playerSingleHandResult)}`);
                 }
 
             }
-        } 
+        }
     }
 
-    private applyPlayerCard(playerSingleHandResult: PlayerSingleHandResult) : void {
+    private applyPlayerCard(playerSingleHandResult: PlayerSingleHandResult): void {
         playerSingleHandResult.hand.addCard(BlackJackCard.fromCard(this.shoe.nextCard()!));
         if (playerSingleHandResult.hand.total > 21) {
             playerSingleHandResult.result = BlackJackResult.BJ_LOSE;

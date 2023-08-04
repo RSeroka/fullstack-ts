@@ -1,12 +1,12 @@
 
 
-import type Hand from "./hand";
-import type Play from "./play";
-import  {PlayerStrategyHitStandOrDouble, PlayerDecisionHitStandOrDouble, PlayerPlayDecision} from "../strategies/decision";
-import type {Strategy, PerDealerUpcard} from "../strategies/strategy";
 import { basicDealerHitsOnSoft17Strategy } from "../strategies/basic-strategy";
+import { PlayerDecisionHitStandOrDouble, PlayerPlayDecision, PlayerStrategyHitStandOrDouble } from "../strategies/decision";
+import type { PerDealerUpcard, Strategy } from "../strategies/strategy";
+import type Hand from "./hand";
 import type { PlayerPlayConfiguration } from "./house-rules";
 import { defaultHouseRules } from "./house-rules";
+import type Play from "./play";
 
 
 
@@ -19,7 +19,7 @@ export default class PlayerPlay implements Play {
     public constructor(strategy?: Strategy, config?: Partial<PlayerPlayConfiguration>) {
         // default the configuration to the static
         this._strategy = {
-            ...structuredClone(PlayerPlay.defaultStrategy),  
+            ...structuredClone(PlayerPlay.defaultStrategy),
             ...strategy
         }
 
@@ -35,7 +35,7 @@ export default class PlayerPlay implements Play {
             if (perDealerCardStrategy.surrender.hasOwnProperty(playerValueString)
                 && perDealerCardStrategy.surrender[playerValueString as keyof typeof perDealerCardStrategy.surrender] == true) {
                 return true;
-            } 
+            }
         }
         return false;
     }
@@ -46,7 +46,7 @@ export default class PlayerPlay implements Play {
         if (playerHand.cards[0]!.value === playerHand.cards[1]!.value) {
             const cardName = playerHand.cards[0]!.name as keyof typeof perDealerCardStrategy.split;
             if (perDealerCardStrategy.split.hasOwnProperty(cardName) && perDealerCardStrategy.split[cardName] == true) {
-                return true;     
+                return true;
             }
         }
         return false;
@@ -94,7 +94,7 @@ export default class PlayerPlay implements Play {
         return tentativeDecision;
     }
 
-    public play(dealerHand:Hand, playerHand?: Hand): PlayerPlayDecision {
+    public play(dealerHand: Hand, playerHand?: Hand): PlayerPlayDecision {
         if (!playerHand) {
             throw new Error("PlayerPlay.play() must have optional playerHand included");
         }
@@ -122,7 +122,7 @@ export default class PlayerPlay implements Play {
     }
 
 
-    public get playerStrategy() : Strategy {
+    public get playerStrategy(): Strategy {
         return this._strategy;
     }
 }

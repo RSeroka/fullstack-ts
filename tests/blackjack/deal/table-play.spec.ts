@@ -1,6 +1,7 @@
 
 import { assert } from "chai"; 
-import TablePlay, {BlackJackResult} from "../../../src/blackjack/deal/table-play";
+import TablePlay from "../../../src/blackjack/deal/table-play";
+import {BlackJackResult} from "../../../src/blackjack/deal/hand-result";
 import ShoeFactory from "../../../src/blackjack/cards/shoe-factory";
 import Shoe from "../../../src/blackjack/cards/shoe";
 import Card from "../../../src/blackjack/cards/card";

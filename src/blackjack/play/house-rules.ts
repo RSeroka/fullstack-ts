@@ -6,7 +6,7 @@
  */
 export type ShoeConfig = {
     numDecks?: number;
-    cutoffPercent?: number; 
+    cutoffPercent?: number;
     randomSeed?: number;
 }
 
@@ -45,11 +45,11 @@ export type HouseRules = {
 
 
 export const defaultHouseRules: HouseRules = {
-    payoutConfig: { blackjackPayout: '3:2'},
+    payoutConfig: { blackjackPayout: '3:2' },
     shoeConfig: {
-        numDecks: 6, 
+        numDecks: 6,
         cutoffPercent: .5
-    }, 
+    },
     dealerPlayConfig: {
         dealerHitsOnSoft17: false
     },

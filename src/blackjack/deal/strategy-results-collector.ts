@@ -6,7 +6,7 @@ import type Strategy from "../strategies/strategy";
 import type { PerDealerUpcard } from "../strategies/strategy";
 import type StrategyResults from "../strategies/strategy-results";
 import { PerDealerUpcardStrategyResults, PerIndividualStrategyResults, StrategyResultsStats } from "../strategies/strategy-results";
-import { BlackJackResult, PlayerSingleHandResult } from "./table-play"; // circular import needs review......
+import { BlackJackResult, PlayerSingleHandResult } from "./hand-result"; 
 
 
 
