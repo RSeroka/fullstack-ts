@@ -9,7 +9,7 @@ import PlayerPlay from "../../../src/blackjack/play/player-play";
 export default function playerPlayTests() {
     let defaultPlayerPlay: PlayerPlay;
     before(() => {
-        defaultPlayerPlay = new PlayerPlay({});
+        defaultPlayerPlay = new PlayerPlay();
     });
 
     it("hit on 5 vs 6", () => {

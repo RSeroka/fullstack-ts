@@ -2,14 +2,16 @@
 import BlackJackCard from "../cards/blackjack-card";
 import type Shoe from "../cards/shoe";
 import type IShoeFactory from "../cards/shoe-factory";
-import type { DealerPlayConfiguration } from "../play/dealer-play";
+import {HouseRules, ShoeConfig, defaultHouseRules } from "../play/house-rules";
 import DealerPlay from "../play/dealer-play";
 import Hand from "../play/hand";
-import type { PlayerPlayConfiguration } from "../play/player-play";
 import PlayerPlay from "../play/player-play";
 import { DealerPlayDecision, PlayerPlayDecision } from "../strategies/decision";
 import type StrategyResults from "../strategies/strategy-results";
 import StrategyResultsCollector from "./strategy-results-collector";  // circular import needs review....
+import type Strategy from "../strategies/strategy";
+import ShuffledShoeFactory from "../cards/shuffled-shoe-factory";
+import { CryptoRandomInt, MersenneTwisterRandomInt, type IRandomInt } from "../cards/shuffled-shoe";
 
 
 export enum BlackJackResult {
@@ -43,42 +45,45 @@ export default class TablePlay {
     private shoeFactory: IShoeFactory;
     private strategyResultsCollectors: Array<StrategyResultsCollector>;
 
-    public constructor(playerPlayConfigs: Array<Partial<PlayerPlayConfiguration>>, dealerPlayConfiguration: DealerPlayConfiguration,
-        shoeFact: IShoeFactory) {
-        this.players = new Array<PlayerPlay>(playerPlayConfigs.length);
-        for (let playerCnt = 0; playerCnt < playerPlayConfigs.length; playerCnt++) {
-            this.players[playerCnt] = new PlayerPlay(playerPlayConfigs[playerCnt]!);
+    public constructor(playersStrategies: Array<Strategy>, houseRules: HouseRules, shoeFactory?: IShoeFactory) {
+        this.players = new Array<PlayerPlay>(playersStrategies.length);
+        for (let playerCnt = 0; playerCnt < playersStrategies.length; playerCnt++) {
+            this.players[playerCnt] = new PlayerPlay(playersStrategies[playerCnt], houseRules.playerPlayConfig);
         }
-        this.dealer = new DealerPlay(dealerPlayConfiguration);
-        this.shoeFactory = shoeFact;
+        this.dealer = new DealerPlay(houseRules.dealerPlayConfig);
+
+        if (shoeFactory === undefined) {
+            const shoeConfig: ShoeConfig = {
+                ...defaultHouseRules.shoeConfig,
+                ...houseRules.shoeConfig
+            }
+            let shoeRandomImpl: IRandomInt;
+            if (shoeConfig.randomSeed !== undefined) {
+                shoeRandomImpl = new MersenneTwisterRandomInt(shoeConfig.randomSeed);
+            }
+            else {
+                shoeRandomImpl = new CryptoRandomInt();
+            }
+            this.shoeFactory = new ShuffledShoeFactory(shoeConfig.numDecks!, shoeConfig.cutoffPercent, shoeRandomImpl);
+        }
+        else {
+            this.shoeFactory = shoeFactory;
+        }
         this.shoe = this.shoeFactory.createShoe();  
         this.shoeCnt = 1;
 
-        this.strategyResultsCollectors = new Array<StrategyResultsCollector>(playerPlayConfigs.length);
-        for (let collectorCnt = 0; collectorCnt < playerPlayConfigs.length; collectorCnt++) {
+        this.strategyResultsCollectors = new Array<StrategyResultsCollector>(playersStrategies.length);
+        for (let collectorCnt = 0; collectorCnt < playersStrategies.length; collectorCnt++) {
             this.strategyResultsCollectors[collectorCnt] = new StrategyResultsCollector(this.players[collectorCnt]?.playerStrategy!);
         }
     }
 
-
-    private twoCardsEach(playerHands: Array<Hand>, dealerHand: Hand): void {
-        
-        if (this.shoe.isPastCutoff() || this.shoe.cardsLeftInShoe < 5 * (playerHands.length + 1))  {
-            if (this.logging) {console.debug("Shuffling....");}
-            this.shoeCnt++;
-            this.shoe = this.shoeFactory.createShoe();  
+    public get strategyResults(): Array<StrategyResults> {
+        const results = new Array<StrategyResults>(this.strategyResultsCollectors.length);
+        for(let cnt = 0; cnt < this.strategyResultsCollectors.length; cnt++) {
+            results[cnt] = this.strategyResultsCollectors[cnt]!.results;
         }
-        for (let cardNum = 0; cardNum < 2; cardNum++) {
-            playerHands.forEach(playerHand => {
-                playerHand.addCard(BlackJackCard.fromCard(this.shoe.nextCard()!));
-            });
-            if (cardNum % 2 == 0) {
-                dealerHand.addDownCard(BlackJackCard.fromCard(this.shoe.nextCard()!));
-            }
-            else {
-                dealerHand.addCard(BlackJackCard.fromCard(this.shoe.nextCard()!));                
-            }
-        }
+        return results;
     }
 
 
@@ -152,6 +157,30 @@ export default class TablePlay {
 
         return handResult;
     }
+
+
+    private twoCardsEach(playerHands: Array<Hand>, dealerHand: Hand): void {
+        
+        if (this.shoe.isPastCutoff() || this.shoe.cardsLeftInShoe < 5 * (playerHands.length + 1))  {
+            if (this.logging) {console.debug("Shuffling....");}
+            this.shoeCnt++;
+            this.shoe = this.shoeFactory.createShoe();  
+        }
+        for (let cardNum = 0; cardNum < 2; cardNum++) {
+            playerHands.forEach(playerHand => {
+                playerHand.addCard(BlackJackCard.fromCard(this.shoe.nextCard()!));
+            });
+            if (cardNum % 2 == 0) {
+                dealerHand.addDownCard(BlackJackCard.fromCard(this.shoe.nextCard()!));
+            }
+            else {
+                dealerHand.addCard(BlackJackCard.fromCard(this.shoe.nextCard()!));                
+            }
+        }
+    }
+
+
+
 
     private createInitialPlayerSingleHandResult() : PlayerSingleHandResult {
         return {
@@ -274,11 +303,5 @@ export default class TablePlay {
         }
     }
 
-    public get strategyResults(): Array<StrategyResults> {
-        const results = new Array<StrategyResults>(this.strategyResultsCollectors.length);
-        for(let cnt = 0; cnt < this.strategyResultsCollectors.length; cnt++) {
-            results[cnt] = this.strategyResultsCollectors[cnt]!.results;
-        }
-        return results;
-    }
+
 };

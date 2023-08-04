@@ -5,23 +5,17 @@ import type Play from "./play";
 import  { DealerPlayDecision} from "../strategies/decision";
 
 
-export type DealerPlayConfiguration = {
-    dealerHitsOnSoft17: boolean;
-}
-
+import { DealerPlayConfiguration, defaultHouseRules } from "./house-rules";
 
 
 export default class DealerPlay implements Play {
-    private static defaultConfiguration: DealerPlayConfiguration = {
-        dealerHitsOnSoft17: true
-    }
 
     private configuration: DealerPlayConfiguration;
 
-    public constructor(config_: Partial<DealerPlayConfiguration>) {
+    public constructor(config_?: Partial<DealerPlayConfiguration>) {
         // default the configuration to the static
         this.configuration = {
-            ...DealerPlay.defaultConfiguration,
+            ...defaultHouseRules.dealerPlayConfig,
             ...config_
         }
     }

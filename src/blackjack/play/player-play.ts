@@ -5,31 +5,28 @@ import type Play from "./play";
 import  {PlayerStrategyHitStandOrDouble, PlayerDecisionHitStandOrDouble, PlayerPlayDecision} from "../strategies/decision";
 import type {Strategy, PerDealerUpcard} from "../strategies/strategy";
 import { basicDealerHitsOnSoft17Strategy } from "../strategies/basic-strategy";
-
-
-export type PlayerPlayConfiguration = {
-    playerStrategy: Strategy;
-    dealerHitsOnSoft17: boolean;
-}
+import type { PlayerPlayConfiguration } from "./house-rules";
+import { defaultHouseRules } from "./house-rules";
 
 
 
 export default class PlayerPlay implements Play {
-    private static defaultConfiguration: PlayerPlayConfiguration = {
-        playerStrategy: structuredClone(basicDealerHitsOnSoft17Strategy),
-        dealerHitsOnSoft17: true
-    }
+    private static defaultStrategy: Strategy = structuredClone(basicDealerHitsOnSoft17Strategy);
 
     private readonly configuration: PlayerPlayConfiguration;
+    private readonly _strategy: Strategy;
 
-    public constructor(config_: Partial<PlayerPlayConfiguration>) {
+    public constructor(strategy?: Strategy, config?: Partial<PlayerPlayConfiguration>) {
         // default the configuration to the static
-        this.configuration = {
-            ...structuredClone(PlayerPlay.defaultConfiguration),  
-            ...config_
+        this._strategy = {
+            ...structuredClone(PlayerPlay.defaultStrategy),  
+            ...strategy
         }
 
-
+        this.configuration = {
+            ...defaultHouseRules.playerPlayConfig,
+            ...config
+        }
     }
 
     private shouldSurrender(playerHand: Hand, perDealerCardStrategy: PerDealerUpcard): boolean {
@@ -104,7 +101,7 @@ export default class PlayerPlay implements Play {
 
         const dealerValue = dealerHand.total;
         // const playerValue = playerHand.total;
-        const perDealerCardStrategy = this.configuration.playerStrategy.dealerUpcards[(dealerValue - 1) % 10]!;
+        const perDealerCardStrategy = this._strategy.dealerUpcards[(dealerValue - 1) % 10]!;
         if (perDealerCardStrategy === undefined) {
             throw new Error("PlayerPlay.play() invalid per dealer card strategy");
         }
@@ -126,6 +123,6 @@ export default class PlayerPlay implements Play {
 
 
     public get playerStrategy() : Strategy {
-        return this.configuration.playerStrategy;
+        return this._strategy;
     }
 }

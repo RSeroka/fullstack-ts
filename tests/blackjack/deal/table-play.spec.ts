@@ -7,6 +7,8 @@ import Card from "../../../src/blackjack/cards/card";
 import type {PerDealerUpcardStrategyResults, PerIndividualStrategyResults, StrategyResultsStats} from "../../../src/blackjack/strategies/strategy-results";
 import { PlayerPlayDecision } from "../../../src/blackjack/strategies/decision";
 import BlackJackCard from "../../../src/blackjack/cards/blackjack-card";
+import { defaultHouseRules } from "../../../src/blackjack/play/house-rules";
+import { basicDealerHitsOnSoft17Strategy } from "../../../src/blackjack/strategies/basic-strategy";
 
 
 
@@ -206,14 +208,14 @@ export default function tablePlayTests()  {
             name: "Surrender",
             cards: {
                 player: [5, 9], // 6, 10
-                dealer: [5, 0, 2] //  6 in the hole, Ace showing, 3
+                dealer: [5, 0] //  6 in the hole, Ace showing
             },
             expect: {
                 playerSingleHands: [
                     {total: 16, result: BlackJackResult.BJ_LOSE, netChips: -0.5, bucket: {"surrender": "16"}}
                 ],
                 dealer: {
-                    total: 20
+                    total: 17
                 },
                 dealtHandNetChips: -0.5
             }
@@ -406,7 +408,7 @@ export default function tablePlayTests()  {
     
         before(() => {
             shoeFactory = new TablePlayTestShoeFactory(1, .98);// .98 should require resuffle every table play 
-            tablePlay = new TablePlay([{}], {dealerHitsOnSoft17: true}, shoeFactory);
+            tablePlay = new TablePlay([basicDealerHitsOnSoft17Strategy], defaultHouseRules, shoeFactory);
         });
 
         after(() => {
