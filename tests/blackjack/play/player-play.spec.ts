@@ -15,7 +15,8 @@ export default function playerPlayTests() {
         const nonDefaultPlayerPlayConfig: PlayerPlayConfiguration = {
             lateSurrenderAllowed: false,
             doubleOnSoft18and19Allowed: false,
-            acesMayBeSplit: 1
+            acesMayBeSplit: 1,
+            doubleAfterSplitAllowed: false
         }
         nonDefaultPlayerPlay = new PlayerPlay(undefined, nonDefaultPlayerPlayConfig);
     });
@@ -63,18 +64,25 @@ export default function playerPlayTests() {
         assert.equal(decision, PlayerPlayDecision.SPLIT);
     });
 
-    it("double 11 vs 6", () => {
+    it("player 11 vs dealer 6", () => {
         const playerPlay = defaultPlayerPlay;
         const dealerHand = new Hand();
         dealerHand.addDownCard(BlackJackCard.TEN);
         dealerHand.addCard(BlackJackCard.SIX);
 
         const playerHand = new Hand();
-        playerHand.addCard(BlackJackCard.SIX);
-        playerHand.addCard(BlackJackCard.FIVE);
-        const decision = playerPlay.play(dealerHand, playerHand);
+        playerHand.addCard(BlackJackCard.EIGHT);
+        playerHand.addCard(BlackJackCard.THREE);
+ 
+        const defaultDecision = defaultPlayerPlay.play(dealerHand, playerHand);
+        assert.equal(defaultDecision, PlayerPlayDecision.DOUBLE, "when allowed, double 11 vs 6");
 
-        assert.equal(decision, PlayerPlayDecision.DOUBLE);
+        const nonDefaultDecisionBeforeSplit = nonDefaultPlayerPlay.play(dealerHand, playerHand);
+        assert.equal(nonDefaultDecisionBeforeSplit, PlayerPlayDecision.DOUBLE, "before split, double 11 vs 6");
+
+        playerHand.splitNumber = 1;
+        const nonDefaultDecision = nonDefaultPlayerPlay.play(dealerHand, playerHand);
+        assert.equal(nonDefaultDecision, PlayerPlayDecision.HIT, "when not allowed, only hit, don't double 11 vs 6");
     });
 
     it("hit 11 with 3 or more cards vs 6", () => {

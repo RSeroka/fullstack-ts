@@ -25,6 +25,7 @@ export type DealerPlayConfiguration = {
 export type PlayerPlayConfiguration = {
     lateSurrenderAllowed?: boolean;
     doubleOnSoft18and19Allowed?: boolean;
+    doubleAfterSplitAllowed?: boolean;
     acesMayBeSplit?: boolean | number;
 }
 
@@ -55,6 +56,7 @@ export const defaultHouseRules: HouseRules = {
     },
     playerPlayConfig: {
         doubleOnSoft18and19Allowed: true,
+        doubleAfterSplitAllowed: true, 
         lateSurrenderAllowed: true,
         acesMayBeSplit: true
     }

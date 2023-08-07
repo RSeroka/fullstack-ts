@@ -82,9 +82,13 @@ export default class PlayerPlay implements Play {
 
         }
 
-        // don't allow double unless 2 cards and honor the "double on soft 18 and 19 allowed" configuration
+        // don't allow double unless 2 cards and 
+        // honor the "double on soft 18 and 19 allowed" configuration and
+        // honor the "double after split allowed" configuration
         const allowedToDouble = playerHand.cards.length === 2 && 
-            !(playerHand.isSoft && !this.configuration.doubleOnSoft18and19Allowed && playerHand.total >= 18)
+            (!playerHand.isSoft || this.configuration.doubleOnSoft18and19Allowed || playerHand.total < 18) &&
+            (playerHand.splitNumber === 0 || this.configuration.doubleAfterSplitAllowed);
+
 
         if (tentativeDecision === PlayerStrategyHitStandOrDouble.DOUBLE && !allowedToDouble) {
             return PlayerPlayDecision.HIT;
