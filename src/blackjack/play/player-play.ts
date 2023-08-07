@@ -30,7 +30,7 @@ export default class PlayerPlay implements Play {
     }
 
     private shouldSurrender(playerHand: Hand, perDealerCardStrategy: PerDealerUpcard): boolean {
-        if (!playerHand.isSoft) {  // don't surrender on soft hands
+        if (this.configuration.lateSurrenderAllowed === true && !playerHand.isSoft) {  // don't surrender on soft hands
             const playerValueString = "" + playerHand.total;
             if (perDealerCardStrategy.surrender.hasOwnProperty(playerValueString)
                 && perDealerCardStrategy.surrender[playerValueString as keyof typeof perDealerCardStrategy.surrender] == true) {
@@ -45,7 +45,10 @@ export default class PlayerPlay implements Play {
     private shouldSplitPair(playerHand: Hand, perDealerCardStrategy: PerDealerUpcard): boolean {
         if (playerHand.cards[0]!.value === playerHand.cards[1]!.value) {
             const cardName = playerHand.cards[0]!.name as keyof typeof perDealerCardStrategy.split;
-            if (perDealerCardStrategy.split.hasOwnProperty(cardName) && perDealerCardStrategy.split[cardName] == true) {
+            const allowedToSplit = playerHand.cards[0]!.value !== 1 || 
+                this.configuration.acesMayBeSplit === true || 
+                    (Number.isInteger(this.configuration.acesMayBeSplit) && this.configuration.acesMayBeSplit as number > playerHand.splitNumber) ;
+            if (allowedToSplit && perDealerCardStrategy.split.hasOwnProperty(cardName) && perDealerCardStrategy.split[cardName] == true) {
                 return true;
             }
         }
@@ -79,11 +82,15 @@ export default class PlayerPlay implements Play {
 
         }
 
-        if (tentativeDecision === PlayerStrategyHitStandOrDouble.DOUBLE && playerHand.cards.length > 2) {
+        // don't allow double unless 2 cards and honor the "double on soft 18 and 19 allowed" configuration
+        const allowedToDouble = playerHand.cards.length === 2 && 
+            !(playerHand.isSoft && !this.configuration.doubleOnSoft18and19Allowed && playerHand.total >= 18)
+
+        if (tentativeDecision === PlayerStrategyHitStandOrDouble.DOUBLE && !allowedToDouble) {
             return PlayerPlayDecision.HIT;
         }
         else if (tentativeDecision === PlayerStrategyHitStandOrDouble.DOUBLE_OR_STAND) {
-            if (playerHand.cards.length === 2) {
+            if (allowedToDouble) {
                 return PlayerPlayDecision.DOUBLE;
             }
             else {
@@ -112,7 +119,6 @@ export default class PlayerPlay implements Play {
                 return PlayerPlayDecision.SPLIT;
             }
             else if (this.shouldSurrender(playerHand, perDealerCardStrategy)) {
-                // TODO - put in logic to check if surrender is allowed
                 return PlayerPlayDecision.SURRENDER;
             }
         }

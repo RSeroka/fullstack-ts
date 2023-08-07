@@ -25,8 +25,10 @@ export default class TablePlay {
     private shoeCnt: number;
     private shoeFactory: IShoeFactory;
     private strategyResultsCollectors: Array<StrategyResultsCollector>;
+    private houseRules: HouseRules;
 
     public constructor(playersStrategies: Array<Strategy>, houseRules: HouseRules, shoeFactory?: IShoeFactory) {
+        this.houseRules = houseRules;
         this.players = new Array<PlayerPlay>(playersStrategies.length);
         for (let playerCnt = 0; playerCnt < playersStrategies.length; playerCnt++) {
             this.players[playerCnt] = new PlayerPlay(playersStrategies[playerCnt], houseRules.playerPlayConfig);
@@ -99,11 +101,11 @@ export default class TablePlay {
         for (let playerIdx = 0; playerIdx < handResult.playerResults.length; playerIdx++) {
             handResult.playerResults[playerIdx]!.forEach(playerSingleHandResult => {
                 if (playerSingleHandResult.result !== BlackJackResult.BJ_LOSE) {
-                    if (playerSingleHandResult.hand.isBlackJack && !playerSingleHandResult.wasSplit && !handResult.dealerHand.isBlackJack) {
-                        // blackjack pays 3:2 
-                        // TODO make this configurable
+                    if (playerSingleHandResult.hand.isBlackJack && playerSingleHandResult.hand.splitNumber === 0 && !handResult.dealerHand.isBlackJack) {
+                        // blackjack pays 3:2 or 6:5 if configured to do so
+                        const payoutRatio = this.houseRules.payoutConfig?.blackjackPayout === '6:5' ? 6/5 : 3/2;
                         playerSingleHandResult.result = BlackJackResult.BJ_WIN;
-                        playerSingleHandResult.singleHandNetChips = 1.5 * BlackJackResult.BJ_WIN;
+                        playerSingleHandResult.singleHandNetChips = payoutRatio * BlackJackResult.BJ_WIN;
                     }
                     else if (handResult.dealerHand.isBlackJack && !playerSingleHandResult.hand.isBlackJack) {
                         playerSingleHandResult.result = BlackJackResult.BJ_LOSE;
@@ -164,16 +166,15 @@ export default class TablePlay {
     private createInitialPlayerSingleHandResult(): PlayerSingleHandResult {
         return {
             hand: new Hand(),
-            wasSplit: false,
             lastPlayerDecision: PlayerPlayDecision.STAND,
             result: BlackJackResult.BJ_PUSH,
             singleHandNetChips: 0
         };
     }
 
-    private createSplitPlayerSingleHandResult(card: BlackJackCard): PlayerSingleHandResult {
+    private createSplitPlayerSingleHandResult(card: BlackJackCard, priorSplitNumber: number): PlayerSingleHandResult {
         const shr = this.createInitialPlayerSingleHandResult();
-        shr.wasSplit = true;
+        shr.hand.splitNumber = priorSplitNumber + 1;
         shr.hand.addCard(card);
         shr.lastPlayerDecision = PlayerPlayDecision.SPLIT;
         return shr;
@@ -211,15 +212,17 @@ export default class TablePlay {
                 while (playerChoose) {
                     const playerSingleHandResult = singlePlayerResults[handIdx]!;
 
-                    if (playerSingleHandResult.wasSplit && playerSingleHandResult.hand.cards.length === 1) {
-                        if (playerSingleHandResult.hand.total === 11) {
-                            // splitting Aces can only get one card
+                    if (playerSingleHandResult.hand.splitNumber > 0 && playerSingleHandResult.hand.cards.length === 1) {
+                        this.applyPlayerCard(playerSingleHandResult);
+                        // splitting Aces can only get one card unless 
+                        // aces may be re-split 
+                        if (playerSingleHandResult.hand.cards[0]!.value === 1 && (playerSingleHandResult.hand.total !== 12
+                            || (Number.isInteger(this.houseRules.playerPlayConfig!.acesMayBeSplit)
+                            && playerSingleHandResult.hand.splitNumber >= (this.houseRules.playerPlayConfig!.acesMayBeSplit as number)))) {
                             playerChoose = false; // break the loop
                             playerSingleHandResult.lastPlayerDecision = PlayerPlayDecision.STAND;
-                            this.applyPlayerCard(playerSingleHandResult);
                             break;  // get out of while (playerChoose) loop
                         }
-                        this.applyPlayerCard(playerSingleHandResult);
                     }
                     const lastPlayerDecision = this.players[playerIdx]!.play(handResult.dealerHand, playerSingleHandResult.hand);
                     playerSingleHandResult.lastPlayerDecision = lastPlayerDecision;
@@ -239,8 +242,8 @@ export default class TablePlay {
                             playerChoose = true;
                             if (this.logging) { console.debug(`player has ${playerSingleHandResult.hand.total}, dealer has ${handResult.dealerHand.total}, player splits`); }
 
-                            const split1 = this.createSplitPlayerSingleHandResult(playerSingleHandResult.hand.cards[0]!);
-                            const split2 = this.createSplitPlayerSingleHandResult(playerSingleHandResult.hand.cards[1]!);
+                            const split1 = this.createSplitPlayerSingleHandResult(playerSingleHandResult.hand.cards[0]!, playerSingleHandResult.hand.splitNumber);
+                            const split2 = this.createSplitPlayerSingleHandResult(playerSingleHandResult.hand.cards[1]!, playerSingleHandResult.hand.splitNumber);
 
                             singlePlayerResults[handIdx] = split1;
                             singlePlayerResults.splice(handIdx + 1, 0, split2);

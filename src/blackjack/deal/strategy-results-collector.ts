@@ -117,7 +117,7 @@ export default class StrategyResultsCollector {
             const doubleOrSingle: keyof PerIndividualStrategyResults = 
                 handResult.lastPlayerDecision == PlayerPlayDecision.DOUBLE ? "double" : "single"; 
 
-            if (pseudoHand.isSoft && (!handResult.wasSplit || handResult.hand.cards[0]?.name != 'A')) {
+            if (pseudoHand.isSoft && (handResult.hand.splitNumber === 0 || handResult.hand.cards[0]?.name != 'A')) {
                 // post Aces split can not take more cards, so treat as hard
                 const softTotal = "" + pseudoHand.total as keyof typeof perDealerUpcardStrategyResults.soft;
                 if (perDealerUpcardStrategyResults.soft[softTotal] !== undefined) {
@@ -143,7 +143,7 @@ export default class StrategyResultsCollector {
         this.applyToStatsBucket(handResult, hardSoftSurrenderBucket);
         //#endregion hardSoftSurrender Bucket
 
-        if (handResult.wasSplit) {
+        if (handResult.hand.splitNumber > 0) {
             const splitCard = handResult.hand.cards[0]!.name;
             const splitKey = "" + splitCard as keyof typeof perDealerUpcardStrategyResults.split;
             const splitBucketTarget = perDealerUpcardStrategyResults.split[splitKey];

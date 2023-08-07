@@ -12,7 +12,6 @@ export enum BlackJackResult {
 // splits would have more than one SingleHandResult
 export type PlayerSingleHandResult = {
     hand: Hand,
-    wasSplit: boolean,
     lastPlayerDecision: PlayerPlayDecision,
     result: BlackJackResult,
     singleHandNetChips: number

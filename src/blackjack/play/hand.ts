@@ -7,6 +7,7 @@ export default class Hand {
     private downCard: BlackJackCard | undefined;
     private _total: number = 0;
     private _isSoft: boolean = false;
+    private _splitNumber: number = 0;
 
     public addDownCard(newCard:BlackJackCard): void {
         this.downCard = newCard;
@@ -68,5 +69,12 @@ export default class Hand {
         return false;
     }
 
+    public get splitNumber(): number {
+        return this._splitNumber;
+    }
+
+    public set splitNumber(value: number) {
+        this._splitNumber = value;
+    }
 
 }

@@ -5,11 +5,19 @@ import Hand from "../../../src/blackjack/play/hand";
 import BlackJackCard from "../../../src/blackjack/cards/blackjack-card";
 import { PlayerPlayDecision } from "../../../src/blackjack/strategies/decision";
 import PlayerPlay from "../../../src/blackjack/play/player-play";
+import type { PlayerPlayConfiguration } from "../../../src/blackjack/play/house-rules";
 
 export default function playerPlayTests() {
     let defaultPlayerPlay: PlayerPlay;
+    let nonDefaultPlayerPlay: PlayerPlay;
     before(() => {
         defaultPlayerPlay = new PlayerPlay();
+        const nonDefaultPlayerPlayConfig: PlayerPlayConfiguration = {
+            lateSurrenderAllowed: false,
+            doubleOnSoft18and19Allowed: false,
+            acesMayBeSplit: 1
+        }
+        nonDefaultPlayerPlay = new PlayerPlay(undefined, nonDefaultPlayerPlayConfig);
     });
 
     it("hit on 5 vs 6", () => {
@@ -97,7 +105,13 @@ export default function playerPlayTests() {
 
         const decision = playerPlay.play(dealerHand, playerHand);
 
-        assert.equal(decision, PlayerPlayDecision.SURRENDER);
+        assert.equal(decision, PlayerPlayDecision.SURRENDER, "surrender 16 vs A when allowed");
+
+        const nonDefaultDecision = nonDefaultPlayerPlay.play(dealerHand, playerHand);
+
+        assert.equal(nonDefaultDecision, PlayerPlayDecision.HIT, "hit 16 vs A when no surrender")
+
+        
     });
 
 
@@ -115,5 +129,40 @@ export default function playerPlayTests() {
         const decision = playerPlay.play(dealerHand, playerHand);
 
         assert.equal(decision, PlayerPlayDecision.HIT);
+    });
+
+    it("Double soft 18 vs 6", () => {
+        const dealerHand = new Hand();
+        dealerHand.addDownCard(BlackJackCard.TEN);
+        dealerHand.addCard(BlackJackCard.SIX);
+
+        const playerHand = new Hand();
+        playerHand.addCard(BlackJackCard.ACE);
+        playerHand.addCard(BlackJackCard.SEVEN);
+
+        const defaultDecision = defaultPlayerPlay.play(dealerHand, playerHand);
+        assert.equal(defaultDecision, PlayerPlayDecision.DOUBLE, "when allowed, double down soft 18 vs 6");
+
+        const nonDefaultDecision = nonDefaultPlayerPlay.play(dealerHand, playerHand);
+        assert.equal(nonDefaultDecision, PlayerPlayDecision.STAND, "when double down not allowed, hold on soft 18 vs 6");
+
+    });
+
+    it("Split Aces after split", () => {
+        const dealerHand = new Hand();
+        dealerHand.addDownCard(BlackJackCard.TEN);
+        dealerHand.addCard(BlackJackCard.SIX);
+
+        const playerHand = new Hand();
+        playerHand.addCard(BlackJackCard.ACE);
+        playerHand.addCard(BlackJackCard.ACE);
+        playerHand.splitNumber = 1;
+
+        const defaultDecision = defaultPlayerPlay.play(dealerHand, playerHand);
+        assert.equal(defaultDecision, PlayerPlayDecision.SPLIT, "when allowed, split aces vs 6");
+
+        const nonDefaultDecision = nonDefaultPlayerPlay.play(dealerHand, playerHand);
+        assert.notEqual(nonDefaultDecision, PlayerPlayDecision.SPLIT, "when split aces not allowed, dont split aces");
+
     });
 }
