@@ -6,7 +6,7 @@ import { CryptoRandomInt, MersenneTwisterRandomInt, type IRandomInt } from "../c
 import ShuffledShoeFactory from "../cards/shuffled-shoe-factory";
 import DealerPlay from "../play/dealer-play";
 import Hand from "../play/hand";
-import { HouseRules, ShoeConfig, defaultHouseRules } from "../play/house-rules";
+import { HouseRules, ShoeConfig, SparseHouseRules, defaultHouseRules } from "../play/house-rules";
 import PlayerPlay from "../play/player-play";
 import { DealerPlayDecision, PlayerPlayDecision } from "../strategies/decision";
 import type Strategy from "../strategies/strategy";
@@ -25,20 +25,20 @@ export default class TablePlay {
     private shoeCnt: number;
     private shoeFactory: IShoeFactory;
     private strategyResultsCollectors: Array<StrategyResultsCollector>;
-    private houseRules: HouseRules;
+    private houseRules: SparseHouseRules;
 
-    public constructor(playersStrategies: Array<Strategy>, houseRules: HouseRules, shoeFactory?: IShoeFactory) {
-        this.houseRules = houseRules;
+    public constructor(playersStrategies: Array<Strategy>, sparseHouseRules: SparseHouseRules, shoeFactory?: IShoeFactory) {
+        this.houseRules = sparseHouseRules;
         this.players = new Array<PlayerPlay>(playersStrategies.length);
         for (let playerCnt = 0; playerCnt < playersStrategies.length; playerCnt++) {
-            this.players[playerCnt] = new PlayerPlay(playersStrategies[playerCnt], houseRules.playerPlayConfig);
+            this.players[playerCnt] = new PlayerPlay(playersStrategies[playerCnt], sparseHouseRules.playerPlayConfig);
         }
-        this.dealer = new DealerPlay(houseRules.dealerPlayConfig);
+        this.dealer = new DealerPlay(sparseHouseRules.dealerPlayConfig);
 
         if (shoeFactory === undefined) {
             const shoeConfig: ShoeConfig = {
                 ...defaultHouseRules.shoeConfig,
-                ...houseRules.shoeConfig
+                ...sparseHouseRules.shoeConfig
             }
             let shoeRandomImpl: IRandomInt;
             if (shoeConfig.randomSeed !== undefined) {
@@ -65,6 +65,14 @@ export default class TablePlay {
         const results = new Array<StrategyResults>(this.strategyResultsCollectors.length);
         for (let cnt = 0; cnt < this.strategyResultsCollectors.length; cnt++) {
             results[cnt] = this.strategyResultsCollectors[cnt]!.results;
+        }
+        return results;
+    }
+
+    public dealHands(numberOfHands: number): Array<DealtHandResult> {
+        const results = new Array<DealtHandResult>(numberOfHands);
+        for (let index = 0; index < results.length; index++) {
+            results[index] = this.dealHand();
         }
         return results;
     }
@@ -103,7 +111,8 @@ export default class TablePlay {
                 if (playerSingleHandResult.result !== BlackJackResult.BJ_LOSE) {
                     if (playerSingleHandResult.hand.isBlackJack && playerSingleHandResult.hand.splitNumber === 0 && !handResult.dealerHand.isBlackJack) {
                         // blackjack pays 3:2 or 6:5 if configured to do so
-                        const payoutRatio = this.houseRules.payoutConfig?.blackjackPayout === '6:5' ? 6/5 : 3/2;
+                        const blackjackPayoutConfig = this.houseRules.payoutConfig.blackjackPayout ?? defaultHouseRules.payoutConfig.blackjackPayout; 
+                        const payoutRatio = blackjackPayoutConfig === '6:5' ? 6/5 : 3/2;
                         playerSingleHandResult.result = BlackJackResult.BJ_WIN;
                         playerSingleHandResult.singleHandNetChips = payoutRatio * BlackJackResult.BJ_WIN;
                     }
@@ -216,9 +225,11 @@ export default class TablePlay {
                         this.applyPlayerCard(playerSingleHandResult);
                         // splitting Aces can only get one card unless 
                         // aces may be re-split 
+                        const acesMayBeSplitConfig = this.houseRules.playerPlayConfig.acesMayBeSplit ?? defaultHouseRules.playerPlayConfig.acesMayBeSplit; 
+
                         if (playerSingleHandResult.hand.cards[0]!.value === 1 && (playerSingleHandResult.hand.total !== 12
-                            || (Number.isInteger(this.houseRules.playerPlayConfig!.acesMayBeSplit)
-                            && playerSingleHandResult.hand.splitNumber >= (this.houseRules.playerPlayConfig!.acesMayBeSplit as number)))) {
+                            || (Number.isInteger(acesMayBeSplitConfig)
+                            && playerSingleHandResult.hand.splitNumber >= (acesMayBeSplitConfig as number)))) {
                             playerChoose = false; // break the loop
                             playerSingleHandResult.lastPlayerDecision = PlayerPlayDecision.STAND;
                             break;  // get out of while (playerChoose) loop

@@ -5,8 +5,8 @@
  * @param randomSeed if supplied, psuedo random deck will be dealt so that reproducible shoes created, not supplied, completely random
  */
 export type ShoeConfig = {
-    numDecks?: number;
-    cutoffPercent?: number;
+    numDecks: number;
+    cutoffPercent: number;
     randomSeed?: number;
 }
 
@@ -14,7 +14,7 @@ export type ShoeConfig = {
  * @param dealerHitsOnSoft17 if true, dealer will hit on hard 17 and soft 18 or greater.  If false, dealer will stand on hard or soft 17 or greater.
  */
 export type DealerPlayConfiguration = {
-    dealerHitsOnSoft17?: boolean;
+    dealerHitsOnSoft17: boolean;
 }
 
 /**
@@ -23,29 +23,38 @@ export type DealerPlayConfiguration = {
  * @param acesMayBeSplit if true, no restriction on splitting aces.  if a whole number > 0, aces may be resplit up to number provided per hand
  */
 export type PlayerPlayConfiguration = {
-    lateSurrenderAllowed?: boolean;
-    doubleOnSoft18and19Allowed?: boolean;
-    doubleAfterSplitAllowed?: boolean;
-    acesMayBeSplit?: boolean | number;
+    lateSurrenderAllowed: boolean;
+    doubleOnSoft18and19Allowed: boolean;
+    doubleAfterSplitAllowed: boolean;
+    acesMayBeSplit: boolean | number;
 }
 
 /**
  * @param blackjackPayout ratio of payment given to player when player has blackjack
  */
 export type PayoutConfig = {
-    blackjackPayout?: '3:2' | '6:5';
+    blackjackPayout: '3:2' | '6:5';
 }
 
 
-export type HouseRules = {
-    payoutConfig?: PayoutConfig;
-    shoeConfig?: ShoeConfig;
-    dealerPlayConfig?: DealerPlayConfiguration;
-    playerPlayConfig?: PlayerPlayConfiguration;
+export type SparseHouseRules = {
+    id?: string;
+    payoutConfig: Partial<PayoutConfig>;
+    shoeConfig: Partial<ShoeConfig>;
+    dealerPlayConfig: Partial<DealerPlayConfiguration>;
+    playerPlayConfig: Partial<PlayerPlayConfiguration>;
 };
 
+export type HouseRules = {
+    id: string;
+    payoutConfig: PayoutConfig;
+    shoeConfig: ShoeConfig;
+    dealerPlayConfig: DealerPlayConfiguration;
+    playerPlayConfig: PlayerPlayConfiguration;
+};
 
 export const defaultHouseRules: HouseRules = {
+    id: "default",
     payoutConfig: { blackjackPayout: '3:2' },
     shoeConfig: {
         numDecks: 6,

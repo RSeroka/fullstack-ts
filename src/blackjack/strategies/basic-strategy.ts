@@ -9,6 +9,7 @@ import { PlayerStrategyHitStandOrDouble } from "./decision";
 // Double after split allowed
 // Double on soft 18, 19 allowed
 export const basicDealerHitsOnSoft17Strategy: Strategy = {
+    id: "basicDealerHitsOnSoft17",
     dealerUpcards: [
         // ACE
         {
@@ -384,6 +385,7 @@ export const basicDealerHitsOnSoft17Strategy: Strategy = {
  */
 
 let _basicDealerStandsOn17Strategy: Strategy = structuredClone(basicDealerHitsOnSoft17Strategy);
+_basicDealerStandsOn17Strategy.id = "basicDealerStandsOnSoft17";
 delete _basicDealerStandsOn17Strategy.dealerUpcards[0]!.surrender["15"]; 
 delete _basicDealerStandsOn17Strategy.dealerUpcards[0]!.surrender["17"]; 
 _basicDealerStandsOn17Strategy.dealerUpcards[0]!.hard["11"] = PlayerStrategyHitStandOrDouble.HIT;

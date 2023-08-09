@@ -46,6 +46,7 @@ export type PerDealerUpcard = {
 
 
 export type Strategy = {
+    id: string;
     dealerUpcards: Array<PerDealerUpcard>;
 }
 
