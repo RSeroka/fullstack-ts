@@ -1,11 +1,11 @@
 
 import type BlackJackCard from "../cards/blackjack-card";
 import Hand from "../play/hand";
-import { PlayerPlayDecision } from "../strategies/decision";
-import type Strategy from "../strategies/strategy";
-import type { PerDealerUpcard } from "../strategies/strategy";
-import type StrategyResults from "../strategies/strategy-results";
-import { PerDealerUpcardStrategyResults, PerIndividualStrategyResults, StrategyResultsStats } from "../strategies/strategy-results";
+import { PlayerPlayDecision } from "../interface-types/decision";
+import type Strategy from "../interface-types/strategy";
+import type { PerDealerUpcard } from "../interface-types/strategy";
+import type StrategyResults from "../interface-types/strategy-results";
+import { PerDealerUpcardStrategyResults, PerIndividualStrategyResults, StrategyResultsStats } from "../interface-types/strategy-results";
 import { BlackJackResult, PlayerSingleHandResult } from "./hand-result"; 
 
 

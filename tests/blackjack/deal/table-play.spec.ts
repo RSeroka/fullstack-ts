@@ -5,12 +5,13 @@ import {BlackJackResult} from "../../../src/blackjack/deal/hand-result";
 import ShoeFactory from "../../../src/blackjack/cards/shoe-factory";
 import Shoe from "../../../src/blackjack/cards/shoe";
 import Card from "../../../src/blackjack/cards/card";
-import type {PerDealerUpcardStrategyResults, PerIndividualStrategyResults, StrategyResultsStats} from "../../../src/blackjack/strategies/strategy-results";
-import { PlayerPlayDecision } from "../../../src/blackjack/strategies/decision";
+import type {PerDealerUpcardStrategyResults, PerIndividualStrategyResults, StrategyResultsStats} from "../../../src/blackjack/interface-types/strategy-results";
+import { PlayerPlayDecision } from "../../../src/blackjack/interface-types/decision";
 import BlackJackCard from "../../../src/blackjack/cards/blackjack-card";
-import { HouseRules, defaultHouseRules } from "../../../src/blackjack/play/house-rules";
+import { HouseRules } from "../../../src/blackjack/interface-types/house-rules";
+import { defaultHouseRules } from "../../../src/blackjack/play/default-house-rules";
 import { basicDealerHitsOnSoft17Strategy } from "../../../src/blackjack/strategies/basic-strategy";
-import type Strategy from "../../../src/blackjack/strategies/strategy";
+import type Strategy from "../../../src/blackjack/interface-types/strategy";
 
 
 

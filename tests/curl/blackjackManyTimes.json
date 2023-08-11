@@ -1,0 +1,358 @@
+{
+    "numHands": 100,
+    "playerStrategy": {
+        "id": "basicDealerHitsOnSoft17",
+        "dealerUpcards": [
+            {
+                "hard": {
+                    "9": "Hit",
+                    "10": "Hit",
+                    "11": "Double",
+                    "12": "Hit",
+                    "13": "Hit",
+                    "14": "Hit",
+                    "15": "Hit",
+                    "16": "Hit",
+                    "8AndUnder": "Hit",
+                    "17AndOver": "Stand"
+                },
+                "soft": {
+                    "13": "Hit",
+                    "14": "Hit",
+                    "15": "Hit",
+                    "16": "Hit",
+                    "17": "Hit",
+                    "18": "Hit",
+                    "19": "Stand",
+                    "20": "Stand"
+                },
+                "split": {
+                    "8": true,
+                    "A": true
+                },
+                "surrender": {
+                    "15": true,
+                    "16": true,
+                    "17": true
+                }
+            },
+            {
+                "hard": {
+                    "9": "Hit",
+                    "10": "Double",
+                    "11": "Double",
+                    "12": "Hit",
+                    "13": "Stand",
+                    "14": "Stand",
+                    "15": "Stand",
+                    "16": "Stand",
+                    "8AndUnder": "Hit",
+                    "17AndOver": "Stand"
+                },
+                "soft": {
+                    "13": "Hit",
+                    "14": "Hit",
+                    "15": "Hit",
+                    "16": "Hit",
+                    "17": "Hit",
+                    "18": "Double or Stand",
+                    "19": "Stand",
+                    "20": "Stand"
+                },
+                "split": {
+                    "2": true,
+                    "3": true,
+                    "6": true,
+                    "7": true,
+                    "8": true,
+                    "9": true,
+                    "A": true
+                },
+                "surrender": {}
+            },
+            {
+                "hard": {
+                    "9": "Double",
+                    "10": "Double",
+                    "11": "Double",
+                    "12": "Hit",
+                    "13": "Stand",
+                    "14": "Stand",
+                    "15": "Stand",
+                    "16": "Stand",
+                    "8AndUnder": "Hit",
+                    "17AndOver": "Stand"
+                },
+                "soft": {
+                    "13": "Hit",
+                    "14": "Hit",
+                    "15": "Hit",
+                    "16": "Hit",
+                    "17": "Double",
+                    "18": "Double or Stand",
+                    "19": "Stand",
+                    "20": "Stand"
+                },
+                "split": {
+                    "2": true,
+                    "3": true,
+                    "6": true,
+                    "7": true,
+                    "8": true,
+                    "9": true,
+                    "A": true
+                },
+                "surrender": {}
+            },
+            {
+                "hard": {
+                    "9": "Double",
+                    "10": "Double",
+                    "11": "Double",
+                    "12": "Stand",
+                    "13": "Stand",
+                    "14": "Stand",
+                    "15": "Stand",
+                    "16": "Stand",
+                    "8AndUnder": "Hit",
+                    "17AndOver": "Stand"
+                },
+                "soft": {
+                    "13": "Hit",
+                    "14": "Hit",
+                    "15": "Double",
+                    "16": "Double",
+                    "17": "Double",
+                    "18": "Double or Stand",
+                    "19": "Stand",
+                    "20": "Stand"
+                },
+                "split": {
+                    "2": true,
+                    "3": true,
+                    "6": true,
+                    "7": true,
+                    "8": true,
+                    "9": true,
+                    "A": true
+                },
+                "surrender": {}
+            },
+            {
+                "hard": {
+                    "9": "Double",
+                    "10": "Double",
+                    "11": "Double",
+                    "12": "Stand",
+                    "13": "Stand",
+                    "14": "Stand",
+                    "15": "Stand",
+                    "16": "Stand",
+                    "8AndUnder": "Hit",
+                    "17AndOver": "Stand"
+                },
+                "soft": {
+                    "13": "Double",
+                    "14": "Double",
+                    "15": "Double",
+                    "16": "Double",
+                    "17": "Double",
+                    "18": "Double or Stand",
+                    "19": "Stand",
+                    "20": "Stand"
+                },
+                "split": {
+                    "2": true,
+                    "3": true,
+                    "4": true,
+                    "6": true,
+                    "7": true,
+                    "8": true,
+                    "9": true,
+                    "A": true
+                },
+                "surrender": {}
+            },
+            {
+                "hard": {
+                    "9": "Double",
+                    "10": "Double",
+                    "11": "Double",
+                    "12": "Stand",
+                    "13": "Stand",
+                    "14": "Stand",
+                    "15": "Stand",
+                    "16": "Stand",
+                    "8AndUnder": "Hit",
+                    "17AndOver": "Stand"
+                },
+                "soft": {
+                    "13": "Double",
+                    "14": "Double",
+                    "15": "Double",
+                    "16": "Double",
+                    "17": "Double",
+                    "18": "Double or Stand",
+                    "19": "Double or Stand",
+                    "20": "Stand"
+                },
+                "split": {
+                    "2": true,
+                    "3": true,
+                    "4": true,
+                    "6": true,
+                    "7": true,
+                    "8": true,
+                    "9": true,
+                    "A": true
+                },
+                "surrender": {}
+            },
+            {
+                "hard": {
+                    "9": "Hit",
+                    "10": "Double",
+                    "11": "Double",
+                    "12": "Hit",
+                    "13": "Hit",
+                    "14": "Hit",
+                    "15": "Hit",
+                    "16": "Hit",
+                    "8AndUnder": "Hit",
+                    "17AndOver": "Stand"
+                },
+                "soft": {
+                    "13": "Hit",
+                    "14": "Hit",
+                    "15": "Hit",
+                    "16": "Hit",
+                    "17": "Hit",
+                    "18": "Stand",
+                    "19": "Stand",
+                    "20": "Stand"
+                },
+                "split": {
+                    "2": true,
+                    "3": true,
+                    "7": true,
+                    "8": true,
+                    "A": true
+                },
+                "surrender": {}
+            },
+            {
+                "hard": {
+                    "9": "Hit",
+                    "10": "Double",
+                    "11": "Double",
+                    "12": "Hit",
+                    "13": "Hit",
+                    "14": "Hit",
+                    "15": "Hit",
+                    "16": "Hit",
+                    "8AndUnder": "Hit",
+                    "17AndOver": "Stand"
+                },
+                "soft": {
+                    "13": "Hit",
+                    "14": "Hit",
+                    "15": "Hit",
+                    "16": "Hit",
+                    "17": "Hit",
+                    "18": "Stand",
+                    "19": "Stand",
+                    "20": "Stand"
+                },
+                "split": {
+                    "8": true,
+                    "9": true,
+                    "A": true
+                },
+                "surrender": {}
+            },
+            {
+                "hard": {
+                    "9": "Hit",
+                    "10": "Double",
+                    "11": "Double",
+                    "12": "Hit",
+                    "13": "Hit",
+                    "14": "Hit",
+                    "15": "Hit",
+                    "16": "Hit",
+                    "8AndUnder": "Hit",
+                    "17AndOver": "Stand"
+                },
+                "soft": {
+                    "13": "Hit",
+                    "14": "Hit",
+                    "15": "Hit",
+                    "16": "Hit",
+                    "17": "Hit",
+                    "18": "Hit",
+                    "19": "Stand",
+                    "20": "Stand"
+                },
+                "split": {
+                    "8": true,
+                    "9": true,
+                    "A": true
+                },
+                "surrender": {
+                    "16": true
+                }
+            },
+            {
+                "hard": {
+                    "9": "Hit",
+                    "10": "Hit",
+                    "11": "Double",
+                    "12": "Hit",
+                    "13": "Hit",
+                    "14": "Hit",
+                    "15": "Hit",
+                    "16": "Hit",
+                    "8AndUnder": "Hit",
+                    "17AndOver": "Stand"
+                },
+                "soft": {
+                    "13": "Hit",
+                    "14": "Hit",
+                    "15": "Hit",
+                    "16": "Hit",
+                    "17": "Hit",
+                    "18": "Hit",
+                    "19": "Stand",
+                    "20": "Stand"
+                },
+                "split": {
+                    "8": true,
+                    "A": true
+                },
+                "surrender": {
+                    "15": true,
+                    "16": true
+                }
+            }
+        ]
+    },
+    "houseRulesOverride": {
+        "id": "default",
+        "payoutConfig": {
+            "blackjackPayout": "3:2"
+        },
+        "shoeConfig": {
+            "numDecks": 6,
+            "cutoffPercent": 0.5
+        },
+        "dealerPlayConfig": {
+            "dealerHitsOnSoft17": false
+        },
+        "playerPlayConfig": {
+            "doubleOnSoft18and19Allowed": true,
+            "doubleAfterSplitAllowed": true,
+            "lateSurrenderAllowed": true,
+            "acesMayBeSplit": true
+        }
+    }
+}

@@ -2,8 +2,8 @@
 
 // https://www.blackjackapprenticeship.com/blackjack-strategy-charts/
 // https://wizardofodds.com/games/blackjack/strategy/4-decks/
-import type Strategy from "./strategy";
-import { PlayerStrategyHitStandOrDouble } from "./decision";
+import type Strategy from "../interface-types/strategy";
+import { PlayerStrategyHitStandOrDouble } from "../interface-types/decision";
 
 
 // Double after split allowed

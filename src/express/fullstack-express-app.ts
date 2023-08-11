@@ -3,10 +3,11 @@
 import type { Board9 } from '../sudoku/board';
 import SudokuSolver9 from '../sudoku/sudoku-solver';
 import { basicDealerHitsOnSoft17Strategy, basicDealerStandsOnSoft17Strategy } from '../blackjack/strategies/basic-strategy';
-import { SparseHouseRules, defaultHouseRules } from '../blackjack/play/house-rules';
+import { PlayManyHandsParams } from '../blackjack/interface-types/rest-api';
+import { defaultHouseRules } from "../blackjack/play/default-house-rules";
 import ExpressApp from './express-app';
-import type Strategy from '../blackjack/strategies/strategy';
 import TablePlay from '../blackjack/deal/table-play';
+import typia from 'typia';
 
 
 export default class FullStackExpressApp extends ExpressApp {
@@ -30,10 +31,17 @@ export default class FullStackExpressApp extends ExpressApp {
         });
 
 
+        /**
+         * response is type Array<Strategy>
+         */
         super.expressApp.get('/blackjack/strategies', (req, res) => {
             res.json([basicDealerHitsOnSoft17Strategy, basicDealerStandsOnSoft17Strategy]);
         });
 
+        /**
+         * success response is type Strategy
+         * error response is type { error: number, errormsg: string }
+         */
         super.expressApp.get('/blackjack/strategies/:strategyId', (req, res) => {
             console.log (`get strategies ${req.params.strategyId}`);
             const id = req.params.strategyId;
@@ -48,10 +56,17 @@ export default class FullStackExpressApp extends ExpressApp {
             }
         });
 
+        /**
+         * response is type Array<HouseRules>
+         */
         super.expressApp.get('/blackjack/houserules', (req, res) => {
             res.json([defaultHouseRules]);
         });
 
+        /**
+         * success response is type HouseRules
+         * error response is type { error: number, errormsg: string }
+         */
         super.expressApp.get('/blackjack/houserules/:houseRulesId', (req, res) => {
             const id = req.params.houseRulesId;
             if (id === defaultHouseRules.id) {
@@ -63,33 +78,30 @@ export default class FullStackExpressApp extends ExpressApp {
         });
 
 
-        type PlayManyHandsParams = {
-            /**
-             * @type uint
-             * @minimum 1
-             * @exclusiveMaximum 10000000
-             */
-            numHands: number;
-
-            /**
-             * 
-             */
-            playerStrategy: Strategy;
 
 
-            houseRulesOverride: SparseHouseRules;
-
-        }
-
+        /**
+         * POST parameters are PlayManyHandsParams
+         * Response is Array<StrategyResults>
+         */
         super.expressApp.post("/blackjack/playmanyhands", (req, res) => {
+            const validateParams = typia.createValidate<PlayManyHandsParams>();
             // validate 
             const reqParams = req.body;
-            const params = reqParams as PlayManyHandsParams;
+            const validationResults = validateParams(reqParams);
+            if (validationResults.success) {
+                const params = validationResults.data; // reqParams as PlayManyHandsParams;
 
-            const tablePlay = new TablePlay([params.playerStrategy], params.houseRulesOverride);
-            tablePlay.dealHands(params.numHands);
+                const tablePlay = new TablePlay([params.playerStrategy], params.houseRulesOverride);
+                tablePlay.dealHands(params.numHands);
+    
+                res.json(tablePlay.strategyResults);
+            }
+            else {
+                res.status(404).json(validationResults.errors);
+            }
+            
 
-            res.json(tablePlay.strategyResults);
         });
 
     }

@@ -1,11 +1,11 @@
 
 
 import { basicDealerHitsOnSoft17Strategy } from "../strategies/basic-strategy";
-import { PlayerDecisionHitStandOrDouble, PlayerPlayDecision, PlayerStrategyHitStandOrDouble } from "../strategies/decision";
-import type { PerDealerUpcard, Strategy } from "../strategies/strategy";
+import { PlayerDecisionHitStandOrDouble, PlayerPlayDecision, PlayerStrategyHitStandOrDouble } from "../interface-types/decision";
+import type { PerDealerUpcard, Strategy } from "../interface-types/strategy";
 import type Hand from "./hand";
-import type { PlayerPlayConfiguration } from "./house-rules";
-import { defaultHouseRules } from "./house-rules";
+import type { PlayerPlayConfiguration } from "../interface-types/house-rules";
+import { defaultHouseRules } from "./default-house-rules";
 import type Play from "./play";
 
 

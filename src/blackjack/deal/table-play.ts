@@ -6,11 +6,12 @@ import { CryptoRandomInt, MersenneTwisterRandomInt, type IRandomInt } from "../c
 import ShuffledShoeFactory from "../cards/shuffled-shoe-factory";
 import DealerPlay from "../play/dealer-play";
 import Hand from "../play/hand";
-import { HouseRules, ShoeConfig, SparseHouseRules, defaultHouseRules } from "../play/house-rules";
+import { defaultHouseRules } from "../play/default-house-rules";
+import { ShoeConfig, SparseHouseRules } from "../interface-types/house-rules";
 import PlayerPlay from "../play/player-play";
-import { DealerPlayDecision, PlayerPlayDecision } from "../strategies/decision";
-import type Strategy from "../strategies/strategy";
-import type StrategyResults from "../strategies/strategy-results";
+import { DealerPlayDecision, PlayerPlayDecision } from "../interface-types/decision";
+import type Strategy from "../interface-types/strategy";
+import type StrategyResults from "../interface-types/strategy-results";
 import StrategyResultsCollector from "./strategy-results-collector"; // circular import needs review....
 import { BlackJackResult, PlayerSingleHandResult, DealtHandResult } from "./hand-result";
 

@@ -11,12 +11,14 @@
     "all-rebuild": "npm run all-clean && concurrently -c auto \"npm:server-build\" \"npm:client-build\"",
     "local-express-server": "node ./dist/src/express/server.js",
     "docker-build": "docker build -t rseroka/sudoku-ts .",
-    "docker-run": "docker run --publish 80:8080 --restart on-failure:5 --name sudoku-container rseroka/sudoku-ts"
+    "docker-run": "docker run --publish 80:8080 --restart on-failure:5 --name sudoku-container rseroka/sudoku-ts",
+    "postinstall": "ts-patch install"
   },
   "author": "rseroka",
   "license": "UNLICENCED",
   "devDependencies": {
-    "@tsconfig/node-lts-strictest": "^18.12.1",
+    "@tsconfig/node-lts": "^18.12.3",
+    "@tsconfig/strictest": "^2.0.1",
     "@types/chai": "^4.3.4",
     "@types/express": "^4.17.17",
     "@types/mocha": "^10.0.1",
@@ -30,9 +32,12 @@
     "mocha": "^10.2.0",
     "rimraf": "^4.1.2",
     "sinon": "^15.0.1",
-    "typescript": "^4.9.5"
+    "ts-node": "^10.9.1",
+    "ts-patch": "^3.0.2",
+    "typescript": "^5.1.6"
   },
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "typia": "^4.2.1"
   }
 }

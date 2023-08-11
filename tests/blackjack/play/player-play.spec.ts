@@ -3,9 +3,9 @@
 import { assert } from "chai"; 
 import Hand from "../../../src/blackjack/play/hand";
 import BlackJackCard from "../../../src/blackjack/cards/blackjack-card";
-import { PlayerPlayDecision } from "../../../src/blackjack/strategies/decision";
+import { PlayerPlayDecision } from "../../../src/blackjack/interface-types/decision";
 import PlayerPlay from "../../../src/blackjack/play/player-play";
-import type { PlayerPlayConfiguration } from "../../../src/blackjack/play/house-rules";
+import type { PlayerPlayConfiguration } from "../../../src/blackjack/interface-types/house-rules";
 
 export default function playerPlayTests() {
     let defaultPlayerPlay: PlayerPlay;

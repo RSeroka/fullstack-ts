@@ -1,6 +1,6 @@
 
 import type Hand from "../play/hand";
-import type { PlayerPlayDecision } from "../strategies/decision";
+import type { PlayerPlayDecision } from "../interface-types/decision";
 
 
 export enum BlackJackResult {

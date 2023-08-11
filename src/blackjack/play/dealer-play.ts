@@ -2,10 +2,11 @@
 
 import type Hand from "./hand";
 import type Play from "./play";
-import  { DealerPlayDecision} from "../strategies/decision";
+import  { DealerPlayDecision} from "../interface-types/decision";
 
 
-import { DealerPlayConfiguration, defaultHouseRules } from "./house-rules";
+import { DealerPlayConfiguration} from "../interface-types/house-rules";
+import { defaultHouseRules } from "./default-house-rules";
 
 
 export default class DealerPlay implements Play {
