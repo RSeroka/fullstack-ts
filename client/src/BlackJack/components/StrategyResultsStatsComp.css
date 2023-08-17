@@ -1,0 +1,55 @@
+
+
+.strategy-results-stats-comp {
+    /* display: flex;
+    flex-wrap: wrap;
+    justify-content: center; */
+    border: 1px solid #aaa;
+    text-align: center;
+}
+
+.strategy-results-stats-comp--deepwinner {
+    background-color: green;
+    color: white;
+}
+
+.strategy-results-stats-comp--winner {
+    background-color: rgba(0, 128, 0, .5);
+    color: white;
+}
+
+.strategy-results-stats-comp--push {
+    background-color: white;
+    color: black;
+
+}
+
+.strategy-results-stats-comp--loser {
+    background-color: rgba(255, 0, 0, .5);
+    color: white;
+}
+
+.strategy-results-stats-comp--deeploser {
+    background-color: red;
+    color: white;
+}
+
+.strategy-results-stats-comp__overlay {
+    border: 1px solid black;
+    border-radius: 10px;
+    background-color: #eee;
+    color: black;
+    text-align: center;
+    margin: 3px;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+
+/* .strategy-results-stats-comp__item {
+    border: 1px solid #aaa;
+} */
+
+
+
+

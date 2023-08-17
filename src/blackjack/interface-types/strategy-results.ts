@@ -1,23 +1,13 @@
 
 
-export class StrategyResultsStats  {
-    public numberWins: number;
-    public numberLosses: number;
-    public numberHands: number;
-    public netValue: number;
 
-    public constructor() {
-        this.numberWins = 0;
-        this.numberLosses = 0;
-        this.numberHands = 0;
-        this.netValue = 0;
-    }
 
-    public get winPercent() { return this.numberHands > 0 ? Math.round(1000 * this.numberWins / this.numberHands) / 10 : 0;}
-    public get losePercent() { return this.numberHands > 0 ? Math.round(1000 * this.numberLosses / this.numberHands) / 10 : 0; }
-    public get pushPercent() { return this.numberHands > 0 ? Math.round(1000 * (this.numberHands - this.numberWins - this.numberLosses) / this.numberHands) / 10 : 0; }
-    public get netValuePercent() { return this.numberHands > 0 ? Math.round(10000 * this.netValue / this.numberHands) / 100: 0; }
-};
+export type StrategyResultsStats = {
+    numberWins: number;
+    numberLosses: number;
+    numberHands: number;
+    netValue: number;
+}
 
 export type PerIndividualStrategyResults = {
     double: StrategyResultsStats;

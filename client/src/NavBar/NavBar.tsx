@@ -38,6 +38,9 @@ const Navbar = () => {
               <NavLink to="/sudoku">Sudoku</NavLink>
             </li>
 
+            <li>
+              <NavLink to="/blackjack">Blackjack</NavLink>
+            </li>
           </ul>
         </div>
       </div>

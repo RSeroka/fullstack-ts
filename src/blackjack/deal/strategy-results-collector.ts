@@ -14,7 +14,12 @@ export default class StrategyResultsCollector {
     private _results: StrategyResults;
 
     private createEmptyStats(): StrategyResultsStats {
-        return new StrategyResultsStats();
+        return {
+            numberWins: 0, 
+            numberLosses: 0, 
+            numberHands: 0, 
+            netValue: 0
+        }
     }
 
     private createEmptyPerIndividualStrategyResults(): PerIndividualStrategyResults {

@@ -82,7 +82,7 @@ export default class FullStackExpressApp extends ExpressApp {
 
         /**
          * POST parameters are PlayManyHandsParams
-         * Response is Array<StrategyResults>
+         * Response is StrategyResults
          */
         super.expressApp.post("/blackjack/playmanyhands", (req, res) => {
             const validateParams = typia.createValidate<PlayManyHandsParams>();
@@ -95,7 +95,7 @@ export default class FullStackExpressApp extends ExpressApp {
                 const tablePlay = new TablePlay([params.playerStrategy], params.houseRulesOverride);
                 tablePlay.dealHands(params.numHands);
     
-                res.json(tablePlay.strategyResults);
+                res.json(tablePlay.strategyResults[0]);
             }
             else {
                 res.status(404).json(validationResults.errors);
