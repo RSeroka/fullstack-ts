@@ -4,7 +4,7 @@
     /* display: flex;
     flex-wrap: wrap;
     justify-content: center; */
-    border: 1px solid #aaa;
+    /* border: 1px solid #aaa; */
     text-align: center;
 }
 
@@ -35,7 +35,7 @@
 }
 
 .strategy-results-stats-comp__overlay {
-    border: 1px solid black;
+    /* border: 1px solid black; */
     border-radius: 10px;
     background-color: #eee;
     color: black;

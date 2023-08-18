@@ -1,0 +1,34 @@
+
+.strategy-results {
+    color: black;
+}
+
+strategy-results__hard {
+    /* border: 1px solid purple; */
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    gap: 2px;
+
+}
+
+.strategy-results__hard-col {
+    /* border: 1px solid green; */
+    display: inline-flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    gap: 4px;
+    flex: 1 1 0;
+    margin: 4px;
+
+}
+
+.strategy-results__hard-cell {
+    /* border: 1px solid #ddd; */
+    flex-grow: 1;
+    height: 25px;
+    justify-content: center;
+    align-self: center;
+}

@@ -1,7 +1,6 @@
 
 import React, { ReactNode, createRef } from 'react';
 import Overlay from 'react-bootstrap/Overlay';
-// import Button from 'react-bootstrap/Button';
 
 import "./StrategyResultsStatsComp.css";
 import { StrategyResultsStats } from '../interface-types/strategy-results';
@@ -16,7 +15,7 @@ type StrategyResultsStatsCompState = {
 
 class StrategyResultsStatsComp extends React.Component<StrategyResultsStatsCompProperties, StrategyResultsStatsCompState> {
 
-    private static readonly MAX_OVERLAY_TIME = 20000;
+    private static readonly MAX_OVERLAY_TIME = 10000;
     private overlayTarget = createRef<HTMLDivElement>();
 
     constructor(props: StrategyResultsStatsCompProperties) {
@@ -59,18 +58,26 @@ class StrategyResultsStatsComp extends React.Component<StrategyResultsStatsCompP
             heatMapClass = "strategy-results-stats-comp--loser";
         }
 
+        const content = "" + Math.round(derived.netValuePercent) + "%";
+        let alwaysOverlayContent = `Win: ${derived.winPercent}%, Push: ${derived.pushPercent}%, Lose: ${derived.losePercent}%, Net: ${derived.netValuePercent}%`;
+        let overlayContent: ReactNode;
+        if (this.props.stats !== undefined) {
+            overlayContent = <>Wins: {this.props.stats?.numberWins}, Losses: {this.props.stats?.numberLosses}, Hands: {this.props.stats?.numberHands}, Net: {this.props.stats?.netValue}
+                <br />{alwaysOverlayContent}</>;
+        }
+        else {
+            overlayContent = <>{alwaysOverlayContent}</>;
+        }
+
         return (
             <>
                 <div className={`strategy-results-stats-comp ${heatMapClass}`} ref={this.overlayTarget} onClick={() => this.onClickHandler()}>
-                    {Math.round(derived.netValuePercent)}%
+                    {content}
                 </div>
 
                 <Overlay target={this.overlayTarget.current} show={this.state.showOverlay} placement='bottom' >
-                    {/*                         Win: {derived.winPercent}%, Push: {derived.pushPercent}%, Lose: {derived.losePercent}%, Net: {derived.netValuePercent}% */}
                     <div className="strategy-results-stats-comp__overlay">
-                        Wins: {this.props.stats?.numberWins}, Losses: {this.props.stats?.numberLosses}, Hands: {this.props.stats?.numberHands}, Net: {this.props.stats?.netValue}
-                        <br />   
-                        Win: {derived.winPercent}%, Push: {derived.pushPercent}%, Lose: {derived.losePercent}%, Net: {derived.netValuePercent}%
+                        {overlayContent}
                     </div>
                 </Overlay>
             </>
