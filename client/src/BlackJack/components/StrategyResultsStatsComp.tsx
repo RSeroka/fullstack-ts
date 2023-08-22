@@ -58,7 +58,7 @@ class StrategyResultsStatsComp extends React.Component<StrategyResultsStatsCompP
             heatMapClass = "strategy-results-stats-comp--loser";
         }
 
-        const content = "" + Math.round(derived.netValuePercent) + "%";
+        const content = this.props.stats && this.props.stats.numberHands > 0 ? "" + Math.round(derived.netValuePercent) + "%" : "-" ;
         let alwaysOverlayContent = `Win: ${derived.winPercent}%, Push: ${derived.pushPercent}%, Lose: ${derived.losePercent}%, Net: ${derived.netValuePercent}%`;
         let overlayContent: ReactNode;
         if (this.props.stats !== undefined) {

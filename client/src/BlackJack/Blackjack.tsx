@@ -9,6 +9,7 @@ import Strategy from './interface-types/strategy';
 import { PlayManyHandsParams } from './interface-types/rest-api';
 import StrategyResults from './interface-types/strategy-results';
 import StrategyResultsHardComp from './components/StrategyResultsHardComp';
+import StrategyResultsSoftComp from './components/StrategyResultsSoftComp';
 import StrategyResultsStatsComp from './components/StrategyResultsStatsComp';
 
 
@@ -64,7 +65,7 @@ class Blackjack extends React.Component<BlackjackProperties, BlackJackState> {
         this.setState({playManyHandsState: "in progress"});
 
         const parameters: PlayManyHandsParams = {
-            numHands: 10, 
+            numHands: 100000, 
             playerStrategy: this.state.strategy!, 
             houseRulesOverride: this.state.houseRules!            
         }
@@ -87,6 +88,7 @@ class Blackjack extends React.Component<BlackjackProperties, BlackJackState> {
             <button type="button" onClick={(ev) => this.onPlayManyHandsButtonClick()}>play many hands</button>
             <StrategyResultsStatsComp stats={this.state.strategyResults?.overall} />
             <StrategyResultsHardComp strategyResults={this.state.strategyResults} ></StrategyResultsHardComp>
+            <StrategyResultsSoftComp strategyResults={this.state.strategyResults} ></StrategyResultsSoftComp>
             <p>houseRules: {this.state.houseRulesState}</p>
             <p>strategy: {this.state.strategyState}</p>
             <p>strategyResults: {this.state.playManyHandsState}</p>

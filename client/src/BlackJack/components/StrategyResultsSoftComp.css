@@ -1,0 +1,16 @@
+
+
+
+
+.strategy-results-soft__col {
+    max-width: 60px;
+}
+
+.strategy-results-soft__cell {
+    height: 50px;
+    width: 50px;
+}
+
+.strategy-results-soft__cell--header {
+    height: 25px;
+}
