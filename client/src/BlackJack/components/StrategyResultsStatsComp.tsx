@@ -71,14 +71,23 @@ class StrategyResultsStatsComp extends React.Component<StrategyResultsStatsCompP
 
         return (
             <>
-                <div className={`strategy-results-stats-comp ${heatMapClass}`} ref={this.overlayTarget} onClick={() => this.onClickHandler()}>
+                <span className={`strategy-results-stats-comp ${heatMapClass}`} ref={this.overlayTarget} onClick={() => this.onClickHandler()}>
                     {content}
-                </div>
+                </span>
 
-                <Overlay target={this.overlayTarget.current} show={this.state.showOverlay} placement='bottom' >
-                    <div className="strategy-results-stats-comp__overlay">
-                        {overlayContent}
-                    </div>
+                <Overlay target={this.overlayTarget.current} show={this.state.showOverlay} placement='bottom'>
+                    {({           
+                        placement: _placement,
+                        arrowProps: _arrowProps,
+                        show: _show,
+                        popper: _popper,
+                        hasDoneInitialMeasure: _hasDoneInitialMeasure,
+                        ...props }) => (
+                        <div {...props} className="strategy-results-stats-comp__overlay">
+                            {overlayContent}
+                        </div>
+                    )}
+
                 </Overlay>
             </>
 
