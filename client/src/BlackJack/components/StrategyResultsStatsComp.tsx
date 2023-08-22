@@ -83,7 +83,7 @@ class StrategyResultsStatsComp extends React.Component<StrategyResultsStatsCompP
                         popper: _popper,
                         hasDoneInitialMeasure: _hasDoneInitialMeasure,
                         ...props }) => (
-                        <div {...props} className="strategy-results-stats-comp__overlay">
+                        <div {...props} className="strategy-results-stats-comp__overlay" onClick={() => this.onClickHandler()}>
                             {overlayContent}
                         </div>
                     )}
