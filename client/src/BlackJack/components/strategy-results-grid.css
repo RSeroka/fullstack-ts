@@ -1,0 +1,38 @@
+
+
+/**
+* common grid functionality 
+*/
+
+.strategy-results-grid {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    width: 100%;
+}
+
+.strategy-results-grid__col {
+    display: inline-flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    flex: 1 1 0;
+    border-right: 1px solid black;
+}
+
+.strategy-results-grid__cell {
+    display:inline-flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: center;
+    align-self: center;
+    align-items: center;
+    border-bottom: 1px solid black;
+    text-align: center;
+}
+
+
+.strategy-results-grid__cell--header, .strategy-results-grid__cell--left-col {
+    background: #eee;
+}

@@ -10,6 +10,7 @@ import MediaQuery from 'react-responsive';
 import { StrategyResults, PerDealerUpcardStrategyResults } from '../interface-types/strategy-results';
 
 
+import "./strategy-results-grid.css";
 import "./StrategyResultsHardComp.css";
 import StrategyResultsStatsComp from './StrategyResultsStatsComp';
 
@@ -74,18 +75,18 @@ class StrategyResultsHardPartialComp extends React.Component<StrategyResultsHard
     private getHardStrategyResultComponentFirstColumn() : ReactNode {
 
         return (
-            <div key="bj-hsrcc-0" className="strategy-results-hard__col">
-                <div key="bj-hsrcc-0-0" className="strategy-results-hard__cell strategy-results-hard__cell--left-col strategy-results-hard__cell--header">&nbsp;</div>
-                <div key="bj-hsrcc-0-1" className="strategy-results-hard__cell strategy-results-hard__cell--left-col">&lt;= 8<br/>Dbl</div>
-                <div key="bj-hsrcc-0-2" className="strategy-results-hard__cell strategy-results-hard__cell--left-col">9<br/>Dbl</div>
-                <div key="bj-hsrcc-0-3" className="strategy-results-hard__cell strategy-results-hard__cell--left-col">10<br/>Dbl</div>
-                <div key="bj-hsrcc-0-4" className="strategy-results-hard__cell strategy-results-hard__cell--left-col">11<br/>Dbl</div>
-                <div key="bj-hsrcc-0-5" className="strategy-results-hard__cell strategy-results-hard__cell--left-col">12<br/>Dbl</div>
-                <div key="bj-hsrcc-0-6" className="strategy-results-hard__cell strategy-results-hard__cell--left-col">13<br/>Dbl</div>
-                <div key="bj-hsrcc-0-7" className="strategy-results-hard__cell strategy-results-hard__cell--left-col">14<br/>Dbl</div>
-                <div key="bj-hsrcc-0-8" className="strategy-results-hard__cell strategy-results-hard__cell--left-col">15<br/>Dbl</div>
-                <div key="bj-hsrcc-0-9" className="strategy-results-hard__cell strategy-results-hard__cell--left-col">16<br/>Dbl</div>
-                <div key="bj-hsrcc-0-10" className="strategy-results-hard__cell strategy-results-hard__cell--left-col">&gt;=17<br/>Dbl</div>
+            <div key="bj-hsrcc-0" className="strategy-results-grid__col strategy-results-hard__col">
+                <div key="bj-hsrcc-0-0" className="strategy-results-grid__cell strategy-results-hard__cell strategy-results-grid__cell--left-col strategy-results-grid__cell--header strategy-results-hard__cell--header">&nbsp;</div>
+                <div key="bj-hsrcc-0-1" className="strategy-results-grid__cell strategy-results-hard__cell strategy-results-grid__cell--left-col">&lt;= 8<br/>Dbl</div>
+                <div key="bj-hsrcc-0-2" className="strategy-results-grid__cell strategy-results-hard__cell strategy-results-grid__cell--left-col">9<br/>Dbl</div>
+                <div key="bj-hsrcc-0-3" className="strategy-results-grid__cell strategy-results-hard__cell strategy-results-grid__cell--left-col">10<br/>Dbl</div>
+                <div key="bj-hsrcc-0-4" className="strategy-results-grid__cell strategy-results-hard__cell strategy-results-grid__cell--left-col">11<br/>Dbl</div>
+                <div key="bj-hsrcc-0-5" className="strategy-results-grid__cell strategy-results-hard__cell strategy-results-grid__cell--left-col">12<br/>Dbl</div>
+                <div key="bj-hsrcc-0-6" className="strategy-results-grid__cell strategy-results-hard__cell strategy-results-grid__cell--left-col">13<br/>Dbl</div>
+                <div key="bj-hsrcc-0-7" className="strategy-results-grid__cell strategy-results-hard__cell strategy-results-grid__cell--left-col">14<br/>Dbl</div>
+                <div key="bj-hsrcc-0-8" className="strategy-results-grid__cell strategy-results-hard__cell strategy-results-grid__cell--left-col">15<br/>Dbl</div>
+                <div key="bj-hsrcc-0-9" className="strategy-results-grid__cell strategy-results-hard__cell strategy-results-grid__cell--left-col">16<br/>Dbl</div>
+                <div key="bj-hsrcc-0-10" className="strategy-results-grid__cell strategy-results-hard__cell strategy-results-grid__cell--left-col">&gt;=17<br/>Dbl</div>
             </div>
         );
     }
@@ -98,15 +99,15 @@ class StrategyResultsHardPartialComp extends React.Component<StrategyResultsHard
         const columnContent = new Array<ReactNode>(11);
         const firstRow = col >= 10 ? "A" : "" + (col + 1);
         const headerId = "bj-hsrcc-" + col + "-0";
-        columnContent.push(<div key={headerId} className="strategy-results-hard__cell strategy-results-hard__cell--header">{firstRow}</div>);
+        columnContent.push(<div key={headerId} className="strategy-results-grid__cell strategy-results-hard__cell strategy-results-grid__cell--header strategy-results-hard__cell--header">{firstRow}</div>);
         for (let row = 1; row <= 10; row++) {
             const id = "bj-hsrcc-" + col + "-" + row;
-            columnContent.push(<div key={id} className="strategy-results-hard__cell">{this.getHardStrategyResultComponent(col, row)}</div>);
+            columnContent.push(<div key={id} className="strategy-results-grid__cell strategy-results-hard__cell">{this.getHardStrategyResultComponent(col, row)}</div>);
         }
 
         return (
             <>
-                <div key={`bj-hsrcc-${col}`} className="strategy-results-hard__col">
+                <div key={`bj-hsrcc-${col}`} className="strategy-results-grid__col strategy-results-hard__col">
                     { columnContent }  
                 </div>
             </>
@@ -135,7 +136,7 @@ class StrategyResultsHardPartialComp extends React.Component<StrategyResultsHard
     render(): ReactNode {
         return (
             <>
-                <div className="strategy-results-hard-partial">
+                <div className="strategy-results-grid">
                     {this.getHardStrategyResultComponentFirstColumn()}
                     {this.getHardStrategyResultComponentColumn(1)}
                     {this.getHardStrategyResultComponentColumn(2)}
