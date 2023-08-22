@@ -8,7 +8,7 @@ import { HouseRules } from './interface-types/house-rules';
 import Strategy from './interface-types/strategy';
 import { PlayManyHandsParams } from './interface-types/rest-api';
 import StrategyResults from './interface-types/strategy-results';
-import StrategyResultsComp from './components/StrategyResultsComp';
+import StrategyResultsHardComp from './components/StrategyResultsHardComp';
 import StrategyResultsStatsComp from './components/StrategyResultsStatsComp';
 
 
@@ -86,7 +86,7 @@ class Blackjack extends React.Component<BlackjackProperties, BlackJackState> {
             <button type="button" onClick={(ev) => this.onStrategyButtonClick()}>get Strategy</button>
             <button type="button" onClick={(ev) => this.onPlayManyHandsButtonClick()}>play many hands</button>
             <StrategyResultsStatsComp stats={this.state.strategyResults?.overall} />
-            <StrategyResultsComp strategyResults={this.state.strategyResults} ></StrategyResultsComp>
+            <StrategyResultsHardComp strategyResults={this.state.strategyResults} ></StrategyResultsHardComp>
             <p>houseRules: {this.state.houseRulesState}</p>
             <p>strategy: {this.state.strategyState}</p>
             <p>strategyResults: {this.state.playManyHandsState}</p>
