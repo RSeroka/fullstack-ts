@@ -10,6 +10,7 @@ import { PlayManyHandsParams } from './interface-types/rest-api';
 import StrategyResults from './interface-types/strategy-results';
 import StrategyResultsHardComp from './components/StrategyResultsHardComp';
 import StrategyResultsSoftComp from './components/StrategyResultsSoftComp';
+import StrategyResultsSplitComp from './components/StrategyResultsSplitComp';
 import StrategyResultsStatsComp from './components/StrategyResultsStatsComp';
 
 
@@ -89,6 +90,8 @@ class Blackjack extends React.Component<BlackjackProperties, BlackJackState> {
             <StrategyResultsStatsComp stats={this.state.strategyResults?.overall} />
             <StrategyResultsHardComp strategyResults={this.state.strategyResults} ></StrategyResultsHardComp>
             <StrategyResultsSoftComp strategyResults={this.state.strategyResults} ></StrategyResultsSoftComp>
+            <StrategyResultsSplitComp strategyResults={this.state.strategyResults} ></StrategyResultsSplitComp>
+
             <p>houseRules: {this.state.houseRulesState}</p>
             <p>strategy: {this.state.strategyState}</p>
             <p>strategyResults: {this.state.playManyHandsState}</p>

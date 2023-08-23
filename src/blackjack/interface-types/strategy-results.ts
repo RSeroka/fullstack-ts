@@ -42,7 +42,6 @@ export type PerDealerUpcardStrategyResults = {
         "2"?: StrategyResultsStats;
         "3"?: StrategyResultsStats;
         "4"?: StrategyResultsStats;
-        "5"?: StrategyResultsStats;
         "6"?: StrategyResultsStats;
         "7"?: StrategyResultsStats;
         "8"?: StrategyResultsStats;

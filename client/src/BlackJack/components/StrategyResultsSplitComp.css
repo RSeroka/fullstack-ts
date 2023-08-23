@@ -1,0 +1,16 @@
+
+
+
+
+.strategy-results-split__col {
+    max-width: 60px;
+}
+
+.strategy-results-split__cell {
+    height: 30px;
+    width: 50px;
+}
+
+.strategy-results-split__cell--header {
+    height: 25px;
+}
