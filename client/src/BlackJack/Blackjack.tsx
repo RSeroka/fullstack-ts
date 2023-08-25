@@ -12,6 +12,7 @@ import StrategyResultsHardComp from './components/StrategyResults/StrategyResult
 import StrategyResultsSoftComp from './components/StrategyResults/StrategyResultsSoftComp';
 import StrategyResultsSplitComp from './components/StrategyResults/StrategyResultsSplitComp';
 import StrategyResultsSurrenderComp from './components/StrategyResults/StrategyResultsSurrenderComp';
+import StrategyResultsComp from './components/StrategyResults/StrategyResultsComp';
 import StrategyResultsStatsComp from './components/StrategyResults/StrategyResultsStatsComp';
 
 
@@ -88,12 +89,8 @@ class Blackjack extends React.Component<BlackjackProperties, BlackJackState> {
             <button type="button" onClick={(ev) => this.onHouseRulesButtonClick()}>get House Rules</button>
             <button type="button" onClick={(ev) => this.onStrategyButtonClick()}>get Strategy</button>
             <button type="button" onClick={(ev) => this.onPlayManyHandsButtonClick()}>play many hands</button>
-            <StrategyResultsStatsComp stats={this.state.strategyResults?.overall} ></StrategyResultsStatsComp>
-            <StrategyResultsStatsComp stats={this.state.strategyResults?.blackjack} ></StrategyResultsStatsComp>
-            <StrategyResultsHardComp strategyResults={this.state.strategyResults} ></StrategyResultsHardComp>
-            <StrategyResultsSoftComp strategyResults={this.state.strategyResults} ></StrategyResultsSoftComp>
-            <StrategyResultsSplitComp strategyResults={this.state.strategyResults} ></StrategyResultsSplitComp>
-            <StrategyResultsSurrenderComp strategyResults={this.state.strategyResults} ></StrategyResultsSurrenderComp>
+            <StrategyResultsComp strategyResults={this.state.strategyResults} ></StrategyResultsComp>
+
 
             <p>houseRules: {this.state.houseRulesState}</p>
             <p>strategy: {this.state.strategyState}</p>

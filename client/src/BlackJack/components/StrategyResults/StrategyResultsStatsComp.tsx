@@ -7,6 +7,7 @@ import { StrategyResultsStats } from '../../interface-types/strategy-results';
 
 type StrategyResultsStatsCompProperties = {
     stats?: StrategyResultsStats;
+    expanded?: true;
 }
 
 type StrategyResultsStatsCompState = {
@@ -26,10 +27,12 @@ class StrategyResultsStatsComp extends React.Component<StrategyResultsStatsCompP
     }
 
     private onClickHandler() {
-        if (!this.state.showOverlay) {
-            setTimeout(() => {this.setState( { showOverlay: false });}, StrategyResultsStatsComp.MAX_OVERLAY_TIME);
+        if (!this.props.expanded) {
+            if (!this.state.showOverlay) {
+                setTimeout(() => {this.setState( { showOverlay: false });}, StrategyResultsStatsComp.MAX_OVERLAY_TIME);
+            }
+            this.setState( { showOverlay: !this.state.showOverlay } );
         }
-        this.setState( { showOverlay: !this.state.showOverlay } );
     }
 
 
@@ -58,37 +61,44 @@ class StrategyResultsStatsComp extends React.Component<StrategyResultsStatsCompP
             heatMapClass = "strategy-results-stats-comp--loser";
         }
 
-        const content = this.props.stats && this.props.stats.numberHands > 0 ? "" + Math.round(derived.netValuePercent) + "%" : "-" ;
-        let alwaysOverlayContent = `Win: ${derived.winPercent}%, Push: ${derived.pushPercent}%, Lose: ${derived.losePercent}%, Net: ${derived.netValuePercent}%`;
-        let overlayContent: ReactNode;
+        const compactContent = this.props.stats && this.props.stats.numberHands > 0 ? "" + Math.round(derived.netValuePercent) + "%" : "-" ;
+        let unconditionalExpandedContent = `Win: ${derived.winPercent}%, Push: ${derived.pushPercent}%, Lose: ${derived.losePercent}%, Net: ${derived.netValuePercent}%`;
+        let expandedContent: ReactNode;
         if (this.props.stats !== undefined) {
-            overlayContent = <>Wins: {this.props.stats?.numberWins}, Losses: {this.props.stats?.numberLosses}, Hands: {this.props.stats?.numberHands}, Net: {this.props.stats?.netValue}
-                <br />{alwaysOverlayContent}</>;
+            expandedContent = <>Wins: {this.props.stats?.numberWins}, Losses: {this.props.stats?.numberLosses}, Hands: {this.props.stats?.numberHands}, Net: {this.props.stats?.netValue}
+                <br />{unconditionalExpandedContent}</>;
         }
         else {
-            overlayContent = <>{alwaysOverlayContent}</>;
+            expandedContent = <>{unconditionalExpandedContent}</>;
+        }
+
+        let overlay: ReactNode | undefined;
+        if (!this.props.expanded) {
+            overlay = (
+                <Overlay target={this.overlayTarget.current} show={this.state.showOverlay} placement='bottom'>
+                {({           
+                    placement: _placement,
+                    arrowProps: _arrowProps,
+                    show: _show,
+                    popper: _popper,
+                    hasDoneInitialMeasure: _hasDoneInitialMeasure,
+                    ...props }) => (
+                    <div {...props} className="strategy-results-stats-comp__overlay" onClick={() => this.onClickHandler()}>
+                        {expandedContent}
+                    </div>
+                )}
+
+                </Overlay>
+            );
+
         }
 
         return (
             <>
                 <span className={`strategy-results-stats-comp ${heatMapClass}`} ref={this.overlayTarget} onClick={() => this.onClickHandler()}>
-                    {content}
+                    {!this.props.expanded ? compactContent : expandedContent}
                 </span>
-
-                <Overlay target={this.overlayTarget.current} show={this.state.showOverlay} placement='bottom'>
-                    {({           
-                        placement: _placement,
-                        arrowProps: _arrowProps,
-                        show: _show,
-                        popper: _popper,
-                        hasDoneInitialMeasure: _hasDoneInitialMeasure,
-                        ...props }) => (
-                        <div {...props} className="strategy-results-stats-comp__overlay" onClick={() => this.onClickHandler()}>
-                            {overlayContent}
-                        </div>
-                    )}
-
-                </Overlay>
+                {overlay}
             </>
 
         );
