@@ -1,0 +1,16 @@
+
+
+
+
+.strategy-results-surrender__col {
+    max-width: 60px;
+}
+
+.strategy-results-surrender__cell {
+    height: 30px;
+    width: 50px;
+}
+
+.strategy-results-surrender__cell--header {
+    height: 25px;
+}

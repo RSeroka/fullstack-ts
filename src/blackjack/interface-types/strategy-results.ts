@@ -7,7 +7,7 @@ export type StrategyResultsStats = {
     numberLosses: number;
     numberHands: number;
     netValue: number;
-}
+};
 
 export type PerIndividualStrategyResults = {
     double: StrategyResultsStats;
@@ -59,7 +59,7 @@ export type StrategyResults = {
     dealerUpcards: Array<PerDealerUpcardStrategyResults>;
     blackjack: StrategyResultsStats;
     overall: StrategyResultsStats;  
-    // Note: overall should be sum of hard, soft, and surrender.  
+    // Note: overall should be sum of hard, soft, blackjack, and surrender.  
     // individual hands of a split put into hard, soft and surrender.   
     // the results stored for split keeps track of that split strategy, but is not added to overall
 };
