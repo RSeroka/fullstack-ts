@@ -3,7 +3,7 @@ import React, { ReactNode, createRef } from 'react';
 import Overlay from 'react-bootstrap/Overlay';
 
 import "./StrategyResultsStatsComp.css";
-import { StrategyResultsStats } from '../interface-types/strategy-results';
+import { StrategyResultsStats } from '../../interface-types/strategy-results';
 
 type StrategyResultsStatsCompProperties = {
     stats?: StrategyResultsStats;

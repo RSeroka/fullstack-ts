@@ -8,11 +8,11 @@ import { HouseRules } from './interface-types/house-rules';
 import Strategy from './interface-types/strategy';
 import { PlayManyHandsParams } from './interface-types/rest-api';
 import StrategyResults from './interface-types/strategy-results';
-import StrategyResultsHardComp from './components/StrategyResultsHardComp';
-import StrategyResultsSoftComp from './components/StrategyResultsSoftComp';
-import StrategyResultsSplitComp from './components/StrategyResultsSplitComp';
-import StrategyResultsSurrenderComp from './components/StrategyResultsSurrenderComp';
-import StrategyResultsStatsComp from './components/StrategyResultsStatsComp';
+import StrategyResultsHardComp from './components/StrategyResults/StrategyResultsHardComp';
+import StrategyResultsSoftComp from './components/StrategyResults/StrategyResultsSoftComp';
+import StrategyResultsSplitComp from './components/StrategyResults/StrategyResultsSplitComp';
+import StrategyResultsSurrenderComp from './components/StrategyResults/StrategyResultsSurrenderComp';
+import StrategyResultsStatsComp from './components/StrategyResults/StrategyResultsStatsComp';
 
 
 type BlackjackProperties = {

@@ -3,7 +3,7 @@
 import React, { ReactNode } from 'react';
 
 
-import { StrategyResults, PerDealerUpcardStrategyResults } from '../interface-types/strategy-results';
+import { StrategyResults, PerDealerUpcardStrategyResults } from '../../interface-types/strategy-results';
 
 import "./StrategyResultsSurrenderComp.css";
 import StrategyResultsStatsComp from './StrategyResultsStatsComp';
