@@ -33,6 +33,7 @@ type Scenario = {
                 surrender?: keyof PerDealerUpcardStrategyResults["surrender"];
                 soft?: keyof PerDealerUpcardStrategyResults["soft"];
                 hard?: keyof PerDealerUpcardStrategyResults["hard"];
+                blackjack?: true; 
             }
 
         }>;
@@ -134,7 +135,7 @@ const generalScenarios: Array<Scenario> = [
         },
         expect: {
             playerSingleHands: [
-                {total: 21, result: BlackJackResult.BJ_PUSH, netChips: 0, bucket: {"hard": "17AndOver"}}
+                {total: 21, result: BlackJackResult.BJ_PUSH, netChips: 0, bucket: {"blackjack": true}}
             ],
             dealer: {
                 total: 21
@@ -150,7 +151,7 @@ const generalScenarios: Array<Scenario> = [
         },
         expect: {
             playerSingleHands: [
-                {total: 11, result: BlackJackResult.BJ_LOSE, netChips: -1, bucket:{"hard": "11"}}
+                {total: 11, result: BlackJackResult.BJ_LOSE, netChips: -1, bucket:{"blackjack": true}}
             ],
             dealer: {
                 total: 21
@@ -363,7 +364,7 @@ const blackJackPays3To2Scenarios: Array<Scenario> = [
         },
         expect: {
             playerSingleHands: [
-                {total: 21, result: BlackJackResult.BJ_WIN, netChips: 1.5, bucket: {"hard": "17AndOver"}}
+                {total: 21, result: BlackJackResult.BJ_WIN, netChips: 1.5, bucket: {"blackjack": true}}
             ],
             dealer: {
                 total: 21
@@ -382,7 +383,7 @@ const blackJackPays6To5Scenarios: Array<Scenario> = [
         },
         expect: {
             playerSingleHands: [
-                {total: 21, result: BlackJackResult.BJ_WIN, netChips: 1.2, bucket: {"hard": "17AndOver"}}
+                {total: 21, result: BlackJackResult.BJ_WIN, netChips: 1.2, bucket: {blackjack: true}}
             ],
             dealer: {
                 total: 21
@@ -547,6 +548,9 @@ function runTablePlayScenarios(suiteDescription: string, scenarios : Array<Scena
                     else { //soft 
                         expectedBucket = expectedBucketsDealerUpCard!.soft[expectedPlayerHand.bucket.soft!][doubleOrSingle];
                     }      
+                }
+                else if (expectedPlayerHand.bucket.hasOwnProperty("blackjack") && expectedPlayerHand.bucket.blackjack === true) {
+                    expectedBucket = expectedStrategyResults.blackjack;
                 }
                 expectedBucket!.netValue += expectedPlayerHand.netChips;
                 expectedBucket!.numberHands++;

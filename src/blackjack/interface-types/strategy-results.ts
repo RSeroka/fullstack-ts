@@ -57,6 +57,7 @@ export type PerDealerUpcardStrategyResults = {
 
 export type StrategyResults = {
     dealerUpcards: Array<PerDealerUpcardStrategyResults>;
+    blackjack: StrategyResultsStats;
     overall: StrategyResultsStats;  
     // Note: overall should be sum of hard, soft, and surrender.  
     // individual hands of a split put into hard, soft and surrender.   

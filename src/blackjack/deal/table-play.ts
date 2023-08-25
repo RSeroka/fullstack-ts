@@ -139,7 +139,7 @@ export default class TablePlay {
                 }
 
 
-                this.strategyResultsCollectors[playerIdx]?.applyHandResult(playerSingleHandResult, handResult.dealerHand.cards[0]!);
+                this.strategyResultsCollectors[playerIdx]?.applyHandResult(playerSingleHandResult, handResult.dealerHand);
 
                 handResult.dealtHandNetChips += playerSingleHandResult.singleHandNetChips;
             });

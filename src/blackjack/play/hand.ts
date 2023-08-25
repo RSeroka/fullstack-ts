@@ -63,7 +63,7 @@ export default class Hand {
                 return true;
             }
         }
-        else if (this.downCard === undefined && this._cards.length === 2 && this.total === 21) {
+        else if (this.downCard === undefined && this._cards.length === 2 && this.total === 21 && this._splitNumber === 0) {
             return true;
         }
         return false;

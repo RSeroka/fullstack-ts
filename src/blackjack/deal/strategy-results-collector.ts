@@ -84,6 +84,7 @@ export default class StrategyResultsCollector {
         }
         this._results = {
             dealerUpcards,
+            blackjack: this.createEmptyStats(),
             overall: this.createEmptyStats()
         }
     }
@@ -104,18 +105,22 @@ export default class StrategyResultsCollector {
         target.netValue += handResult.singleHandNetChips;
     }
 
-    public applyHandResult(handResult: PlayerSingleHandResult, dealerUpCard: BlackJackCard): void {
+    public applyHandResult(handResult: PlayerSingleHandResult, dealerHand: Hand): void {
+        const dealerUpCard = dealerHand.cards[0]!;
         const dealerUpcardsOffset = dealerUpCard.value - 1;
         const perDealerUpcardStrategyResults = this._results.dealerUpcards[dealerUpcardsOffset]!;
 
         //#region begin hardSoftSurrender Bucket 
-        let hardSoftSurrenderBucket: StrategyResultsStats | undefined = undefined;
-        if (handResult.lastPlayerDecision == PlayerPlayDecision.SURRENDER) {
-            const surrenderTotal = "" + handResult.hand.total as keyof typeof perDealerUpcardStrategyResults.surrender;
-            hardSoftSurrenderBucket = perDealerUpcardStrategyResults.surrender[surrenderTotal];
+        let hardSoftSurrenderOrBlackjackBucket: StrategyResultsStats | undefined = undefined;
+        if (handResult.hand.isBlackJack || dealerHand.isBlackJack) {
+            hardSoftSurrenderOrBlackjackBucket = this._results.blackjack; 
         }
-        if (hardSoftSurrenderBucket === undefined) {
-            const pseudoHand = new Hand();
+        else if (handResult.lastPlayerDecision == PlayerPlayDecision.SURRENDER) {
+            const surrenderTotal = "" + handResult.hand.total as keyof typeof perDealerUpcardStrategyResults.surrender;
+            hardSoftSurrenderOrBlackjackBucket = perDealerUpcardStrategyResults.surrender[surrenderTotal];
+        }
+        if (hardSoftSurrenderOrBlackjackBucket === undefined) {
+            const pseudoHand = new Hand(); // pseudoHand is created to determine if hand was soft before adding more cards
             pseudoHand.addCard(handResult.hand.cards[0]!);
             pseudoHand.addCard(handResult.hand.cards[1]!);
 
@@ -126,10 +131,10 @@ export default class StrategyResultsCollector {
                 // post Aces split can not take more cards, so treat as hard
                 const softTotal = "" + pseudoHand.total as keyof typeof perDealerUpcardStrategyResults.soft;
                 if (perDealerUpcardStrategyResults.soft[softTotal] !== undefined) {
-                    hardSoftSurrenderBucket = perDealerUpcardStrategyResults.soft[softTotal][doubleOrSingle];
+                    hardSoftSurrenderOrBlackjackBucket = perDealerUpcardStrategyResults.soft[softTotal][doubleOrSingle];
                 }
             }
-            if (hardSoftSurrenderBucket === undefined) {
+            if (hardSoftSurrenderOrBlackjackBucket === undefined) {
                 let hardTotalKey: keyof typeof perDealerUpcardStrategyResults.hard;
                 const hardTotal = pseudoHand.total;
                 if (hardTotal <= 8) {
@@ -142,10 +147,10 @@ export default class StrategyResultsCollector {
                     hardTotalKey = "" + hardTotal as keyof typeof perDealerUpcardStrategyResults.hard;
                 }
 
-                hardSoftSurrenderBucket = perDealerUpcardStrategyResults.hard[hardTotalKey][doubleOrSingle];
+                hardSoftSurrenderOrBlackjackBucket = perDealerUpcardStrategyResults.hard[hardTotalKey][doubleOrSingle];
             }
         }
-        this.applyToStatsBucket(handResult, hardSoftSurrenderBucket);
+        this.applyToStatsBucket(handResult, hardSoftSurrenderOrBlackjackBucket);
         //#endregion hardSoftSurrender Bucket
 
         if (handResult.hand.splitNumber > 0) {
