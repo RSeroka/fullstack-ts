@@ -16,15 +16,15 @@ const Navbar = () => {
   }
 
   return (
-    <nav className="navbar">
-      <div className="container">
-        <div className="logo">
+    <nav className="nbs-navbar">
+      <div className="nbs-container">
+        <div className="nbs-logo">
           <h1>Richard Seroka</h1>
         </div>
-        <div className="menu-icon" onClick={handleShowNavbar}>
+        <div className="nbs-menu-icon" onClick={handleShowNavbar}>
           <Hamburger />
         </div>
-        <div className={`nav-elements  ${showNavbar && 'active'}`}>
+        <div className={`nbs-nav-elements  ${showNavbar && 'active'}`}>
           <ul>
             <li>
               <NavLink to="/">Home</NavLink>
