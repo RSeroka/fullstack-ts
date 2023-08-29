@@ -26,7 +26,7 @@ export type PlayerPlayConfiguration = {
     lateSurrenderAllowed: boolean;
     doubleOnSoft18and19Allowed: boolean;
     doubleAfterSplitAllowed: boolean;
-    acesMayBeSplit: boolean | number;
+    acesMayBeReSplit: boolean | number;
 }
 
 /**

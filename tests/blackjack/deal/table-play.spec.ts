@@ -403,7 +403,7 @@ export default function tablePlayTests()  {
     const alternateHouseRulesScenarios = generalScenarios.concat(splitAcesMoreThanOnceNOTAllowedScenarios)
         .concat(blackJackPays6To5Scenarios);
     const alternateHouseRules = structuredClone(defaultHouseRules);
-    alternateHouseRules.playerPlayConfig!.acesMayBeSplit = 1;
+    alternateHouseRules.playerPlayConfig!.acesMayBeReSplit = 1;
     alternateHouseRules.payoutConfig!.blackjackPayout = '6:5';
     runTablePlayScenarios("alternate house rules scenarios", alternateHouseRulesScenarios, 
         basicDealerHitsOnSoft17Strategy, alternateHouseRules);

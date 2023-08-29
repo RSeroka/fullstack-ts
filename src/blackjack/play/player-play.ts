@@ -46,8 +46,8 @@ export default class PlayerPlay implements Play {
         if (playerHand.cards[0]!.value === playerHand.cards[1]!.value) {
             const cardName = playerHand.cards[0]!.name as keyof typeof perDealerCardStrategy.split;
             const allowedToSplit = playerHand.cards[0]!.value !== 1 || 
-                this.configuration.acesMayBeSplit === true || 
-                    (Number.isInteger(this.configuration.acesMayBeSplit) && this.configuration.acesMayBeSplit as number > playerHand.splitNumber) ;
+                this.configuration.acesMayBeReSplit === true || 
+                    (Number.isInteger(this.configuration.acesMayBeReSplit) && this.configuration.acesMayBeReSplit as number > playerHand.splitNumber) ;
             if (allowedToSplit && perDealerCardStrategy.split.hasOwnProperty(cardName) && perDealerCardStrategy.split[cardName] == true) {
                 return true;
             }

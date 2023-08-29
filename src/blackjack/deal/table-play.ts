@@ -226,11 +226,11 @@ export default class TablePlay {
                         this.applyPlayerCard(playerSingleHandResult);
                         // splitting Aces can only get one card unless 
                         // aces may be re-split 
-                        const acesMayBeSplitConfig = this.houseRules.playerPlayConfig.acesMayBeSplit ?? defaultHouseRules.playerPlayConfig.acesMayBeSplit; 
+                        const acesMayBeReSplitConfig = this.houseRules.playerPlayConfig.acesMayBeReSplit ?? defaultHouseRules.playerPlayConfig.acesMayBeReSplit; 
 
                         if (playerSingleHandResult.hand.cards[0]!.value === 1 && (playerSingleHandResult.hand.total !== 12
-                            || (Number.isInteger(acesMayBeSplitConfig)
-                            && playerSingleHandResult.hand.splitNumber >= (acesMayBeSplitConfig as number)))) {
+                            || (Number.isInteger(acesMayBeReSplitConfig)
+                            && playerSingleHandResult.hand.splitNumber >= (acesMayBeReSplitConfig as number)))) {
                             playerChoose = false; // break the loop
                             playerSingleHandResult.lastPlayerDecision = PlayerPlayDecision.STAND;
                             break;  // get out of while (playerChoose) loop

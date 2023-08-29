@@ -15,7 +15,7 @@ export default function playerPlayTests() {
         const nonDefaultPlayerPlayConfig: PlayerPlayConfiguration = {
             lateSurrenderAllowed: false,
             doubleOnSoft18and19Allowed: false,
-            acesMayBeSplit: 1,
+            acesMayBeReSplit: 1,
             doubleAfterSplitAllowed: false
         }
         nonDefaultPlayerPlay = new PlayerPlay(undefined, nonDefaultPlayerPlayConfig);

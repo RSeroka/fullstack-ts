@@ -14,6 +14,6 @@ export const defaultHouseRules: HouseRules = {
         doubleOnSoft18and19Allowed: true,
         doubleAfterSplitAllowed: true, 
         lateSurrenderAllowed: true,
-        acesMayBeSplit: true
+        acesMayBeReSplit: true
     }
 }
