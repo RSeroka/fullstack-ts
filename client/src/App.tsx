@@ -3,7 +3,7 @@
 import './App.css';
 
 import { Link, Route, Routes } from "react-router-dom";
-import Blackjack from './BlackJack/Blackjack';
+import BlackjackComp from './BlackJack/components/BlackjackComp';
 import Navbar from './NavBar/NavBar';
 import Resume from "./Resume/Resume";
 import Sudoku from './Sudoku/Sudoku';
@@ -68,7 +68,7 @@ class App extends React.Component<AppProperties, AppState> {
           <Route path="/" element={<Home />} />
           <Route path="sudoku" element={<Sudoku />} />
           <Route path="resume" element={<Resume />} />
-          <Route path="blackjack" element={<Blackjack />} />
+          <Route path="blackjack" element={<BlackjackComp />} />
           <Route path="*" element={<NoMatch />} />
         </Routes>
         <ToastContainer position="middle-center">
