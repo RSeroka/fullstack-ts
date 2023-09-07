@@ -13,144 +13,142 @@ type HouseRulesProperties = {
 };
 
 type HouseRulesState = {
-    updatedHouseRules: HouseRules
+
 };
 
 
 class HouseRulesComp extends React.Component<HouseRulesProperties, HouseRulesState> {
-    // use this pattern 
-    // https://itnext.io/react-context-and-hooks-an-excellent-way-to-pass-data-26c3f48b9bf5 
-    // https://itnext.io/react-context-and-hooks-pass-data-and-update-it-easily-d2f659cceab  
 
-
-    constructor(props: HouseRulesProperties) {
-        super(props);
-        if (this.props.houseRules) {
-            this.state = { updatedHouseRules : {...this.props.houseRules} }
-        } 
- 
-    }
-
-    componentDidUpdate(prevProps: Readonly<HouseRulesProperties>, prevState: Readonly<HouseRulesState>, snapshot?: any): void {
-        if (this.props.houseRules && (!this.state?.updatedHouseRules || 
-            JSON.stringify(this.props) !== JSON.stringify(prevProps))) {
-            this.setState({ updatedHouseRules : {...this.props.houseRules} });
-        } 
-    }
-
-
-    private onSubmit() {
-        this.props.setHouseRules(this.state.updatedHouseRules);
-    }
 
     private onNumDecksChange(event: React.ChangeEvent<HTMLSelectElement>) {
-        const updatedState = {...this.state!};
-        updatedState.updatedHouseRules.shoeConfig.numDecks = Number.parseInt(event.target.value);
-        this.setState(updatedState);
-        
+
+        if (!this.props.houseRules) {
+            return;
+        }
+
+        const updated = {...this.props.houseRules};
+        updated.shoeConfig.numDecks = Number.parseInt(event.target.value);
+        this.props.setHouseRules(updated);
     }
 
     private onBlackjackPayoutChange(event: React.ChangeEvent<HTMLInputElement>) {
-        if (!this.state?.updatedHouseRules) {
+
+        if (!this.props.houseRules) {
             return;
         }
-        const updatedState = {...this.state!};
-        updatedState.updatedHouseRules.payoutConfig.blackjackPayout = event.target.value as PayoutConfig['blackjackPayout'];
-        this.setState(updatedState);
-        
+
+        const updated = {...this.props.houseRules};
+        updated.payoutConfig.blackjackPayout = event.target.value as PayoutConfig['blackjackPayout'];
+        this.props.setHouseRules(updated);
     }
 
     private onShufflePercentChange(event: React.ChangeEvent<HTMLInputElement>) {
-        if (!this.state?.updatedHouseRules) {
+
+        if (!this.props.houseRules) {
             return;
         }
-        const updatedState = {...this.state!};
+
+        const updated = {...this.props.houseRules};
         let updatedValue = Number.parseInt(event.target.value);
         if (this.props.houseRules && (isNaN(updatedValue) || updatedValue <= 1 || updatedValue >= 100)) {
             updatedValue = Math.round(this.props.houseRules.shoeConfig.cutoffPercent * 100);
         }
 
-        updatedState.updatedHouseRules.shoeConfig.cutoffPercent= updatedValue / 100;
-        this.setState(updatedState);
+        updated.shoeConfig.cutoffPercent= updatedValue / 100;
+        this.props.setHouseRules(updated);
     }
 
     private onRandomSeedChange(event: React.ChangeEvent<HTMLInputElement>) {
-        if (!this.state?.updatedHouseRules) {
+
+        if (!this.props.houseRules) {
             return;
         }
-        const updatedState = {...this.state!};
+
+        const updated = {...this.props.houseRules};
         let updatedValue: number | undefined = Number.parseInt(event.target.value);
         if (isNaN(updatedValue)) {
             updatedValue = undefined;
         }
-        updatedState.updatedHouseRules.shoeConfig.randomSeed = updatedValue;
-        this.setState(updatedState);
+        updated.shoeConfig.randomSeed = updatedValue;
+        this.props.setHouseRules(updated);
     }
 
     private onDealerHitsOnSoft17Change(event: React.ChangeEvent<HTMLInputElement>) {
-        if (!this.state?.updatedHouseRules) {
+        
+        if (!this.props.houseRules) {
             return;
         }
-        const updatedState = {...this.state!};
-        updatedState.updatedHouseRules.dealerPlayConfig.dealerHitsOnSoft17 = event.target.value === "true" ;
-        this.setState(updatedState);
-        
+
+        const updated = {...this.props.houseRules};
+        updated.dealerPlayConfig.dealerHitsOnSoft17 = event.target.value === "true" ;
+        this.props.setHouseRules(updated);
     }
 
     private onPlayerLateSurrenderAllowedChange(event: React.ChangeEvent<HTMLInputElement>) {
-        if (!this.state?.updatedHouseRules) {
+
+        if (!this.props.houseRules) {
             return;
         }
-        const updatedState = {...this.state!};
-        updatedState.updatedHouseRules.playerPlayConfig.lateSurrenderAllowed = event.target.value === "true" ;
-        this.setState(updatedState);
+
+        const updated = {...this.props.houseRules};
+        updated.playerPlayConfig.lateSurrenderAllowed = event.target.value === "true" ;
+        this.props.setHouseRules(updated);
     }
 
     private onPlayerDoubleOnSoft18and19AllowedChange(event: React.ChangeEvent<HTMLInputElement>) {
-        if (!this.state?.updatedHouseRules) {
+
+        if (!this.props.houseRules) {
             return;
         }
-        const updatedState = {...this.state!};
-        updatedState.updatedHouseRules.playerPlayConfig.doubleOnSoft18and19Allowed = event.target.value === "true" ;
-        this.setState(updatedState);
+
+        const updated = {...this.props.houseRules};
+        updated.playerPlayConfig.doubleOnSoft18and19Allowed = event.target.value === "true" ;
+        this.props.setHouseRules(updated);
     }
 
     private onPlayerDoubleAfterSplitAllowedChange(event: React.ChangeEvent<HTMLInputElement>) {
-        if (!this.state?.updatedHouseRules) {
+        
+        if (!this.props.houseRules) {
             return;
         }
-        const updatedState = {...this.state!};
-        updatedState.updatedHouseRules.playerPlayConfig.doubleAfterSplitAllowed = event.target.value === "true" ;
-        this.setState(updatedState);
+
+        const updated = {...this.props.houseRules};
+        updated.playerPlayConfig.doubleAfterSplitAllowed = event.target.value === "true" ;
+        this.props.setHouseRules(updated);
     }    
 
     private onPlayerAcesResplitBooleanChange(event: React.ChangeEvent<HTMLInputElement>) {
-        if (!this.state?.updatedHouseRules) {
+
+
+        if (!this.props.houseRules) {
             return;
         }
-        const updatedState = {...this.state!};
+
+        const updated = {...this.props.houseRules};
         if (event.target.checked) {
-            updatedState.updatedHouseRules.playerPlayConfig.acesMayBeReSplit = true;
+            updated.playerPlayConfig.acesMayBeReSplit = true;
         }
         else {
-            updatedState.updatedHouseRules.playerPlayConfig.acesMayBeReSplit = 1;
+            updated.playerPlayConfig.acesMayBeReSplit = 1;
         }
-        this.setState(updatedState);
+        this.props.setHouseRules(updated);
     }
 
     private onPlayerAcesResplitNumberChange(event: React.ChangeEvent<HTMLInputElement>) {
-        if (!this.state?.updatedHouseRules) {
+
+
+        if (!this.props.houseRules) {
             return;
         }
-        const updatedState = {...this.state!};
 
+        const updated = {...this.props.houseRules};
         if (Number.isInteger(event.target.valueAsNumber)) {
-            updatedState.updatedHouseRules.playerPlayConfig.acesMayBeReSplit = event.target.valueAsNumber;
+            updated.playerPlayConfig.acesMayBeReSplit = event.target.valueAsNumber;
         }
         else {
-            updatedState.updatedHouseRules.playerPlayConfig.acesMayBeReSplit = 1;
+            updated.playerPlayConfig.acesMayBeReSplit = 1;
         }
-        this.setState(updatedState);
+        this.props.setHouseRules(updated);
     }
 
 
@@ -159,20 +157,16 @@ class HouseRulesComp extends React.Component<HouseRulesProperties, HouseRulesSta
         return (
             <div>
                 <label>Blackjack Payout:&nbsp;
-                    {/* <select value={this.state?.updatedHouseRules ? this.state.updatedHouseRules.payoutConfig.blackjackPayout : undefined}
-                    onChange={this.onBlackjackPayoutChange.bind(this)}>
-                    <option value="3:2">3 to 2</option>
-                    <option value="6:5">6 to 5</option>
-                </select> */}
+
                     <label>
                         <input type="radio" onChange={this.onBlackjackPayoutChange.bind(this)}
-                            value="3:2" checked={this.state?.updatedHouseRules?.payoutConfig.blackjackPayout === "3:2"} />
+                            value="3:2" checked={this.props.houseRules?.payoutConfig.blackjackPayout === "3:2"} />
                         &nbsp;3:2&nbsp;
                     </label>
 
                     <label>
                         <input type="radio" onChange={this.onBlackjackPayoutChange.bind(this)}
-                            value="6:5" checked={this.state?.updatedHouseRules?.payoutConfig.blackjackPayout === "6:5"} />
+                            value="6:5" checked={this.props.houseRules?.payoutConfig.blackjackPayout === "6:5"} />
                         &nbsp;6:5&nbsp;
                     </label>
                 </label>
@@ -188,7 +182,7 @@ class HouseRulesComp extends React.Component<HouseRulesProperties, HouseRulesSta
             <>
                 <label style={{display: 'block'}}>
                     Number of Decks: &nbsp;
-                    <select value={this.state?.updatedHouseRules?.shoeConfig.numDecks}
+                    <select value={this.props.houseRules?.shoeConfig.numDecks}
                         onChange={this.onNumDecksChange.bind(this)}>
                         <option value="1">1</option>
                         <option value="2">2</option>
@@ -203,14 +197,14 @@ class HouseRulesComp extends React.Component<HouseRulesProperties, HouseRulesSta
                 <label style={{display: 'block'}}>
                     Reshuffle Percent: &nbsp;
                     <input type="number" max={90} min={1} step={1}
-                        value={this.state?.updatedHouseRules?.shoeConfig.cutoffPercent ? 
-                            Math.round(this.state?.updatedHouseRules?.shoeConfig.cutoffPercent * 100) : ""}
+                        value={this.props.houseRules?.shoeConfig.cutoffPercent ? 
+                            Math.round(this.props.houseRules?.shoeConfig.cutoffPercent * 100) : ""}
                         onChange={this.onShufflePercentChange.bind(this)} />
                 </label>
                 <label style={{display: 'block'}}>
                     randomSeed: &nbsp;
                     <input type="number"  
-                        value={this.state?.updatedHouseRules?.shoeConfig.randomSeed ? this.state?.updatedHouseRules?.shoeConfig.randomSeed : ""}
+                        value={this.props.houseRules?.shoeConfig.randomSeed ? this.props.houseRules?.shoeConfig.randomSeed : ""}
                         onChange={this.onRandomSeedChange.bind(this)} />
                 </label>
             </>
@@ -252,36 +246,36 @@ class HouseRulesComp extends React.Component<HouseRulesProperties, HouseRulesSta
         return (
             <div>
                 {this.renderTrueFalseRadio("Dealer Soft 17", false, "Dealer Sticks", "Dealer Hits", 
-                    this.state?.updatedHouseRules?.dealerPlayConfig.dealerHitsOnSoft17, 
+                    this.props.houseRules?.dealerPlayConfig.dealerHitsOnSoft17, 
                     this.onDealerHitsOnSoft17Change)}
 
                 {this.renderTrueFalseRadio("Player Late Surrender", false, "Not Allowed", "Allowed", 
-                    this.state?.updatedHouseRules?.playerPlayConfig.lateSurrenderAllowed, 
+                    this.props.houseRules?.playerPlayConfig.lateSurrenderAllowed, 
                     this.onPlayerLateSurrenderAllowedChange)}
 
 
                 {this.renderTrueFalseRadio("Player Double on Soft 18/19", false, "Not Allowed", "Allowed", 
-                    this.state?.updatedHouseRules?.playerPlayConfig.doubleOnSoft18and19Allowed, 
+                    this.props.houseRules?.playerPlayConfig.doubleOnSoft18and19Allowed, 
                     this.onPlayerDoubleOnSoft18and19AllowedChange)}
 
                     
                 {this.renderTrueFalseRadio("Player Double after Split", false, "Not Allowed", "Allowed", 
-                    this.state?.updatedHouseRules?.playerPlayConfig.doubleAfterSplitAllowed, 
+                    this.props.houseRules?.playerPlayConfig.doubleAfterSplitAllowed, 
                     this.onPlayerDoubleAfterSplitAllowedChange)}
 
                 <div>
                     Player Split Aces:&nbsp;
                     <label>
                         <input type="checkbox" onChange={this.onPlayerAcesResplitBooleanChange.bind(this)}
-                            checked={this.state?.updatedHouseRules?.playerPlayConfig.acesMayBeReSplit === true} />
+                            checked={this.props.houseRules?.playerPlayConfig.acesMayBeReSplit === true} />
                         &nbsp;Unlimited Splits&nbsp;
                     </label>
-                    {Number.isInteger(this.state?.updatedHouseRules?.playerPlayConfig.acesMayBeReSplit) ?
+                    {Number.isInteger(this.props.houseRules?.playerPlayConfig.acesMayBeReSplit) ?
                         (
                             <label>
                             &nbsp;Limited Number of Splits&nbsp;
                             <input type="number" min={1} max={8} onChange={this.onPlayerAcesResplitNumberChange.bind(this)}
-                                value={this.state?.updatedHouseRules?.playerPlayConfig.acesMayBeReSplit as number} />
+                                value={this.props.houseRules?.playerPlayConfig.acesMayBeReSplit as number} />
                             </label>
                         ) :
                         (<></>)
@@ -297,7 +291,6 @@ class HouseRulesComp extends React.Component<HouseRulesProperties, HouseRulesSta
 
         return (
             <div>
-                <button onClick={this.onSubmit.bind(this)}>Submit</button>
                 {this.renderPayoutConfig()}
                 {this.renderShoeConfig()}
                 {this.renderDealerAndPlayerPlayConfig()}
