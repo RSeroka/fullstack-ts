@@ -10,13 +10,13 @@ import { StrategyResults, PerDealerUpcardStrategyResults } from '../../interface
 
 import "./StrategyResultsHardComp.css";
 import StrategyResultsStatsComp from './StrategyResultsStatsComp';
-import StrategyResultsGridComp, { StrategyResultsGridSpecialization } from './StrategyResultsGrid';
+import StrategyGridComp, { StrategyGridSpecialization } from '../StrategyGrid';
 
 
 
 
 
-class StrategyResultsHardCompSpecialization extends StrategyResultsGridSpecialization {
+class StrategyResultsHardCompSpecialization extends StrategyGridSpecialization {
     private strategyResults: StrategyResults | undefined;
 
     constructor(strategyResults: StrategyResults | undefined) {
@@ -84,7 +84,7 @@ class StrategyResultsHardComp extends React.Component<StrategyResultsHardCompPro
     render() : ReactNode {
         const specialization = new StrategyResultsHardCompSpecialization(this.props.strategyResults);
         return (
-            <StrategyResultsGridComp specialization={specialization}></StrategyResultsGridComp>
+            <StrategyGridComp specialization={specialization}></StrategyGridComp>
         );
 
     }

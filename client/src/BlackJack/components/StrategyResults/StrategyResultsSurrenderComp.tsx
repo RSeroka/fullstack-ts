@@ -7,10 +7,10 @@ import { StrategyResults, PerDealerUpcardStrategyResults } from '../../interface
 
 import "./StrategyResultsSurrenderComp.css";
 import StrategyResultsStatsComp from './StrategyResultsStatsComp';
-import StrategyResultsGridComp, { StrategyResultsGridSpecialization } from './StrategyResultsGrid';
+import StrategyGridComp, { StrategyGridSpecialization } from '../StrategyGrid';
 
 
-class StrategyResultsSurrenderCompSpecialization extends StrategyResultsGridSpecialization {
+class StrategyResultsSurrenderCompSpecialization extends StrategyGridSpecialization {
     private strategyResults: StrategyResults | undefined;
 
     constructor(strategyResults: StrategyResults | undefined) {
@@ -69,7 +69,7 @@ class StrategyResultsSurrenderComp extends React.Component<StrategyResultsSurren
     render() : ReactNode {
         const specialization = new StrategyResultsSurrenderCompSpecialization(this.props.strategyResults);
         return (
-            <StrategyResultsGridComp specialization={specialization}></StrategyResultsGridComp>
+            <StrategyGridComp specialization={specialization}></StrategyGridComp>
         );
 
     }

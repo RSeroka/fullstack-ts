@@ -4,7 +4,7 @@
 * common grid functionality 
 */
 
-.strategy-results-grid {
+.strategy-grid {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -12,7 +12,7 @@
     width: 100%;
 }
 
-.strategy-results-grid__col {
+.strategy-grid__col {
     display: inline-flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -21,7 +21,7 @@
     border-right: 1px solid black;
 }
 
-.strategy-results-grid__cell {
+.strategy-grid__cell {
     display:inline-flex;
     flex-direction: column;
     flex-grow: 1;
@@ -33,6 +33,6 @@
 }
 
 
-.strategy-results-grid__cell--header, .strategy-results-grid__cell--left-col {
+.strategy-grid__cell--header, .strategy-grid__cell--left-col {
     background: #eee;
 }

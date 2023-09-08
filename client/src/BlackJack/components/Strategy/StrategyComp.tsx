@@ -4,7 +4,7 @@ import React, { ReactNode } from 'react';
 
 import "./StrategyComp.css";
 
-import Strategy from '../interface-types/strategy';
+import Strategy from '../../interface-types/strategy';
 
 
 type StrategyProperties = {

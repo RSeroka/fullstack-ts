@@ -10,7 +10,7 @@ import Strategy from '../interface-types/strategy';
 import StrategyResults from '../interface-types/strategy-results';
 import { getAllBlackjackHouseRules, getStrategyById, playManyHands } from '../service-interface/blackjack-client';
 import './BlackjackComp.css';
-import StrategyComp from './StrategyComp';
+import StrategyComp from './Strategy/StrategyComp';
 import StrategyResultsComp from './StrategyResults/StrategyResultsComp';
 import HouseRulesComp from './HouseRulesComp';
 

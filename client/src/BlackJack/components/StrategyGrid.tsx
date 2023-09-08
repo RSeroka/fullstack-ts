@@ -9,14 +9,14 @@ import MediaQuery from 'react-responsive';
 
 
 
-import "./StrategyResultsGrid.css";
+import "./StrategyGrid.css";
 
 
 
 
 
 
-export abstract class StrategyResultsGridSpecialization {
+export abstract class StrategyGridSpecialization {
     abstract get columnClassName(): string;
     abstract get cellClassName(): string;
     abstract get topCellClassName(): string;
@@ -26,16 +26,16 @@ export abstract class StrategyResultsGridSpecialization {
 
 
 
-type StrategyResultsGridProperties = {
+type StrategyGridProperties = {
 
-    specialization: StrategyResultsGridSpecialization;
+    specialization: StrategyGridSpecialization;
 }
 
-type StrategyResultsGridState = {
+type StrategyGridState = {
 
 };
 
-class StrategyResultsGridComp extends React.Component<StrategyResultsGridProperties, StrategyResultsGridState> {
+class StrategyGridComp extends React.Component<StrategyGridProperties, StrategyGridState> {
 
 
     render() : ReactNode {
@@ -44,19 +44,19 @@ class StrategyResultsGridComp extends React.Component<StrategyResultsGridPropert
         return (
             <>
                 <MediaQuery minWidth={660}>
-                    <StrategyResultsPartialGridComp  specialization={this.props.specialization}></StrategyResultsPartialGridComp>
+                    <StrategyPartialGridComp  specialization={this.props.specialization}></StrategyPartialGridComp>
                 </MediaQuery>
                 <MediaQuery maxWidth={659} minWidth={330}>
-                    <StrategyResultsPartialGridComp highColumnNumber={5} specialization={this.props.specialization}></StrategyResultsPartialGridComp>
+                    <StrategyPartialGridComp highColumnNumber={5} specialization={this.props.specialization}></StrategyPartialGridComp>
                     <br />                
-                    <StrategyResultsPartialGridComp lowColumnNumber={6} specialization={this.props.specialization}></StrategyResultsPartialGridComp>                
+                    <StrategyPartialGridComp lowColumnNumber={6} specialization={this.props.specialization}></StrategyPartialGridComp>                
                 </MediaQuery>
                 <MediaQuery minWidth={250} maxWidth={329}>
-                    <StrategyResultsPartialGridComp highColumnNumber={3} specialization={this.props.specialization}></StrategyResultsPartialGridComp>
+                    <StrategyPartialGridComp highColumnNumber={3} specialization={this.props.specialization}></StrategyPartialGridComp>
                     <br />                
-                    <StrategyResultsPartialGridComp lowColumnNumber={4} highColumnNumber={7} specialization={this.props.specialization}></StrategyResultsPartialGridComp>  
+                    <StrategyPartialGridComp lowColumnNumber={4} highColumnNumber={7} specialization={this.props.specialization}></StrategyPartialGridComp>  
                     <br />                
-                    <StrategyResultsPartialGridComp lowColumnNumber={8} specialization={this.props.specialization}></StrategyResultsPartialGridComp>  
+                    <StrategyPartialGridComp lowColumnNumber={8} specialization={this.props.specialization}></StrategyPartialGridComp>  
                 </MediaQuery>
 
             </>
@@ -65,34 +65,34 @@ class StrategyResultsGridComp extends React.Component<StrategyResultsGridPropert
 }
 
 
-type StrategyResultsPartialGridProperties = {
+type StrategyPartialGridProperties = {
     lowColumnNumber?: number;
     highColumnNumber?: number;
 
-    specialization: StrategyResultsGridSpecialization;
+    specialization: StrategyGridSpecialization;
 }
 
-type StrategyResultsPartialGridState = {
+type StrategyPartialGridState = {
 
 };
 
-class StrategyResultsPartialGridComp extends React.Component<StrategyResultsPartialGridProperties, StrategyResultsPartialGridState> {
+class StrategyPartialGridComp extends React.Component<StrategyPartialGridProperties, StrategyPartialGridState> {
 
 
     private get columnClassName(): string {
-        return `strategy-results-grid__col ${this.props.specialization.columnClassName}`;
+        return `strategy-grid__col ${this.props.specialization.columnClassName}`;
     }
 
     private get cellClassName(): string {
-        return `strategy-results-grid__cell ${this.props.specialization.cellClassName}`;
+        return `strategy-grid__cell ${this.props.specialization.cellClassName}`;
     }
 
     private get leftCellClassName(): string {
-        return "strategy-results-grid__cell--left-col";
+        return "strategy-grid__cell--left-col";
     }
 
     private get topCellClassName(): string {
-        return `strategy-results-grid__cell--header ${this.props.specialization.topCellClassName}`;
+        return `strategy-grid__cell--header ${this.props.specialization.topCellClassName}`;
     }
 
     private getFirstColumn() : ReactNode {
@@ -142,7 +142,7 @@ class StrategyResultsPartialGridComp extends React.Component<StrategyResultsPart
     render(): ReactNode {
         return (
             <>
-                <div className="strategy-results-grid">
+                <div className="strategy-grid">
                     {this.getFirstColumn()}
                     {this.getColumn(1)}
                     {this.getColumn(2)}
@@ -160,5 +160,5 @@ class StrategyResultsPartialGridComp extends React.Component<StrategyResultsPart
     }
 }
 
-export type {StrategyResultsPartialGridProperties};
-export default StrategyResultsGridComp;
+export type {StrategyPartialGridProperties};
+export default StrategyGridComp;
