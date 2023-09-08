@@ -37,7 +37,8 @@ class StrategyResultsSplitCompSpecialization extends StrategyResultsGridSpeciali
             <>6s</>,
             <>7s</>,
             <>8s</>,
-            <>9s</>
+            <>9s</>,
+            <>Aces</>
         ];
     }
 
