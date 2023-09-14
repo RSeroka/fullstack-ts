@@ -246,9 +246,9 @@ export default class TablePlay {
                             this.applyPlayerCard(playerSingleHandResult);
                             break;
                         case PlayerPlayDecision.HIT:
-                            playerChoose = true;
                             if (this.logging) { console.debug(`player has ${playerSingleHandResult.hand.total}, dealer has ${handResult.dealerHand.total}, player hits`); }
                             this.applyPlayerCard(playerSingleHandResult);
+                            playerChoose = playerSingleHandResult.result != BlackJackResult.BJ_LOSE; // break loop on hit that goes over
                             break;
                         case PlayerPlayDecision.SPLIT:
                             playerChoose = true;

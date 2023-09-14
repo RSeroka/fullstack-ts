@@ -35,19 +35,21 @@ class StrategyResultsHardCompSpecialization extends StrategyGridSpecialization {
     }
 
     public get leftColumnContent(): Array<ReactNode> {
-        return [
-            <>&nbsp;</>,
-            <>&lt;= 8<br/>Dbl</>,
-            <>9<br/>Dbl</>,
-            <>10<br/>Dbl</>,
-            <>11<br/>Dbl</>,
-            <>12<br/>Dbl</>,
-            <>13<br/>Dbl</>,
-            <>14<br/>Dbl</>,
-            <>15<br/>Dbl</>,
-            <>16<br/>Dbl</>,
-            <>&gt;=17<br/>Dbl</>
-        ];
+        const retVal: Array<ReactNode> = [];
+        retVal.push(<>&nbsp;</>);
+        for (let rowNum = 1; rowNum < 11; rowNum++) {
+            retVal.push(<>{this.getPlayerTotalDescription(rowNum)}<br/>Dbl</>)
+        }
+        return retVal;
+    }
+
+    public getPlayerTotalDescription(rowNum: number): string {
+        const playerTotal: string
+            = rowNum <= 1 ? "<= 8" : 
+            rowNum >= 10 ? ">=17" : 
+            ("" + (rowNum + 7));
+
+        return playerTotal;
     }
 
     public getCellContent(col: number, row: number): ReactNode {
@@ -59,11 +61,15 @@ class StrategyResultsHardCompSpecialization extends StrategyGridSpecialization {
 
         const stats = this.strategyResults?.dealerUpcards ? this.strategyResults?.dealerUpcards[dealerUpcardArrayOffset]?.hard[playerTotal].single : undefined;
         const doubleStats = this.strategyResults?.dealerUpcards ? this.strategyResults?.dealerUpcards[dealerUpcardArrayOffset]?.hard[playerTotal].double : undefined;
+        const dealerCard = col >= 10 ? "A" : "" + (col + 1);
+        const singleDesc = `Dealer: ${dealerCard}, Player: ${this.getPlayerTotalDescription(row)}`;
+        const doubleDesc = singleDesc + ", Double";
+
 
         return (
             <>
-                <StrategyResultsStatsComp stats={stats} ></StrategyResultsStatsComp>
-                <StrategyResultsStatsComp stats={doubleStats} ></StrategyResultsStatsComp>
+                <StrategyResultsStatsComp description={singleDesc} stats={stats} ></StrategyResultsStatsComp>
+                <StrategyResultsStatsComp description={doubleDesc} stats={doubleStats} ></StrategyResultsStatsComp>
             </>
 
         );

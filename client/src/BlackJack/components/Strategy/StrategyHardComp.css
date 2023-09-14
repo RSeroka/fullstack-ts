@@ -1,0 +1,12 @@
+.strategy-hard__col {
+    max-width: 60px;
+}
+
+.strategy-hard__cell {
+    height: 30px;
+    width: 50px;
+}
+
+.strategy-hard__cell--header {
+    height: 25px;
+}

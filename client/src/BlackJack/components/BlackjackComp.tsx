@@ -51,7 +51,7 @@ class BlackjackComp extends React.Component<BlackjackCompProperties, BlackjackCo
             this.onUpdatedHouseRules(value[0]);
 
         }, (reasonRejected: any) => {
-            this.setState({houseRulesState: reasonRejected});
+            this.setState({houseRulesState: reasonRejected, houseRules: undefined});
         })
     }
 
@@ -64,7 +64,7 @@ class BlackjackComp extends React.Component<BlackjackCompProperties, BlackjackCo
             this.onUpdatedStrategy(value);
 
         }, (reasonRejected: any) => {
-            this.setState({strategyState: reasonRejected});
+            this.setState({strategyState: reasonRejected, strategy: undefined});
         });
     }
 
@@ -82,7 +82,17 @@ class BlackjackComp extends React.Component<BlackjackCompProperties, BlackjackCo
 
             this.setState({playManyHandsState: strategyResultsString, strategyResults: value}); 
         }, (reasonRejected: any) => {
-            this.setState({playManyHandsState: reasonRejected});
+            let msg: string;
+            if ( typeof(reasonRejected) === 'string') {
+                msg = `playManyHands error: ${reasonRejected}`;
+            }
+            else if ( reasonRejected.message && typeof(reasonRejected === 'string')) {
+                msg = `playManyHands error message: ${reasonRejected.message}`;
+            }
+            else {
+                msg = `playManyHands unknown error: ${reasonRejected}`;
+            }
+            this.setState({playManyHandsState: msg, strategyResults: undefined});
         });
     }
 

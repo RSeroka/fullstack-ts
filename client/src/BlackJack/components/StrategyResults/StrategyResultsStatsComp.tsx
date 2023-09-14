@@ -6,6 +6,7 @@ import "./StrategyResultsStatsComp.css";
 import { StrategyResultsStats } from '../../interface-types/strategy-results';
 
 type StrategyResultsStatsCompProperties = {
+    description?: string,
     stats?: StrategyResultsStats;
     expanded?: true;
 }
@@ -65,12 +66,17 @@ class StrategyResultsStatsComp extends React.Component<StrategyResultsStatsCompP
         let unconditionalExpandedContent = `Win: ${derived.winPercent}%, Push: ${derived.pushPercent}%, Lose: ${derived.losePercent}%, Net: ${derived.netValuePercent}%`;
         let expandedContent: ReactNode;
         if (this.props.stats !== undefined) {
-            expandedContent = <>Wins: {this.props.stats?.numberWins}, Losses: {this.props.stats?.numberLosses}, Hands: {this.props.stats?.numberHands}, Net: {this.props.stats?.netValue}
-                <br />{unconditionalExpandedContent}</>;
+            expandedContent = <>&nbsp;Wins: {this.props.stats?.numberWins}, Losses: {this.props.stats?.numberLosses}, Hands: {this.props.stats?.numberHands}, Net: {this.props.stats?.netValue}&nbsp;
+                <br />&nbsp;{unconditionalExpandedContent}&nbsp;</>;
         }
         else {
-            expandedContent = <>{unconditionalExpandedContent}</>;
+            expandedContent = <>&nbsp;{unconditionalExpandedContent}&nbsp;</>;
         }
+        let descriptionContent: ReactNode;
+        if (this.props.description) {
+            descriptionContent = <div className="strategy-results-stats-comp__overlay--header">{this.props.description}</div>; 
+        }
+
 
         let overlay: ReactNode | undefined;
         if (!this.props.expanded) {
@@ -84,6 +90,7 @@ class StrategyResultsStatsComp extends React.Component<StrategyResultsStatsCompP
                     hasDoneInitialMeasure: _hasDoneInitialMeasure,
                     ...props }) => (
                     <div {...props} className="strategy-results-stats-comp__overlay" onClick={() => this.onClickHandler()}>
+                        {descriptionContent}
                         {expandedContent}
                     </div>
                 )}
