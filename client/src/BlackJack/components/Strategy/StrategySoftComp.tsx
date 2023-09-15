@@ -5,13 +5,13 @@ import React, { ReactNode } from 'react';
 import { Strategy, PerDealerUpcard } from '../../interface-types/strategy';
 
 
-import "./StrategyHardComp.css";
+import "./StrategySoftComp.css";
 
 import StrategyGridComp, { StrategyGridSpecialization } from '../StrategyGrid';
 import StrategyHitStandOrDoubleComp from './StrategyHitStandOrDoubleComp';
 import { PlayerStrategyHitStandOrDouble } from '../../interface-types/decision';
 
-class StrategyHardCompSpecialization extends StrategyGridSpecialization {
+class StrategySoftCompSpecialization extends StrategyGridSpecialization {
     private strategy: Strategy | undefined;
     private setStrategy: (updatedStrategy: Strategy) => void;
 
@@ -22,51 +22,47 @@ class StrategyHardCompSpecialization extends StrategyGridSpecialization {
     }
 
     public get columnClassName(): string {
-        return "strategy-hard__col";
+        return "strategy-soft__col";
     }
     public get cellClassName(): string {
-        return "strategy-hard__cell";
+        return "strategy-soft__cell";
     }
     public get topCellClassName(): string {
-        return "strategy-hard__cell--header";
+        return "strategy-soft__cell--header";
     }
 
     public get leftColumnContent(): Array<ReactNode> {
         const retVal: Array<ReactNode> = [];
         retVal.push(<>&nbsp;</>);
-        for (let rowNum = 1; rowNum < 11; rowNum++) {
+        for (let rowNum = 1; rowNum < 9; rowNum++) {
             retVal.push(<>{this.getPlayerTotalDescription(rowNum)}</>)
         }
         return retVal;
     }
 
     private getPlayerTotalDescription(rowNum: number): string {
-        const playerTotal: string
-            = rowNum <= 1 ? "<= 8" : 
-            rowNum >= 10 ? ">=17" : 
-            ("" + (rowNum + 7));
+        const playerTotal: string = "" + (rowNum + 12);
 
         return playerTotal;
     }
 
-    private setHsod(dealerUpcardArrayOffset: number, playerTotal: keyof PerDealerUpcard["hard"], 
+    private setHsod(dealerUpcardArrayOffset: number, playerTotal: keyof PerDealerUpcard["soft"], 
         hsod: PlayerStrategyHitStandOrDouble) {
-        if (this.strategy?.dealerUpcards[dealerUpcardArrayOffset]?.hard[playerTotal] !== undefined) {
-            this.strategy.dealerUpcards[dealerUpcardArrayOffset].hard[playerTotal] = hsod;
+        if (this.strategy?.dealerUpcards[dealerUpcardArrayOffset]?.soft[playerTotal] !== undefined) {
+            this.strategy.dealerUpcards[dealerUpcardArrayOffset].soft[playerTotal] = hsod;
             this.setStrategy(this.strategy);
         }
     }
 
     public getCellContent(col: number, row: number): ReactNode {
         const dealerUpcardArrayOffset = col >= 10 ? 0 : col;
-        const playerTotal: keyof PerDealerUpcard["hard"]
-            = row <= 1 ? "8AndUnder" : 
-            row >= 10 ? "17AndOver" : 
-            ("" + (row + 7)) as keyof PerDealerUpcard["hard"];
+        const playerTotal // : keyof PerDealerUpcard["soft"]
+            = ("" + (row + 12)) as keyof PerDealerUpcard["soft"];
 
-        const psHSoD = this.strategy?.dealerUpcards ? this.strategy?.dealerUpcards[dealerUpcardArrayOffset]?.hard[playerTotal]: undefined;
+        const psHSoD = this.strategy?.dealerUpcards ? this.strategy?.dealerUpcards[dealerUpcardArrayOffset]?.soft[playerTotal]: undefined;
         const dealerCard = col >= 10 ? "A" : "" + (col + 1);
-        const description = `Dealer: ${dealerCard}, Player: ${this.getPlayerTotalDescription(row)}`;
+        const playerNonAce = row + 1;
+        const description = `Dealer: ${dealerCard}, Player: Ace + ${playerNonAce}`;
         return (
             <>
                 <StrategyHitStandOrDoubleComp
@@ -81,19 +77,19 @@ class StrategyHardCompSpecialization extends StrategyGridSpecialization {
 }
 
 
-type StrategyHardCompProperties = {
+type StrategySoftCompProperties = {
     strategy?: Strategy;
     setStrategy: (updatedStrategy: Strategy) => void;
 }
 
-type StrategyHardCompState = {
+type StrategySoftCompState = {
 
 };
 
-class StrategyHardComp extends React.Component<StrategyHardCompProperties, StrategyHardCompState> {
+class StrategySoftComp extends React.Component<StrategySoftCompProperties, StrategySoftCompState> {
 
     render() : ReactNode {
-        const specialization = new StrategyHardCompSpecialization(this.props.strategy, this.props.setStrategy);
+        const specialization = new StrategySoftCompSpecialization(this.props.strategy, this.props.setStrategy);
         return (
             <StrategyGridComp specialization={specialization}></StrategyGridComp>
         );
@@ -103,4 +99,4 @@ class StrategyHardComp extends React.Component<StrategyHardCompProperties, Strat
 
 
 
-export default StrategyHardComp;
+export default StrategySoftComp;

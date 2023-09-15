@@ -10,6 +10,7 @@ import "./StrategyComp.css";
 import Strategy from '../../interface-types/strategy';
 
 import StrategyHardComp from './StrategyHardComp';
+import StrategySoftComp from './StrategySoftComp';
 
 
 type StrategyProperties = {
@@ -37,7 +38,10 @@ class StrategyComp extends React.Component<StrategyProperties, StrategyState> {
                     </Accordion.Item>
                     <Accordion.Item eventKey="1">
                         <Accordion.Header>Soft Total Strategy</Accordion.Header>
-                        <Accordion.Body className="strategy__item-body"> </Accordion.Body>                   
+                        <Accordion.Body className="strategy__item-body"> 
+                            <StrategySoftComp strategy={this.props.strategy} 
+                                setStrategy={this.props.setStrategy} ></StrategySoftComp>
+                        </Accordion.Body>                   
                     </Accordion.Item>
                     <Accordion.Item eventKey="2">
                         <Accordion.Header>Split Pairs Strategy</Accordion.Header>

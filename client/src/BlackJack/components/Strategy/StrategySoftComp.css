@@ -1,0 +1,12 @@
+.strategy-soft__col {
+    max-width: 60px;
+}
+
+.strategy-soft__cell {
+    height: 30px;
+    width: 50px;
+}
+
+.strategy-soft__cell--header {
+    height: 25px;
+}
