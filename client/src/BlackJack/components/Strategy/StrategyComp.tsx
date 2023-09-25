@@ -11,6 +11,8 @@ import Strategy from '../../interface-types/strategy';
 
 import StrategyHardComp from './StrategyHardComp';
 import StrategySoftComp from './StrategySoftComp';
+import StrategySplitComp from './StrategySplitComp';
+import StrategySurrenderComp from './StrategySurrenderComp';
 
 
 type StrategyProperties = {
@@ -45,11 +47,17 @@ class StrategyComp extends React.Component<StrategyProperties, StrategyState> {
                     </Accordion.Item>
                     <Accordion.Item eventKey="2">
                         <Accordion.Header>Split Pairs Strategy</Accordion.Header>
-                        <Accordion.Body className="strategy__item-body"></Accordion.Body>
+                        <Accordion.Body className="strategy__item-body">
+                            <StrategySplitComp strategy={this.props.strategy} 
+                                setStrategy={this.props.setStrategy} ></StrategySplitComp>
+                        </Accordion.Body>
                     </Accordion.Item>
                     <Accordion.Item eventKey="3">
                         <Accordion.Header>Late Surrender Strategy</Accordion.Header>
-                        <Accordion.Body className="strategy__item-body"></Accordion.Body>
+                        <Accordion.Body className="strategy__item-body">
+                            <StrategySurrenderComp strategy={this.props.strategy} 
+                                setStrategy={this.props.setStrategy} ></StrategySurrenderComp>
+                        </Accordion.Body>
                     </Accordion.Item>
                     
                 </Accordion>

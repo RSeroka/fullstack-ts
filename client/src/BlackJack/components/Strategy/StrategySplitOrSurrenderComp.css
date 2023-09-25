@@ -1,0 +1,27 @@
+
+.strategy-split-or-surrender-comp__overlay {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+
+    background: #ccc;
+    /* min-height: 60px; */
+    border: 2px solid black;
+    border-radius: 5px;
+    /* margin: 5px; */
+    /* padding-left: 5px; */
+}
+
+.strategy-split-or-surrender-comp__overlay-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+}
+
+.strategy-split-or-surrender-comp__overlay-row--header {
+    font-weight: bold;
+    border-bottom: 1px solid black;
+
+}

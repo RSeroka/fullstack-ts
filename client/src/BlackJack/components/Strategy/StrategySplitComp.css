@@ -1,0 +1,12 @@
+.strategy-split__col {
+    max-width: 60px;
+}
+
+.strategy-split__cell {
+    height: 30px;
+    width: 50px;
+}
+
+.strategy-split__cell--header {
+    height: 25px;
+}
