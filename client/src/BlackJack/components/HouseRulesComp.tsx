@@ -155,9 +155,10 @@ class HouseRulesComp extends React.Component<HouseRulesProperties, HouseRulesSta
 
     private renderPayoutConfig(): ReactNode {
         return (
-            <div>
-                <label>Blackjack Payout:&nbsp;
+            <div className="house-rules-comp__control">
 
+                <label className="house-rules-comp__description">Blackjack Payout:&nbsp;</label>
+                <span className="house-rules-comp__input-control">
                     <label>
                         <input type="radio" onChange={this.onBlackjackPayoutChange.bind(this)}
                             value="3:2" checked={this.props.houseRules?.payoutConfig.blackjackPayout === "3:2"} />
@@ -169,7 +170,7 @@ class HouseRulesComp extends React.Component<HouseRulesProperties, HouseRulesSta
                             value="6:5" checked={this.props.houseRules?.payoutConfig.blackjackPayout === "6:5"} />
                         &nbsp;6:5&nbsp;
                     </label>
-                </label>
+                </span>
 
             </div>
 
@@ -180,39 +181,42 @@ class HouseRulesComp extends React.Component<HouseRulesProperties, HouseRulesSta
     private renderShoeConfig() : ReactNode {
         return (
             <>
-                <label style={{display: 'block'}}>
-                    Number of Decks: &nbsp;
-                    <select value={this.props.houseRules?.shoeConfig.numDecks}
-                        onChange={this.onNumDecksChange.bind(this)}>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                    </select>
-                </label>
-                <label style={{display: 'block'}}>
-                    Reshuffle Percent: &nbsp;
-                    <input type="number" max={90} min={1} step={1}
-                        value={this.props.houseRules?.shoeConfig.cutoffPercent ? 
-                            Math.round(this.props.houseRules?.shoeConfig.cutoffPercent * 100) : ""}
-                        onChange={this.onShufflePercentChange.bind(this)} />
-                </label>
-                <label style={{display: 'block'}}>
-                    randomSeed: &nbsp;
-                    <input type="number"  
-                        value={this.props.houseRules?.shoeConfig.randomSeed ? this.props.houseRules?.shoeConfig.randomSeed : ""}
-                        onChange={this.onRandomSeedChange.bind(this)} />
-                </label>
+               <div className="house-rules-comp__control">
+                    <label className="house-rules-comp__description">Number of Decks:&nbsp;</label>
+                    <div className="house-rules-comp__input-control">
+                            <select value={this.props.houseRules?.shoeConfig.numDecks}
+                                onChange={this.onNumDecksChange.bind(this)}>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                            </select>
+                        </div>
+                </div>
+                <div className="house-rules-comp__control">
+                    <label className="house-rules-comp__description">Reshuffle Percent:&nbsp;</label>
+                    <div className="house-rules-comp__input-control">
+                        <input className="house-rules-comp__input-number" type="number" max={90} min={1} step={1}
+                            value={this.props.houseRules?.shoeConfig.cutoffPercent ? 
+                                Math.round(this.props.houseRules?.shoeConfig.cutoffPercent * 100) : ""}
+                            onChange={this.onShufflePercentChange.bind(this)} />
+                    </div>
+                </div>
+                <div className="house-rules-comp__control">
+                    <label className="house-rules-comp__description">Random Seed:&nbsp;</label>
+                    <div className="house-rules-comp__input-control">
+                        <input className="house-rules-comp__input-number" type="number" 
+                            value={this.props.houseRules?.shoeConfig.randomSeed ? this.props.houseRules?.shoeConfig.randomSeed : ""}
+                            onChange={this.onRandomSeedChange.bind(this)} />
+                    </div>
+                </div>
             </>
         );
     }
-
-
- 
 
     private renderTrueFalseRadio(description:string, leftFilledInWhenTrue: boolean, leftDescription:string, 
         rightDescription: string, propertyValue: boolean | undefined, 
@@ -222,8 +226,11 @@ class HouseRulesComp extends React.Component<HouseRulesProperties, HouseRulesSta
         const rightValue = rightFilledInWhenTrue ? "true" : "false";
 
         return (
-            <div>
-                {description}:&nbsp;
+
+            <div className="house-rules-comp__control">
+
+                <label className="house-rules-comp__description">{description}:&nbsp;</label>
+                <span className="house-rules-comp__input-control">
                     <label>
                         <input type="radio" onChange={onChangeFn.bind(this)}
                             value={leftValue} checked={propertyValue === leftFilledInWhenTrue} />
@@ -235,6 +242,8 @@ class HouseRulesComp extends React.Component<HouseRulesProperties, HouseRulesSta
                             value={rightValue} checked={propertyValue === rightFilledInWhenTrue} />
                         &nbsp;{rightDescription}&nbsp;
                     </label>
+                </span>
+
             </div>
 
         );
@@ -263,25 +272,28 @@ class HouseRulesComp extends React.Component<HouseRulesProperties, HouseRulesSta
                     this.props.houseRules?.playerPlayConfig.doubleAfterSplitAllowed, 
                     this.onPlayerDoubleAfterSplitAllowedChange)}
 
-                <div>
-                    Player Split Aces:&nbsp;
-                    <label>
-                        <input type="checkbox" onChange={this.onPlayerAcesResplitBooleanChange.bind(this)}
-                            checked={this.props.houseRules?.playerPlayConfig.acesMayBeReSplit === true} />
+                <div className="house-rules-comp__control">
+                    <label className="house-rules-comp__description">Player Split Aces:&nbsp;</label>
+                    <div className="house-rules-comp__input-control">
+                        <input type="checkbox" 
+                            checked={this.props.houseRules?.playerPlayConfig.acesMayBeReSplit === true}
+                            onChange={this.onPlayerAcesResplitBooleanChange.bind(this)} />
                         &nbsp;Unlimited Splits&nbsp;
-                    </label>
-                    {Number.isInteger(this.props.houseRules?.playerPlayConfig.acesMayBeReSplit) ?
-                        (
-                            <label>
-                            &nbsp;Limited Number of Splits&nbsp;
-                            <input type="number" min={1} max={8} onChange={this.onPlayerAcesResplitNumberChange.bind(this)}
-                                value={this.props.houseRules?.playerPlayConfig.acesMayBeReSplit as number} />
-                            </label>
-                        ) :
-                        (<></>)
-                    }
-
+                    </div>
                 </div>
+                {Number.isInteger(this.props.houseRules?.playerPlayConfig.acesMayBeReSplit) ?
+                    (
+                        <div className="house-rules-comp__control">
+                            <label className="house-rules-comp__description">Max Player Ace Splits:&nbsp;</label>
+                            <div className="house-rules-comp__input-control">
+                                <input className="house-rules-comp__input-number" type="number" 
+                                    min={1} max={8} onChange={this.onPlayerAcesResplitNumberChange.bind(this)}
+                                    value={this.props.houseRules?.playerPlayConfig.acesMayBeReSplit as number} />
+                            </div>
+                        </div>
+                    ) :
+                    (<></>)
+                }
 
             </div>
         );

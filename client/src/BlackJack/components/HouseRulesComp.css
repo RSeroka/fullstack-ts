@@ -1,2 +1,29 @@
 
 
+.house-rules-comp__control {
+    display: flex;
+    flex-direction: row;
+}
+
+.house-rules-comp__description {
+  flex: none;
+  display: block;
+  width: max(40vw, 150px);
+  text-align: end;
+  font-weight: 600;
+}
+
+
+.house-rules-comp__input-control {
+  flex: 1 1 auto;
+  display: block;
+  margin-bottom: 4px;
+  margin-right: 8px;
+  padding: 4px;
+  margin-top: -4px;
+}
+
+.house-rules-comp__input-number[type='number'] {
+  max-width: 100px;
+}
+
