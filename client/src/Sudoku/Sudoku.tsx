@@ -530,6 +530,7 @@ export default function Game(): JSX.Element {
                 {!inSolveQuery && currentMove === 0 ? (
                     <>
                             <select className="game-info__select"
+                                name="game-info__select"
                                 onChange={(ev) => start(ev.target.value)}>
                                 <option value="nochoice">Pick A Board</option>
                                 <option value="easy">Easy</option>
