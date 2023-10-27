@@ -32,12 +32,12 @@
     "mocha": "^10.2.0",
     "rimraf": "^4.1.2",
     "sinon": "^15.0.1",
-    "ts-node": "^10.9.1",
-    "ts-patch": "^3.0.2",
-    "typescript": "^5.2.2"
+    "ts-node": "^10.9.1"
   },
   "dependencies": {
     "express": "^4.18.2",
-    "typia": "^4.2.1"
+    "typia": "^4.2.1",
+    "typescript": "^5.2.2",
+    "ts-patch": "^3.0.2"
   }
 }
