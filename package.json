@@ -10,8 +10,8 @@
     "client-build": "cd client && npm run build",
     "all-rebuild": "npm run all-clean && concurrently -c auto \"npm:server-build\" \"npm:client-build\"",
     "local-express-server": "node ./dist/src/express/server.js",
-    "docker-build": "docker build -t rseroka/sudoku-ts .",
-    "docker-run": "docker run --publish 80:8080 --restart on-failure:5 --name sudoku-container rseroka/sudoku-ts",
+    "docker-build": "docker build -t rseroka/fullstack-ts .",
+    "docker-run": "docker run --publish 80:8080 --restart on-failure:5 --name fullstack-container rseroka/fullstack-ts",
     "postinstall": "ts-patch install"
   },
   "author": "rseroka",
