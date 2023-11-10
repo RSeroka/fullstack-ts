@@ -15,6 +15,10 @@ const Navbar = () => {
     setShowNavbar(!showNavbar)
   }
 
+  const onLinkClick: React.MouseEventHandler<HTMLAnchorElement> = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    setShowNavbar(false);
+  } 
+
   return (
     <nav className="nbs-navbar">
       <div className="nbs-container">
@@ -27,19 +31,19 @@ const Navbar = () => {
         <div className={`nbs-nav-elements  ${showNavbar && 'active'}`}>
           <ul>
             <li>
-              <NavLink to="/">Home</NavLink>
+              <NavLink to="/" onClick={onLinkClick}>Home</NavLink>
             </li>
 
             <li>
-              <NavLink to="/resume">Resume</NavLink>
+              <NavLink to="/resume" onClick={onLinkClick}>Resume</NavLink>
             </li>
 
             <li>
-              <NavLink to="/sudoku">Sudoku</NavLink>
+              <NavLink to="/sudoku" onClick={onLinkClick}>Sudoku</NavLink>
             </li>
 
             <li>
-              <NavLink to="/blackjack">Blackjack</NavLink>
+              <NavLink to="/blackjack" onClick={onLinkClick}>Blackjack</NavLink>
             </li>
           </ul>
         </div>
