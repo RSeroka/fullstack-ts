@@ -18,7 +18,7 @@ class Resume extends React.Component<ResumeProperties> {
             <>
 
             <a target="_blank" rel="noreferrer" href={pdfLink} type="application/pdf">{linkText}</a>
-            <span>&nbsp; {FontAwesomeIconElementFactory.create('arrow-up-right-from-square')}</span>
+            <span>&nbsp; {FontAwesomeIconElementFactory.instance.create('arrow-up-right-from-square')}</span>
             </>
         )
     }

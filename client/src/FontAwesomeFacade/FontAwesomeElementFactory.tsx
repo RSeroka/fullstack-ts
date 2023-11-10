@@ -10,8 +10,18 @@ import { SizeProp } from '@fortawesome/fontawesome-svg-core';
 
 
 export default class FontAwesomeIconElementFactory {
-    private static icons:any = {};
-    static {
+
+    private static _instance: FontAwesomeIconElementFactory | undefined = undefined;
+
+    public static get instance(): FontAwesomeIconElementFactory {
+        if (FontAwesomeIconElementFactory._instance === undefined) {
+            FontAwesomeIconElementFactory._instance = new FontAwesomeIconElementFactory();
+        }
+        return FontAwesomeIconElementFactory._instance;
+    }
+
+    private icons:any = {};
+    private constructor() {
         // dictionary below contains Font Awesome Icons that will be used 
         // in the application. 
         // the icon() macro uses babel macros to limit the glyphs imported 
@@ -19,7 +29,7 @@ export default class FontAwesomeIconElementFactory {
         // Note: the icon() macro only works with static parameters, 
         // can not use variables, this is why the dictionary is needed .
 
-        FontAwesomeIconElementFactory.icons = {
+        this.icons = {
             classic : {
                 solid: {
                     'backward-fast': icon({name: 'backward-fast', style: 'solid', family: 'classic'}),
@@ -41,10 +51,10 @@ export default class FontAwesomeIconElementFactory {
 
     }
 
-    public static create(name: string, style?: string, family?: string, options?: {size?: string}) : JSX.Element | undefined {
+    public create(name: string, style?: string, family?: string, options?: {size?: string}) : JSX.Element | undefined {
         const style_ = style ? style: 'solid';
         const family_ = family ? family : 'classic';
-        const faIcon = FontAwesomeIconElementFactory.icons[family_]?.[style_]?.[name];
+        const faIcon = this.icons[family_]?.[style_]?.[name];
         if (faIcon) {
             return <FontAwesomeIcon icon={faIcon} size={options?.size as SizeProp} />;
         }

@@ -106,7 +106,7 @@ type GameNavButtonState = {
 class GameNavButton extends  React.Component<GameNavButtonState> {
     private renderFAIcon(): JSX.Element {
         if (this.props.faIconName) {
-            return <>{FontAwesomeIconElementFactory.create(this.props.faIconName)}<br /></>;
+            return <>{FontAwesomeIconElementFactory.instance.create(this.props.faIconName)}<br /></>;
         }
         else {
             return (<></>) ;
