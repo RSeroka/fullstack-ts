@@ -7,6 +7,7 @@ import BlackjackComp from './BlackJack/components/BlackjackComp';
 import Navbar from './NavBar/NavBar';
 import Resume from "./Resume/Resume";
 import Sudoku from './Sudoku/Sudoku';
+import Home from './Home/Home';
 
 import Button from 'react-bootstrap/Button';
 import Toast from 'react-bootstrap/Toast';
@@ -87,16 +88,7 @@ class App extends React.Component<AppProperties, AppState> {
   }
 }
 
-function Home() {
-  return (
-    <div>
-      <h2>Home</h2>
 
-      <div>
-      </div>
-    </div>
-  );
-}
 
 function NoMatch() {
   return (

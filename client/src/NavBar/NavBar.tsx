@@ -5,7 +5,6 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { ReactComponent as Hamburger } from '../assets/icons/hamburger.svg';
-// import { ReactComponent as Brand } from '../logo.svg';
 import "./NavBar.css";
 
 const Navbar = () => {
